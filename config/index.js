@@ -2,7 +2,7 @@
 var path = require('path')
 
 var build_assetsPublicPath = 'http://wx.indoorun.com/indoorun/test/app/webapp/'
-var dev_assetsPublicPath = ''
+var dev_assetsPublicPath = '/'
 
 module.exports = {
   build: {
@@ -28,7 +28,7 @@ module.exports = {
     env: require('./dev.env'),
     port: 8080,
     autoOpenBrowser: true,
-    assetsSubDirectory: '/static',
+    assetsSubDirectory: 'static',
     assetsPublicPath: dev_assetsPublicPath,
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
@@ -40,5 +40,5 @@ module.exports = {
   },
   publicPath:process.env.NODE_ENV === 'production'
     ? build_assetsPublicPath
-    : dev_assetsPublicPath
+    : '.'
 }
