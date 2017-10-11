@@ -74,14 +74,14 @@
     font-size: 1.4rem;
     font-weight: 400;
     margin: 0;
-    padding: 5rem 0 10px 0;
+    padding: 4rem 0 10px 0;
   }
 
   .tip {
 
     text-align: center;
     margin: 0 auto;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
     color: #9D9D9D;
     font-weight: 200;
     font-size: 0.875rem;
@@ -91,9 +91,9 @@
     display: block;
     left: 0;
     right: 0;
-    margin: -4.5rem auto;
-    width: 9rem;
-    height: 9rem;
+    margin: -3.5rem auto;
+    width: 7rem;
+    height: 7rem;
   }
 
   h5 {
@@ -124,12 +124,11 @@
   .closeBtn {
 
     position: absolute;
-    right:0px;
-    top:0px;
-    width: 3rem;
-    height: 3rem;
-    background-size: 1rem;
-    background: no-repeat center url("../assets/close1.png");
+    right:20px;
+    top:20px;
+    width: 10px;
+    height: 10px;
+    background: url("../assets/close1.png") no-repeat center /1rem 1rem;
   }
 
   .facilities {
@@ -137,7 +136,7 @@
     left: 0;
     right: 0;
     margin: auto;
-    width: 70%;
+    width: 80%;
     display: flex;
     display: -webkit-flex;
     text-align: center;

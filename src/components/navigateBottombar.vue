@@ -8,21 +8,14 @@
 
 <script>
 
-  function show(enable) {
-
-    if (enable) {
-
-      this.$el.style.visibility = 'visible'
-    }
-    else {
-
-      this.$el.style.visibility = 'hidden'
-    }
-  }
-
   export default {
     name : 'navigatebottombar',
     props:['routers'],
+    data:function () {
+      return {
+        show:true
+      }
+    },
     methods: {
       exit:function() {
         this.$emit('onexit', true)

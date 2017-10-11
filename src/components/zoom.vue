@@ -50,7 +50,7 @@
   .scale_btn{
     position: fixed;
     right:1rem;
-    bottom:14%;
+    bottom:7rem;
     z-index: 11;
   }
 

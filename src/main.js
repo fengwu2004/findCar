@@ -3,8 +3,7 @@
 import Vue from 'vue'
 import indoorun from '../../indoorunMap/map.js'
 import FindCarView from './findcarview'
-import FLoorListView from './floorlistview'
-import LocateStatusView from './locatestatusview'
+
 import FindFacilityBtnView from './findfacilityview'
 import FindFacilityView from './findfacility'
 import NormalBottomBar from './normalbottombar'
@@ -15,8 +14,10 @@ import UpdateMarkerView from './updatemarkerview'
 import ErrorTipView from './errortipview'
 import ZoomView from './zoomview'
 
+import floorlistdiv from './components/floorList.vue'
 import markwithble from './components/markwithble.vue'
 import emptyspace from './components/emptyspace.vue'
+import locatestatediv from './components/locatestatus.vue'
 
 var config = require('../config')
 
@@ -84,11 +85,9 @@ function onSavePackingUnit(unit) {
 
 function enableClickMarker() {
 
-  map.addOnceEvent(map.eventTypes.onMarkerClick, marker => {
+  map.addEventListener(map.eventTypes.onMarkerClick, marker => {
 
-    if (marker.id != endMarker.id) {
-
-      enableClickMarker()
+    if (marker.id != endMarker.id || endMarker.className !== 'IDRCarMarker') {
 
       return
     }
@@ -103,6 +102,16 @@ function enableClickMarker() {
     })
   })
 }
+
+map.addEventListener(map.eventTypes.onMapScroll, () => {
+
+  if (!locateStatusView) {
+
+    return
+  }
+
+  locateStatusView.dolocate = false
+})
 
 var markWithBleView = null
 function showMarkWithBle(unit) {
@@ -217,22 +226,90 @@ function showFindFacilityBtnView(bshow, cb) {
 
 function showLocateStatusView(bshow) {
 
-  if (!locateStatusView && bshow) {
+  if (locateStatusView) {
 
-    locateStatusView = new LocateStatusView(map)
+    locateStatusView.show = bshow
+
+    return
   }
 
-  locateStatusView && locateStatusView.show(bshow)
+  locateStatusView = new Vue({
+    el:'#locateState',
+    components: { locatestatediv },
+    methods: {
+      doLocating:function() {
+
+        if (map.getUserPos()) {
+
+          this.dolocate = true
+
+          map.centerPos(map.getUserPos(), false)
+
+          map.autoChangeFloor = true
+        }
+        else {
+
+          map.doLocation(function(pos) {
+
+            map.setCurrPos(pos)
+
+            if (pos) {
+
+              floorListView.locateFloorId = pos.floorId
+            }
+            else {
+
+              floorListView.locateFloorId = null
+            }
+          }, function (errorId) {
+
+            floorListView.locateFloorId = null
+
+            if (errorId === 0) {
+
+              errortipview.show('温馨提示：蓝牙未开启，请开启蓝牙')
+            }
+          })
+        }
+      }
+    },
+    data: function() {
+      return {
+        show:true,
+        dolocate:false
+      }
+    }
+  })
 }
 
 function showFloorListView(bshow) {
 
-  if (!floorListView && bshow) {
+  if (floorListView) {
 
-    floorListView = new FLoorListView(map)
+    floorListView.show = bshow
+
+    return
   }
 
-  floorListView && floorListView.show(bshow)
+  floorListView = new Vue({
+    el:"#floorList",
+    components: { floorlistdiv },
+    data: function() {
+      return {
+        show:true,
+        floorList:map.regionEx.floorList,
+        currentFloorId:map.getFloorId(),
+        locateFloorId:map.getUserPos() ? map.getUserPos().floorId : null
+      }
+    },
+    methods:{
+      onSelect:function(val) {
+        this.currentFloorId = val
+        map.changeFloor(val)
+        map.autoChangeFloor = false
+      }
+    }
+  })
 }
 
 function checkTargetValid(unitId, unitList) {
@@ -259,7 +336,7 @@ function checkNeedUpdateNaivtarget(unitlist) {
 
     targetUnit = map.findNearUnit(map.getUserPos(), unitlist)
 
-    if (!map.doRoute(null, targetUnit.getPos())) {
+    if (!map.doRoute(null, targetUnit.getPos(), true)) {
 
       var confirm = {name:'确定', callback:function() {
 
@@ -277,28 +354,49 @@ function checkNeedUpdateNaivtarget(unitlist) {
   }
 }
 
+function getUnits(emptyspaces) {
+
+  var emptyUnits = []
+
+  for (var i = 0; i < emptyspaces.length; ++i) {
+
+    var unit = new indoorun.idrUnit(emptyspaces[i])
+
+    emptyUnits.push(unit)
+  }
+
+  return emptyUnits
+}
+
 function doFindEmptySpace() {
 
   var data = {regionId:map.getRegionId(), floorId:map.getFloorId()}
 
-  var url = indoorun.idrNetworkInstance.host + 'chene/getSpaceUnitListOfFloor.html'
+  var url = indoorun.idrNetworkInstance.host + 'chene/getSpaceUnitListOfRegion.html'
 
   indoorun.idrNetworkInstance.doAjax(url, data, function(res) {
 
     emptyUnits.length = 0
 
-    var spaceUnitList = res.data
+    for (var i = 0; i < res.data.length; ++i) {
 
-    for (var i = 0; i < spaceUnitList.length; ++i) {
+      var units = getUnits(res.data[i].spaceUnitList)
 
-      var unit = new indoorun.idrUnit(spaceUnitList[i])
+      if (map.getFloorId() === res.data[i].floorId) {
 
-      emptyUnits.push(unit)
+        map.updateUnitsColor(units, 0x8aef99)
+      }
+
+      if (map.getUserPos() && map.getUserPos().floorId == res.data[i].floorId) {
+
+        checkNeedUpdateNaivtarget(units)
+      }
+
+      units.forEach(unit => {
+
+        emptyUnits.push(unit)
+      })
     }
-
-    map.updateUnitsColor(emptyUnits, 0x8aef99)
-
-    checkNeedUpdateNaivtarget(emptyUnits)
 
   }, function(res) {
 
@@ -381,7 +479,7 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
   askSpaceUnitWhenChangeFloor()
 
-  floorListView.setCurrentFloor(data.floorId)
+  floorListView.currentFloorId = data.floorId
 
   if (!getSaveUnit) {
 
@@ -409,6 +507,15 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
       map.setCurrPos(pos)
 
+      if (pos) {
+
+        floorListView.locateFloorId = pos.floorId
+      }
+      else {
+
+        floorListView.locateFloorId = null
+      }
+
       if (!startLocate) {
 
         map.centerPos(pos, false)
@@ -417,6 +524,8 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
       indoorun.idrDebug.debugInfo('定位成功')
 
     }, function(errorId) {
+
+      floorListView.locateFloorId = null
 
       if (errorId === 0) {
 
@@ -555,6 +664,8 @@ map.addEventListener(map.eventTypes.onRouterSuccess, function(data) {
   showBottomBar(false)
 
   showNavigateBottombar(true, data.path, checkExit)
+
+  map.changeFloor(data.start.floorId)
 
   map.birdLook()
 })
@@ -817,7 +928,7 @@ function deleteMarker() {
 
   endMarker = null
 
-  indoorun.idrNetworkInstance.removeMarkedUnit(null, null)
+  indoorun.idrNetworkInstance.removeMarkedUnit(regionId, null, null)
 }
 
 function sharePosition() {

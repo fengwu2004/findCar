@@ -19,10 +19,10 @@
       <emptyspace v-if="show" v-on:onclick="onFindEmptySpace" v-bind:dofind="doFind"></emptyspace>
     </div>
     <div id="locateState">
-      <locatestatediv v-bind:dolocate="dolocate" v-on:onclick="doLocating"></locatestatediv>
+      <locatestatediv v-if="show" v-bind:dolocate="dolocate" v-on:onclick="doLocating"></locatestatediv>
     </div>
     <div id="floorList">
-      <floorlistdiv v-bind:floorlist="floorList" v-bind:selectfloorid="currentFloorId" v-on:onselect="onSelect"></floorlistdiv>
+      <floorlistdiv v-if="show" v-bind:floorlist="floorList" v-bind:selectfloorid="currentFloorId" v-bind:locatefloorid="locateFloorId" v-on:onselect="onSelect"></floorlistdiv>
     </div>
     <div id="findCar">
       <findwithnum v-bind:showerror="showerrorincarno" v-show="type === findbynum" v-bind:map="map" v-on:onclose="onClose" v-on:findbycarno="onFindByCarNo"></findwithnum>
@@ -41,7 +41,7 @@
       <findfacilityview v-bind:facilities="facilitys" v-on:onnavigateto="onNavigateTo"></findfacilityview>
     </div>
     <div id="navigate">
-      <navigatebottombar v-bind:routers="routerpos" v-on:onexit="onStopNavigate" v-on:showfloor="onShowSelectFloor"></navigatebottombar>
+      <navigatebottombar v-if="show" v-bind:routers="routerpos" v-on:onexit="onStopNavigate" v-on:showfloor="onShowSelectFloor"></navigatebottombar>
     </div>
     <div id="alertbox">
       <alertbox v-bind:title="title" v-bind:message="message" v-bind:buttons="buttons"></alertbox>

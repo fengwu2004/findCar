@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="currentName" v-on:click="onShow()">{{ name() }}</div>
+    <div class="currentName" v-on:click="onShow()">{{ name() }}<span v-show="checkShow(selectfloorid)" class="lc_dot">●</span></div>
     <div v-bind:class="dropDownStyle">
-      <div v-for="floor in floorList" v-bind:key="floor.id" v-bind:class="getFloorStyle(floor.id)" v-on:click="onSelect(floor.id)">{{ floor.name }}</div>
+      <div v-for="floor in floorList" v-bind:key="floor.id" v-bind:class="getFloorStyle(floor.id)" v-on:click="onSelect(floor.id)">{{ floor.name }}<span v-show="checkShow(floor.id)" class="lc_dot">●</span></div>
     </div>
   </div>
 </template>
@@ -68,7 +68,7 @@
 
   export default {
     name :'floorlistdiv',
-    props: ['floorlist', 'selectfloorid'],
+    props: ['floorlist', 'selectfloorid', 'locatefloorid'],
     data:function() {
       return {
         floorList:this.floorlist,
@@ -84,7 +84,11 @@
       onShow:onShow,
       onSelect:onSelect,
       getFloorStyle:getFloorStyle,
-      name:getCurrentName
+      name:getCurrentName,
+      checkShow:function (floorId) {
+
+        return this.locatefloorid == floorId
+      }
     }
   }
 
@@ -105,31 +109,46 @@
   }
 
   .currentName {
-    background: url("../assets/lou-01.png") no-repeat;
-    background-size: 2.3rem;
-    color: #fff;
+    background: url("../assets/楼层切换1.png") no-repeat;
+    background-size: 2.5rem;
+    color: #030303;
     text-align: center;
-    width: 2.3rem;
-    height: 2.3rem;
-    line-height: 2.3rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
     text-align: center;
+    font-size: 0.9rem;
+  }
+
+  .lc_dot{
+    color: red;
+    font-size: 8px;
+    position: absolute;
+    right: 2px;
   }
 
   .dropdown {
-    width: 100%;
-    height: 2.3rem;
-    line-height: 2.3rem;
+
+    background: url("../assets/楼层切换3.png") no-repeat;
+    background-size: 2.5rem;
+    color: white;
     text-align: center;
-    padding: 3px 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    margin: 5px 0;
+    text-align: center;
+    font-size: 0.9rem;
   }
 
   .selected{
-    background: url("../assets/lcbg.png") no-repeat center;
-    -webkit-background-size: contain;
-    background-size: contain;
+    background: url("../assets/楼层切换2.png") no-repeat;
+    background-size: 2.5rem;
     color: #fff;
     line-height: 2.5rem;
     text-align: center;
+    color: white;
+    font-size: 0.9rem;
   }
 
 </style>

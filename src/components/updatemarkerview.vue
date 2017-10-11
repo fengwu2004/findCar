@@ -21,15 +21,15 @@
     methods: {
       onDelete:function() {
 
-        this.$emit('ondelete', '')
+        this.$emit('ondelete')
       },
       onChangePos:function() {
 
-        this.$emit('onchangepos', '')
+        this.$emit('onchangepos')
       },
       onShare:function() {
 
-        this.$emit('onshare', '')
+        this.$emit('onshare')
       },
     }
   }
@@ -39,7 +39,7 @@
 <style scoped>
 
   .pointRev{
-    width: 120px;
+    width: 130px;
     height:90px;
     position: absolute;
     z-index: 30;

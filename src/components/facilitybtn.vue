@@ -23,12 +23,12 @@
   div {
     flex:1;
     -webkit-flex: 1;
-    min-width: 33%;
-    max-width: 33%;
+    min-width: 25%;
+    max-width: 25%;
   }
 
   img {
-    width: 50%;
+    width: 70%;
     left: 0;
     right: 0;
     max-width: 50px;
@@ -39,7 +39,7 @@
     font-size: 0.6rem;
     text-align: center;
     padding: 5px 0;
-    margin: 0;
+    margin: 0 0 10px 0;
   }
 
 </style>
