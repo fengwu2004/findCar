@@ -46,7 +46,7 @@
   }
 
   .bg {
-    background-color: #9D9D9D;
+    background-color: black;
     left: 0;
     top: 0;
     right: 0;
@@ -54,7 +54,7 @@
     position: absolute;
     margin: 0;
     opacity: 0.4;
-    z-index: 2;
+    z-index: 1000;
   }
   .content {
     border-radius: 5px;
@@ -65,7 +65,7 @@
     left: 0;
     right: 0;
     margin: auto;
-    z-index: 100;
+    z-index: 1001;
   }
 
   .closeBtn {

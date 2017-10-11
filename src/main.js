@@ -4,7 +4,6 @@ import Vue from 'vue'
 import indoorun from '../../indoorunMap/map.js'
 import FindCarView from './findcarview'
 import FLoorListView from './floorlistview'
-import EmptySpaceView from './emptyspaceview'
 import LocateStatusView from './locatestatusview'
 import FindFacilityBtnView from './findfacilityview'
 import FindFacilityView from './findfacility'
@@ -12,10 +11,12 @@ import NormalBottomBar from './normalbottombar'
 import NavigateBottomBar from './navigateBottomBar'
 import AlertBox from './AlertBox'
 import BottomBar from './bottombar'
-import MarkWithBleView from './markwithble'
 import UpdateMarkerView from './updatemarkerview'
 import ErrorTipView from './errortipview'
 import ZoomView from './zoomview'
+
+import markwithble from './components/markwithble.vue'
+import emptyspace from './components/emptyspace.vue'
 
 var config = require('../config')
 
@@ -41,8 +42,6 @@ var navigateBottomBar = null
 
 var normalBottomBar = null
 
-var markWithBleView = null
-
 var updateMarkerView = null
 
 var emptySpaceTimer = null
@@ -58,6 +57,8 @@ var errortipview = new ErrorTipView()
 var alertboxview = null
 
 var zoomView = null
+
+var endMarker = null
 
 indoorun.idrDebug.showDebugInfo(true)
 
@@ -75,21 +76,19 @@ function onSavePackingUnit(unit) {
     svgY: pos.y
   }
 
-  indoorun.idrNetworkInstance.doAjax(url, {sName:data}, function() {
+  indoorun.idrNetworkInstance.saveMarkedUnit(unit, () => {
 
     console.log('保存成功')
-
-  }, function() {
-
-    console.log('保存失败')
   })
 }
 
 function enableClickMarker() {
 
-  map.addEventListener(map.eventTypes.onMarkerClick, function(marker) {
+  map.addOnceEvent(map.eventTypes.onMarkerClick, marker => {
 
     if (marker.id != endMarker.id) {
+
+      enableClickMarker()
 
       return
     }
@@ -98,15 +97,14 @@ function enableClickMarker() {
 
     showUpdateMarkerView(true, marker)
 
-    map.addEventListener(map.eventTypes.onMapScroll, function() {
+    map.addOnceEvent(map.eventTypes.onMapScroll, () => {
 
       showUpdateMarkerView(false, null)
-
-      map.removeEventListener(map.eventTypes.onMapScroll)
     })
   })
 }
 
+var markWithBleView = null
 function showMarkWithBle(unit) {
 
   if (endMarker) {
@@ -116,19 +114,50 @@ function showMarkWithBle(unit) {
     return
   }
 
-  if (!markWithBleView) {
+  var name = map.regionEx.getFloorbyId(unit.floorId).name + '  ' + unit.name
 
-    markWithBleView = new MarkWithBleView(map, unit, function(parkingUnit) {
+  if (markWithBleView) {
 
-      onSavePackingUnit(parkingUnit)
+    markWithBleView.name = name
 
-      endMarker = addCarMarker(parkingUnit.getPos())
+    markWithBleView.show = true
 
-      enableClickMarker()
-    })
+    markWithBleView.unit = unit
+
+    return
   }
 
-  markWithBleView.show(true)
+  markWithBleView = new Vue({
+    el:'#markwithble',
+    data:function () {
+      return {
+        show:true,
+        unit:unit,
+        name:name
+      }
+    },
+    components: { markwithble },
+    methods: {
+      onConfirm:function() {
+
+        this.show = false
+
+        var pos = this.unit.getPos()
+
+        onSavePackingUnit(this.unit)
+
+        endMarker = addCarMarker(pos)
+
+        map.centerPos(pos)
+
+        enableClickMarker()
+      },
+      onClose:function() {
+
+        this.show = false
+      }
+    }
+  })
 }
 
 var findEmptySpaceInfo = {
@@ -230,7 +259,17 @@ function checkNeedUpdateNaivtarget(unitlist) {
 
     targetUnit = map.findNearUnit(map.getUserPos(), unitlist)
 
-    map.doRoute(map.getUserPos(), targetUnit.getPos())
+    if (!map.doRoute(null, targetUnit.getPos())) {
+
+      var confirm = {name:'确定', callback:function() {
+
+        alertboxview.hide()
+      }}
+
+      showAlertBox(null, '您附近有空位', [confirm])
+
+      return
+    }
 
     endMarker && map.removeMarker(endMarker)
 
@@ -269,44 +308,78 @@ function doFindEmptySpace() {
 
 function showEmptySpaceView(bshow) {
 
-  if (!emptySpaceView && bshow) {
+  if (!bshow) {
 
-    emptySpaceView = new EmptySpaceView(function(finding) {
+    if (emptySpaceView) {
 
-      if (finding) {
+      emptySpaceView.show = false
+    }
 
-        doFindEmptySpace()
+    return
+  }
 
-        emptySpaceTimer = setInterval(doFindEmptySpace, 10000)
+  if (emptySpaceView) {
 
-        emptySpaceView.doFinding(true)
-      }
-      else {
+    emptySpaceView.show = true
+  }
+  else {
 
-        clearInterval(emptySpaceTimer)
+    emptySpaceView = new Vue({
+      el:'#emptyspace',
+      components: { emptyspace },
+      methods: {
+        onFindEmptySpace:function() {
 
-        emptySpaceTimer = null
+          this.doFind = !this.doFind
 
-        emptySpaceView.doFinding(false)
+          if (this.doFind) {
 
-        map.clearFloorUnitsColor(true)
+            doFindEmptySpace()
 
-        emptyUnits.length = 0
+            emptySpaceTimer = setInterval(doFindEmptySpace, 10000)
+          }
+          else {
+
+            clearInterval(emptySpaceTimer)
+
+            emptySpaceTimer = null
+
+            map.clearFloorUnitsColor(true)
+
+            emptyUnits.length = 0
+          }
+        }
+      },
+      data: function() {
+        return {
+          doFind:false,
+          show:true
+        }
       }
     })
   }
-
-  emptySpaceView && emptySpaceView.show(bshow)
 }
 
 var gmtime = new Date().getTime()
 
 map.initMap('yf1248331604', 'map', regionId)
 
+function askSpaceUnitWhenChangeFloor() {
+
+  if (!emptySpaceView || !emptySpaceView.show || !emptySpaceView.doFind) {
+
+    return
+  }
+
+  doFindEmptySpace()
+}
+
 var getSaveUnit = false
 
 var startLocate = false
 map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
+
+  askSpaceUnitWhenChangeFloor()
 
   floorListView.setCurrentFloor(data.floorId)
 
@@ -335,6 +408,11 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
     map.doLocation(function(pos) {
 
       map.setCurrPos(pos)
+
+      if (!startLocate) {
+
+        map.centerPos(pos, false)
+      }
 
       indoorun.idrDebug.debugInfo('定位成功')
 
@@ -401,8 +479,6 @@ function checkExit() {
   showAlertBox('是否结束本次导航', null, [cancel, confirm])
 }
 
-var endMarker = null
-
 map.addEventListener(map.eventTypes.onRouterFinish, function() {
 
   showNavigateBottombar(false, null, null)
@@ -413,6 +489,8 @@ map.addEventListener(map.eventTypes.onRouterFinish, function() {
 
   endMarker = null
 
+  targetUnit = null
+
   if (startEmptyNavi) {
 
     startEmptyNavi = false
@@ -421,7 +499,7 @@ map.addEventListener(map.eventTypes.onRouterFinish, function() {
 
     emptySpaceTimer = null
 
-    emptySpaceView.doFinding(false)
+    emptySpaceView.doFind = false
 
     map.clearFloorUnitsColor(true)
 
@@ -515,7 +593,7 @@ function onFindTargetUnits(units) {
 
   if (units.length == 1) {
 
-    map.doRoute(map.getUserPos(), units[0].getPos())
+    map.doRoute(null, units[0].getPos())
 
     return
   }
@@ -537,7 +615,7 @@ function onFindTargetUnits(units) {
     tempMarkers.push(marker)
   }
 
-  map.addEventListener('onMarkerClick', function(marker) {
+  map.addOnceEvent(indoorun.idrMapEvent.onMarkerClick, function(marker) {
 
     var pos = marker.position
 
@@ -548,9 +626,7 @@ function onFindTargetUnits(units) {
 
     tempMarkers.length = 0
 
-    map.doRoute(map.getUserPos(), pos)
-
-    map.removeEventListener('onMarkerClick')
+    map.doRoute(null, pos)
   })
 }
 
@@ -562,17 +638,15 @@ function onMarkUnitInMap() {
 
   showNormalBottomBar(false)
 
-  showBottomBar(true, '长按车位进行选择')
+  showBottomBar(true, '点击车位进行选择')
 
-  map.addEventListener(map.eventTypes.onMapLongPress, function(pos) {
+  map.addOnceEvent(map.eventTypes.onUnitClick, function (unit) {
 
-    var unit = map.getNearUnit(pos)
+    var pos = unit.getPos()
 
     indoorun.idrNetworkInstance.saveMarkedUnit(unit, map.getRegionId(), null, null)
 
-    map.doRoute(map.getUserPos(), pos)
-
-    map.removeEventListener(map.eventTypes.onMapLongPress)
+    map.doRoute(null, pos)
 
     showBottomBar(false, '')
   })
@@ -589,7 +663,11 @@ function onFindCar() {
 
   if (endMarker) {
 
-    map.doRoute(map.getUserPos(), endMarker.position)
+    map.removeMarker(endMarker)
+
+    endMarker = addEndMarker(endMarker.position)
+
+    map.doRoute(null, endMarker.position)
   }
   else {
 
@@ -615,7 +693,7 @@ function onFindByCarNo(carNo) {
 
     var unit = new indoorun.idrUnit(data.parkingUnit)
 
-    self.map.doRoute(self.map.getUserPos(), unit.getPos())
+    map.doRoute(null, unit.getPos())
 
   }, function() {
 
@@ -658,7 +736,7 @@ function navigateToEmptySpace() {
 
     emptySpaceTimer = setInterval(doFindEmptySpace, 10000)
 
-    emptySpaceView.doFinding(true)
+    emptySpaceView.doFind = true
   }
 }
 
@@ -723,21 +801,17 @@ function updateMarkerPos() {
 
   showNormalBottomBar(false)
 
-  map.addEventListener(map.eventTypes.onUnitClick, function(unit) {
+  map.addOnceEvent(map.eventTypes.onUnitClick, function(unit) {
 
     endMarker = map.updateMarkerLocation(endMarker, unit.getPos())
 
     showBottomBar(false, '')
 
     showNormalBottomBar(true)
-
-    map.removeEventListener(map.eventTypes.onUnitClick)
   })
 }
 
 function deleteMarker() {
-
-  map.removeEventListener(map.eventTypes.onMarkerClick)
 
   map.removeMarker(endMarker)
 

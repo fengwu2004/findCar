@@ -52,9 +52,9 @@
     top:0;
     bottom:0;
     margin: 0;
-    background-color: #9D9D9D;
+    background-color: black;
     opacity: 0.4;
-    z-index: 2;
+    z-index: 1000;
   }
 
   .content {
@@ -66,7 +66,7 @@
     width: 80%;
     top: 20%;
     margin:auto;
-    z-index: 2;
+    z-index: 1001;
   }
 
   .title {

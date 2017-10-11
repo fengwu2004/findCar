@@ -16,7 +16,7 @@
   <body id="body">
     <div id="map" class="page"></div>
     <div id="emptyspace">
-      <emptyspace v-on:onclick="onFindEmptySpace" v-bind:dofind="doFind"></emptyspace>
+      <emptyspace v-if="show" v-on:onclick="onFindEmptySpace" v-bind:dofind="doFind"></emptyspace>
     </div>
     <div id="locateState">
       <locatestatediv v-bind:dolocate="dolocate" v-on:onclick="doLocating"></locatestatediv>
@@ -29,7 +29,7 @@
       <findwithunit v-show="type === findbyunit" v-on:onfindunits="onFindUnits" v-bind:map="map" v-on:onclose="onClose" v-on:onmarkinmap="onMarkInMap"></findwithunit>
     </div>
     <div id="markwithble">
-      <markwithble v-bind:name="name" v-on:confirm="onConfirm" v-on:close="onClose"></markwithble>
+      <markwithble v-show="show" v-bind:name="name" v-on:confirm="onConfirm" v-on:close="onClose"></markwithble>
     </div>
     <div id="footer">
       <normalbottombar v-for="item in btnInfos" v-bind:data="item" v-bind:key="item.type"></normalbottombar>
@@ -50,7 +50,7 @@
      <bottombar v-bind:message="message"></bottombar>
     </div>
     <div id="updatemaker">
-      <updatemarkerview v-bind:x="x" v-bind:y="y" v-on:ondelete="deleteMarker" v-on:onchangepos="changeMarkerPos" v-on:onshare="share"></updatemarkerview>
+      <updatemarkerview v-if="show" v-bind:x="x" v-bind:y="y" v-on:ondelete="deleteMarker" v-on:onchangepos="changeMarkerPos" v-on:onshare="share"></updatemarkerview>
     </div>
     <div id="errortip">
       <errortipview v-bind:message="message" v-bind:opacity="display"></errortipview>
