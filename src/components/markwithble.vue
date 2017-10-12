@@ -71,21 +71,20 @@
   .closeBtn {
 
     position: absolute;
-    right:0px;
-    top:0px;
-    width: 3rem;
-    height: 3rem;
-    background-size: 0.8rem;
-    background: transparent no-repeat center url("../assets/close1.png");
+    right:20px;
+    top:20px;
+    width: 10px;
+    height: 10px;
+    background: url("../assets/close1.png") no-repeat center /1rem 1rem;
   }
 
   .tag {
 
     display: block;
     left: 0;right: 0;
-    margin: -4.5rem auto;
-    width:9rem;
-    height:9rem;
+    margin: -3.5rem auto;
+    width:7rem;
+    height:7rem;
   }
 
   .title {
@@ -94,7 +93,7 @@
     font-size: 1.4rem;
     font-weight: 400;
     margin: 0;
-    padding: 5rem 0 10px 0;
+    padding: 3.5rem 0 10px 0;
   }
 
   .tip {
@@ -115,7 +114,7 @@
     background-color: #0086ff;
     color: white;
     text-align: center;
-    margin:10px auto;
+    margin:30px auto;
     line-height: 2rem;
     border-radius: 3px;
     border: 2px solid #0086ff;

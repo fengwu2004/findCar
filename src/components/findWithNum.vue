@@ -68,9 +68,9 @@
     top:0;
     bottom:0;
     margin: 0;
-    background-color: #9D9D9D;
+    background-color: black;
     opacity: 0.4;
-    z-index: 2;
+    z-index: 1000;
   }
 
   .content {
@@ -82,27 +82,26 @@
     left: 0;
     right: 0;
     margin: auto;
-    z-index: 100;
+    z-index: 1001;
   }
 
   .closeBtn {
 
     position: absolute;
-    right:1px;
-    top:1px;
-    width: 3rem;
-    height: 3rem;
-    background-size: 1rem;
-    background: no-repeat center url("../assets/close1.png");
+    right:20px;
+    top:20px;
+    width: 10px;
+    height: 10px;
+    background: url("../assets/close1.png") no-repeat center /1rem 1rem;
   }
 
   .tag {
     display: block;
     left: 0;
     right: 0;
-    margin: -4.5rem auto;
-    width: 9rem;
-    height: 9rem;
+    margin: -3.5rem auto;
+    width: 7rem;
+    height: 7rem;
   }
 
   .title {
@@ -110,7 +109,7 @@
     font-size: 1.4rem;
     font-weight: 400;
     margin: 0;
-    padding: 5rem 0 10px 0;
+    padding: 3.5rem 0 10px 0;
   }
 
   .tip {

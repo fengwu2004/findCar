@@ -41,7 +41,7 @@
       <findfacilityview v-bind:facilities="facilitys" v-on:onnavigateto="onNavigateTo"></findfacilityview>
     </div>
     <div id="navigate">
-      <navigatebottombar v-if="show" v-bind:routers="routerpos" v-on:onexit="onStopNavigate" v-on:showfloor="onShowSelectFloor"></navigatebottombar>
+      <navigatebottombar v-if="show" v-bind:routers="routerpos" v-bind:initfloorid="initFloorId" v-on:onexit="onStopNavigate" v-on:showfloor="onShowSelectFloor"></navigatebottombar>
     </div>
     <div id="alertbox">
       <alertbox v-bind:title="title" v-bind:message="message" v-bind:buttons="buttons"></alertbox>
@@ -58,6 +58,6 @@
     <div id="zoom">
       <zoom v-bind:map="map"></zoom>
     </div>
-    <label id="debug">这是调试信息</label>
+    <label id="debug"></label>
   </body>
 </html>

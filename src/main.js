@@ -7,7 +7,6 @@ import FindCarView from './findcarview'
 import FindFacilityBtnView from './findfacilityview'
 import FindFacilityView from './findfacility'
 import NormalBottomBar from './normalbottombar'
-import NavigateBottomBar from './navigateBottomBar'
 import AlertBox from './AlertBox'
 import BottomBar from './bottombar'
 import UpdateMarkerView from './updatemarkerview'
@@ -18,6 +17,7 @@ import floorlistdiv from './components/floorList.vue'
 import markwithble from './components/markwithble.vue'
 import emptyspace from './components/emptyspace.vue'
 import locatestatediv from './components/locatestatus.vue'
+import navigatebottombar from './components/navigateBottombar.vue'
 
 var config = require('../config')
 
@@ -61,35 +61,15 @@ var zoomView = null
 
 var endMarker = null
 
-indoorun.idrDebug.showDebugInfo(true)
-
-function onSavePackingUnit(unit) {
-
-  var pos = unit.getPos()
-
-  var url = '/saveCheLocation.html'
-
-  var data = {
-    unitId: unit.id,
-    floorId: unit.floorId,
-    regionId: map.getRegionId(),
-    svgX: pos.x,
-    svgY: pos.y
-  }
-
-  indoorun.idrNetworkInstance.saveMarkedUnit(unit, () => {
-
-    console.log('保存成功')
-  })
-}
+indoorun.idrDebug.showDebugInfo(false)
 
 function enableClickMarker() {
 
-  map.addEventListener(map.eventTypes.onMarkerClick, marker => {
+  map.addOnceEvent(map.eventTypes.onMarkerClick, marker => {
 
     if (marker.id != endMarker.id || endMarker.className !== 'IDRCarMarker') {
 
-      return
+      return false
     }
 
     map.centerPos(marker.position, false)
@@ -99,7 +79,11 @@ function enableClickMarker() {
     map.addOnceEvent(map.eventTypes.onMapScroll, () => {
 
       showUpdateMarkerView(false, null)
+
+      return true
     })
+
+    return true
   })
 }
 
@@ -112,6 +96,19 @@ map.addEventListener(map.eventTypes.onMapScroll, () => {
 
   locateStatusView.dolocate = false
 })
+
+function addCarMarker(unit) {
+
+  var pos = unit.getPos()
+
+  indoorun.idrNetworkInstance.saveMarkedUnit(unit, null, null)
+
+  endMarker = doAddCarMarker(pos)
+
+  map.centerPos(pos)
+
+  enableClickMarker()
+}
 
 var markWithBleView = null
 function showMarkWithBle(unit) {
@@ -151,15 +148,7 @@ function showMarkWithBle(unit) {
 
         this.show = false
 
-        var pos = this.unit.getPos()
-
-        onSavePackingUnit(this.unit)
-
-        endMarker = addCarMarker(pos)
-
-        map.centerPos(pos)
-
-        enableClickMarker()
+        addCarMarker(this.unit)
       },
       onClose:function() {
 
@@ -204,14 +193,83 @@ function showNormalBottomBar(bshow) {
   normalBottomBar && normalBottomBar.show(bshow)
 }
 
-function showNavigateBottombar(bshow, path, cb) {
+function getRouters(path) {
 
-  if (!navigateBottomBar && bshow) {
+  var results = []
 
-    navigateBottomBar = new NavigateBottomBar(map)
+  if (!path) {
+
+    return results
   }
 
-  navigateBottomBar && navigateBottomBar.show(bshow, path, cb)
+  for (var i = 0; i < path.paths.length; ++i) {
+
+    var floorPath = path.paths[i]
+
+    var name = map.regionEx.getFloorbyId(floorPath.floorId).name
+
+    results.push({id:floorPath.floorId, name:name})
+  }
+
+  return results
+}
+
+function showNavigateBottombar(bshow, path, cb) {
+
+  if (!bshow) {
+
+    if (navigateBottomBar) {
+
+      navigateBottomBar.show = false
+    }
+
+    return
+  }
+
+  var routers = getRouters(path)
+
+  if (routers.length <= 0) {
+
+    return
+  }
+
+  if (navigateBottomBar) {
+
+    navigateBottomBar.show = bshow
+
+    navigateBottomBar.routerpos = routers
+
+    navigateBottomBar.callback = cb
+
+    navigateBottomBar.initFloorId = routers[0].id
+
+    return
+  }
+
+  navigateBottomBar = new Vue({
+    el:'#navigate',
+    components:{ navigatebottombar },
+    data: function() {
+      return {
+        routerpos:routers,
+        callback:cb,
+        initFloorId:routers[0].id,
+        show:true
+      }
+    },
+    methods: {
+      onStopNavigate:function() {
+
+        this.callback && this.callback()
+      },
+      onShowSelectFloor:function(value) {
+
+        map.changeFloor(value)
+
+        map.birdLook()
+      }
+    }
+  })
 }
 
 function showFindFacilityBtnView(bshow, cb) {
@@ -485,19 +543,19 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
     indoorun.idrNetworkInstance.getMarkedUnit(map.getRegionId(), function(res) {
 
-      if (res.code === 'success') {
+      endMarker = doAddCarMarker({x:res.data.svgX, y:res.data.svgY, floorId:res.data.floorId})
 
-        endMarker = addCarMarker({x:res.data.svgX, y:res.data.svgY, floorId:res.data.floorId})
+      enableClickMarker()
 
-        enableClickMarker()
-      }
+    }, () => {
 
-    }, null)
+      showFindCarView()
+    })
 
     getSaveUnit = true
   }
 
-  indoorun.idrDebug.showDebugInfo(true)
+  indoorun.idrDebug.showDebugInfo(false)
 
   indoorun.idrDebug.debugInfo('加载时间:' + (new Date().getTime() - gmtime).toString())
 
@@ -555,19 +613,14 @@ map.addEventListener(map.eventTypes.onNaviStatusUpdate, function(status) {
 
   if (status.goalDist < 150) {
 
-    var cancel = {name:'取消', callback:function() {
-
-      alertboxview.hide()
-    }}
-
-    var confirm = {name:'确定', callback:function() {
+    var confirm = {name:'知道了', callback:function() {
 
       alertboxview.hide()
 
       map.stopRoute()
     }}
 
-    showAlertBox('您已到达目的地', '是否结束本次导航', [cancel, confirm])
+    showAlertBox('您已到达目的地', null, [confirm])
   }
 })
 
@@ -616,7 +669,7 @@ map.addEventListener(map.eventTypes.onRouterFinish, function() {
   }
 })
 
-function addCarMarker(pos) {
+function doAddCarMarker(pos) {
 
   var IDRCarMarker = indoorun.idrMapMarker.IDRCarMarker
 
@@ -639,8 +692,6 @@ function addEndMarker(pos) {
 }
 
 function showSomeUIInNavi(bshow) {
-
-  showFloorListView(bshow)
 
   showEmptySpaceView(bshow)
 
@@ -702,43 +753,16 @@ function onFindTargetUnits(units) {
 
   tempMarkers.length = 0
 
-  if (units.length == 1) {
-
-    map.doRoute(null, units[0].getPos())
+  if (units.length == 0) {
 
     return
   }
 
-  showEmptySpaceView(false)
+  var pos = units[0].getPos()
 
-  showFindFacilityBtnView(false)
+  addCarMarker(units[0])
 
-  showNormalBottomBar(false)
-
-  for (var i = 0; i < units.length; ++i) {
-
-    var IDRMapMarker = indoorun.idrMapMarker.IDRMapMarker
-
-    var marker = new IDRMapMarker(units[i].getPos(), config.publicPath + '/static/markericon/temppoint.png')
-
-    map.addMarker(marker)
-
-    tempMarkers.push(marker)
-  }
-
-  map.addOnceEvent(indoorun.idrMapEvent.onMarkerClick, function(marker) {
-
-    var pos = marker.position
-
-    for (var i = 0; i < tempMarkers.length; ++i) {
-
-      map.removeMarker(tempMarkers[i])
-    }
-
-    tempMarkers.length = 0
-
-    map.doRoute(null, pos)
-  })
+  map.doRoute(null, pos)
 }
 
 function onMarkUnitInMap() {
@@ -755,34 +779,38 @@ function onMarkUnitInMap() {
 
     var pos = unit.getPos()
 
-    indoorun.idrNetworkInstance.saveMarkedUnit(unit, map.getRegionId(), null, null)
+    addCarMarker(unit)
+
+    showBottomBar(false, '')
 
     map.doRoute(null, pos)
 
-    showBottomBar(false, '')
+    showEmptySpaceView(true)
+
+    showNormalBottomBar(true)
+
+    return true
   })
 }
 
 function onFindCar() {
 
-  if (map.getUserPos() == null) {
+  if (!endMarker) {
 
-    errortipview.show('定位失败，无法找车')
+    showFindCarView()
 
     return
   }
 
-  if (endMarker) {
+  if (map.doRoute(null, endMarker.position)) {
 
     map.removeMarker(endMarker)
 
     endMarker = addEndMarker(endMarker.position)
-
-    map.doRoute(null, endMarker.position)
   }
   else {
 
-    showFindCarView()
+    errortipview.show('定位失败，无法寻车')
   }
 }
 
@@ -803,6 +831,8 @@ function onFindByCarNo(carNo) {
     var data = res.data
 
     var unit = new indoorun.idrUnit(data.parkingUnit)
+
+    addCarMarker(unit)
 
     map.doRoute(null, unit.getPos())
 
@@ -841,9 +871,9 @@ function navigateToEmptySpace() {
 
   startEmptyNavi = true
 
-  if (!emptySpaceTimer) {
+  doFindEmptySpace()
 
-    doFindEmptySpace()
+  if (!emptySpaceTimer) {
 
     emptySpaceTimer = setInterval(doFindEmptySpace, 10000)
 
@@ -919,6 +949,8 @@ function updateMarkerPos() {
     showBottomBar(false, '')
 
     showNormalBottomBar(true)
+
+    return true
   })
 }
 
