@@ -2,17 +2,21 @@
   <div class="main">
     <div class="bg" v-on:click="onClose"></div>
     <div class="content">
-      <div class="closeBtn" v-on:click="onClose()"></div>
+      <div class="closeBtn" v-on:click="onClose"></div>
       <img class="tag" src="../assets/car.png">
       <p class="title">车牌找车</p>
       <p class="tip">请输入您的车牌号</p>
       <div class="inputandresults">
         <input placeholder="例：粤B NB001" v-model="carnumber" v-on:focus="onFocuse"/>
+        <div v-for="(car, index) in carlist" v-bind:key="car.carNo" class="droplist" v-on:click="onSelect(car)">
+          <label class="carNo">{{ car.carNo }}</label>
+          <label class="placeCode">{{ car.placeCode }}</label>
+        </div>
       </div>
       <p v-bind:class="getErrorShow">该车辆不在此停车场，请确认车牌号!</p>
-      <div class="confirmBtn" v-on:click="onConfirm()">确定</div>
+      <div class="confirmBtn" v-on:click="onConfirm">确定</div>
       <h5><span>  or  </span></h5>
-      <div class="cancelBtn" v-on:click="onCancel()">输入车位号找车</div>
+      <div class="cancelBtn" v-on:click="onCancel">输入车位号找车</div>
       <br>
     </div>
   </div>
@@ -20,21 +24,9 @@
 
 <script>
 
-  function onClose() {
-
-    this.$emit('onclose', '0')
-  }
-
-  function onFindbyUnit() {
-
-    this.onClose()
-
-    this.$emit('onclose', 1)
-  }
-
   export default {
     name:'findwithnum',
-    props:['map', 'showerror', 'placeinfos'],
+    props:['error', 'placeinfos', 'carlist'],
     data: function () {
       return {
         carnumber:"",
@@ -42,14 +34,28 @@
       }
     },
     methods: {
-      onClose:onClose,
+      onClose:function () {
+
+        this.$emit('close')
+      },
       onConfirm:function() {
 
         this.onfocuse = false
-        this.$emit('findbycarno', this.carnumber)
+
+        this.$emit('confirm', this.carnumber)
       },
-      onCancel:onFindbyUnit,
+      onSelect:function (car) {
+
+        console.log('selectcar')
+
+        this.$emit('selectcar', car)
+      },
+      onCancel:function () {
+
+        this.$emit('changetosearchunit')
+      },
       onFocuse:function () {
+
         this.onfocuse = true
       }
     },
@@ -61,7 +67,7 @@
           return 'errorTipHide'
         }
 
-        if (this.showerror) {
+        if (this.error) {
 
           return 'errorTip'
         }
@@ -160,7 +166,7 @@
   }
 
   .confirmBtn {
-    width: 84%;
+    width: 82%;
     background-color: #0086ff;
     color: white;
     text-align: center;
@@ -172,7 +178,7 @@
   }
 
   .cancelBtn {
-    width: 84%;
+    width: 82%;
     background-color: white;
     color: #0086ff;
     text-align: center;
@@ -189,6 +195,9 @@
     height: 2rem;
     padding: 1px 0px;
     margin: 10px auto 5px;
+    overflow-y: visible;
+    z-index: 1003;
+    position: relative;
   }
 
   input {
@@ -197,7 +206,7 @@
     width: 100%;
     margin: 0;
     line-height: 2rem;
-    border-radius: 3px;
+    /*border-radius: 3px;*/
     font-size: 1rem;
     padding: 1px 0px;
     font-weight: 100;
@@ -224,6 +233,31 @@
     line-height: 0.5rem;
     border-top:1px solid lightgray;
     width: 45%;
+  }
+
+  .droplist {
+
+    background-color: white;
+    border-bottom: 1px solid #9D9D9D;
+    border-right: 1px solid #9D9D9D;
+    border-left: 1px solid #9D9D9D;
+    height: 2rem;
+    width: 100%;
+  }
+
+  .carNo {
+
+    line-height: 2rem;
+    font-size: 0.8rem;
+    margin-left: 1rem;
+  }
+
+  .placeCode {
+
+    line-height: 2rem;
+    font-size: 0.8rem;
+    position: absolute;
+    right: 1rem;
   }
 
 </style>

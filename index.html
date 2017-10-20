@@ -24,10 +24,8 @@
     <div id="floorList">
       <floorlistdiv v-if="show" v-bind:floorlist="floorList" v-bind:selectfloorid="currentFloorId" v-bind:locatefloorid="locateFloorId" v-on:onselect="onSelect"></floorlistdiv>
     </div>
-    <div id="findCar">
-      <findwithnum v-bind:showerror="showerrorincarno" v-show="type === findbynum" v-bind:map="map" v-on:onclose="onClose" v-on:findbycarno="onFindByCarNo"></findwithnum>
-      <findwithunit v-show="type === findbyunit" v-on:onfindunits="onFindUnits" v-bind:map="map" v-on:onclose="onClose" v-on:onmarkinmap="onMarkInMap"></findwithunit>
-    </div>
+    <findwithnum id="findwithnum" v-show="show" v-bind:selectcar="onSelectCar" v-bind:error="error" v-bind:carlist="carlist" v-on:close="onClose" v-on:changetosearchunit="onChangeToSearchUnit" v-on:confirm="onFindByCarNo"></findwithnum>
+    <findwithunit id="findwithunit" v-show="show" v-on:onfindunits="onFindUnits" v-bind:map="map" v-on:onclose="onClose" v-on:onmarkinmap="onMarkInMap"></findwithunit>
     <div id="markwithble">
       <markwithble v-show="show" v-bind:name="name" v-on:confirm="onConfirm" v-on:close="onClose"></markwithble>
     </div>

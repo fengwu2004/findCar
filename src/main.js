@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import indoorun from '../../indoorunMap/map.js'
-import FindCarView from './findcarview'
 
 import FindFacilityBtnView from './findfacilityview'
 import FindFacilityView from './findfacility'
@@ -18,6 +17,8 @@ import markwithble from './components/markwithble.vue'
 import emptyspace from './components/emptyspace.vue'
 import locatestatediv from './components/locatestatus.vue'
 import navigatebottombar from './components/navigateBottombar.vue'
+import findwithnum from './components/findWithNum.vue'
+import findwithunit from './components/findWithUnit.vue'
 
 var config = require('../config')
 
@@ -549,7 +550,7 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
     }, () => {
 
-      showFindCarView()
+      showFindCarByNum()
     })
 
     getSaveUnit = true
@@ -745,8 +746,6 @@ map.addEventListener(map.eventTypes.onInitMapSuccess, function(regionEx) {
   map.changeFloor(regionEx.floorList[0].id)
 })
 
-var findcarview = null
-
 var tempMarkers = []
 
 function onFindTargetUnits(units) {
@@ -797,7 +796,7 @@ function onFindCar() {
 
   if (!endMarker) {
 
-    showFindCarView()
+    showFindCarByNum()
 
     return
   }
@@ -814,6 +813,38 @@ function onFindCar() {
   }
 }
 
+var _carlist = [
+  {
+    carNo:'沪A 21548',
+    placeCode:'F-352',
+    floorId:map.getFloorId()
+  },
+  {
+    carNo:'沪A 21548',
+    placeCode:'F-351',
+    floorId:map.getFloorId()
+  },
+  {
+    carNo:'沪A 21548',
+    placeCode:'F-356',
+    floorId:map.getFloorId()
+  },
+  {
+    carNo:'沪A 21548',
+    placeCode:'F-355',
+    floorId:map.getFloorId()
+  },
+  {
+    carNo:'沪A 21548',
+    placeCode:'F-354',
+    floorId:map.getFloorId()
+  },
+  {
+    carNo:'沪A 21888',
+    placeCode:'F-343',
+    floorId:map.getFloorId()
+  }]
+
 function onFindByCarNo(carNo) {
 
   const url = indoorun.idrNetworkInstance.host + 'chene/getParkingPlaceUnitByCarNo.html'
@@ -823,40 +854,132 @@ function onFindByCarNo(carNo) {
     'carNo': carNo,
   }
 
+  _findCarByNum.carlist = _carlist
+
+  return
+
   indoorun.idrNetworkInstance.doAjax(url, data, function(res) {
 
     alert(JSON.stringify(res))
 
-    var data = res.data
+    var carlist = res.data.matchedCarList
 
-    var unit = new indoorun.idrUnit(data.parkingUnit)
+    if (!carlist || carlist.length <= 0) {
 
-    addCarMarker(unit)
+      return
+    }
 
-    map.doRoute(null, unit.getPos())
+    if (carlist.length > 1) {
+
+      _findCarByNum.carlist = carlist
+    }
+    else {
+
+      var unit = map.findUnitWithName(carlist[0].floorId, carlist[0].placeCode)
+
+      addCarMarker(unit)
+
+      if (map.getUserPos()) {
+
+        map.doRoute(null, unit.getPos())
+      }
+
+      _findCarByNum.show = false
+    }
 
   }, function() {
 
-    findcarview.showErrorOfFindByCarNo()
+    _findCarByNum.error = true
   })
 }
 
-function showFindCarView() {
+var _findCarByNum = null
+function showFindCarByNum() {
 
-  if (!findcarview) {
+  if (_findCarByNum) {
 
-    findcarview = new FindCarView(map, function(units) {
+    _findCarByNum.show = true
 
-      onFindTargetUnits(units)
-
-    }, function() {
-
-      onMarkUnitInMap()
-
-    }, onFindByCarNo)
+    return
   }
 
-  findcarview.show(0)
+  _findCarByNum = new Vue({
+    el:'#findwithnum',
+    components: { findwithnum },
+    data:function () {
+      return {
+        show:true,
+        error:false,
+        carlist:null
+      }
+    },
+    methods: {
+      onFindByCarNo:function (carNum) {
+
+        onFindByCarNo(carNum)
+      },
+      onChangeToSearchUnit:function () {
+
+        this.show = false
+
+        showFindCarByUnit()
+      },
+      onSelectCar:function (car) {
+
+        var unit = map.findUnitWithName(car.floorId, car.placeCode)
+
+        addCarMarker(unit)
+
+        if (map.getUserPos()) {
+
+          map.doRoute(null, unit.getPos())
+        }
+
+        _findCarByNum.show = false
+      },
+      onClose:function () {
+
+        this.show = false
+      }
+    }
+  })
+}
+
+var _findCarByUnit = null
+function showFindCarByUnit() {
+
+  if (_findCarByUnit) {
+
+    _findCarByUnit.show = true
+
+    return
+  }
+
+  _findCarByUnit = new Vue({
+    el:'#findwithunit',
+    components: { findwithunit },
+    data:function () {
+      return {
+        show:true,
+        map:map,
+        showerrorincarno:false
+      }
+    },
+    methods: {
+      onFindUnits:function (unitName) {
+
+        onFindTargetUnits(unitName)
+      },
+      onClose:function () {
+
+        this.show = false
+      },
+      onMarkInMap:function () {
+
+        onMarkUnitInMap()
+      }
+    }
+  })
 }
 
 function navigateToEmptySpace() {
