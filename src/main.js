@@ -105,7 +105,7 @@ function addCarMarker(unit) {
 
   endMarker = doAddCarMarker(pos)
 
-  map.centerPos(pos)
+  map.centerPos(pos, false)
 
   enableClickMarker()
 }
@@ -821,7 +821,6 @@ function onFindByCarNo(carNo) {
   var data = {
     'regionId': map.getRegionId(),
     'carNo': carNo,
-    'floorId': map.getFloorId(),
   }
 
   indoorun.idrNetworkInstance.doAjax(url, data, function(res) {
@@ -887,7 +886,7 @@ function markWithBluetooth() {
 
   if (endMarker) {
 
-    map.centerPos(endMarker.position)
+    map.centerPos(endMarker.position, false)
 
     return
   }

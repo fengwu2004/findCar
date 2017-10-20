@@ -6,8 +6,10 @@
       <img class="tag" src="../assets/car.png">
       <p class="title">车牌找车</p>
       <p class="tip">请输入您的车牌号</p>
-      <input placeholder="例：粤B NB001">
-      <p class="errorTip" v-bind:style="{visibility:showerror}">该车辆不在此停车场，请确认车牌号!</p>
+      <div class="inputandresults">
+        <input placeholder="例：粤B NB001" v-model="carnumber" v-on:focus="onFocuse"/>
+      </div>
+      <p v-bind:class="getErrorShow">该车辆不在此停车场，请确认车牌号!</p>
       <div class="confirmBtn" v-on:click="onConfirm()">确定</div>
       <h5><span>  or  </span></h5>
       <div class="cancelBtn" v-on:click="onCancel()">输入车位号找车</div>
@@ -32,20 +34,41 @@
 
   export default {
     name:'findwithnum',
-    props:['map', 'showerror'],
+    props:['map', 'showerror', 'placeinfos'],
     data: function () {
       return {
-        carnumber:""
+        carnumber:"",
+        onfocuse:false
       }
     },
     methods: {
       onClose:onClose,
       onConfirm:function() {
 
+        this.onfocuse = false
         this.$emit('findbycarno', this.carnumber)
       },
       onCancel:onFindbyUnit,
+      onFocuse:function () {
+        this.onfocuse = true
+      }
     },
+    computed:{
+      getErrorShow:function () {
+
+        if (this.onfocuse) {
+
+          return 'errorTipHide'
+        }
+
+        if (this.showerror) {
+
+          return 'errorTip'
+        }
+
+        return 'errorTipHide'
+      }
+    }
 }
 
 </script>
@@ -121,22 +144,14 @@
     font-size: 0.875rem;
   }
 
-  input {
-    border: 1px solid #9D9D9D;
-    display: block;
+  .errorTip {
     width: 80%;
-    margin: 10px auto 5px;
-    line-height: 2rem;
-    border-radius: 3px;
-    font-size: 1rem;
-    padding: 1px 10px;
-    font-weight: 100;
-    text-align: center;
-    user-select: text !important;
-    -webkit-user-select:text !important;
+    color: red;
+    font-size: 0.5rem;
+    margin: auto;
   }
 
-  .errorTip {
+  .errorTipHide {
     visibility: hidden;
     width: 80%;
     color: red;
@@ -145,7 +160,7 @@
   }
 
   .confirmBtn {
-    width: 80%;
+    width: 84%;
     background-color: #0086ff;
     color: white;
     text-align: center;
@@ -153,11 +168,11 @@
     line-height: 2rem;
     border-radius: 3px;
     border: 2px solid #0086ff;
-    padding: 0px 10px;
+    padding: 0px 0px;
   }
 
   .cancelBtn {
-    width: 80%;
+    width: 84%;
     background-color: white;
     color: #0086ff;
     text-align: center;
@@ -165,18 +180,26 @@
     line-height: 2rem;
     border-radius: 3px;
     border: 1px solid #0086ff;
-    padding: 1px 10px;
+    padding: 1px 0px;
+  }
+
+  .inputandresults {
+
+    width: 84%;
+    height: 2rem;
+    padding: 1px 0px;
+    margin: 10px auto 5px;
   }
 
   input {
     border: 1px solid #9D9D9D;
     display: block;
-    width: 80%;
-    margin: 10px auto 5px;
+    width: 100%;
+    margin: 0;
     line-height: 2rem;
     border-radius: 3px;
     font-size: 1rem;
-    padding: 1px 10px;
+    padding: 1px 0px;
     font-weight: 100;
     text-align: center;
   }

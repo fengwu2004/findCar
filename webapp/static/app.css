@@ -34,19 +34,19 @@ body, html {
 #floorList {
   position: absolute;
   right: 1.1rem;
-  top: 15%; }
+  top: 9rem; }
 
 #emptyspace {
-  top: 5%;
+  top: 4rem;
   right: 1rem; }
 
 #locateState {
   left: 1rem;
-  bottom: 15%; }
+  bottom: 7rem; }
 
 #publicfacility {
   left: 1rem;
-  bottom: 23%; }
+  bottom: 12rem; }
 
 #navigate {
   z-index: 100;
