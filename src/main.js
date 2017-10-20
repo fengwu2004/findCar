@@ -817,32 +817,32 @@ var _carlist = [
   {
     carNo:'沪A 21548',
     placeCode:'F-352',
-    floorId:map.getFloorId()
+    unitId:"14980981315802601"
   },
   {
     carNo:'沪A 21548',
     placeCode:'F-351',
-    floorId:map.getFloorId()
+    unitId:"14980981315802601"
   },
   {
     carNo:'沪A 21548',
     placeCode:'F-356',
-    floorId:map.getFloorId()
+    unitId:"14980981315802601"
   },
   {
     carNo:'沪A 21548',
     placeCode:'F-355',
-    floorId:map.getFloorId()
+    unitId:"14980981315802601"
   },
   {
     carNo:'沪A 21548',
     placeCode:'F-354',
-    floorId:map.getFloorId()
+    unitId:"14980981315802601"
   },
   {
     carNo:'沪A 21888',
     placeCode:'F-343',
-    floorId:map.getFloorId()
+    unitId:"14980981315802601"
   }]
 
 function onFindByCarNo(carNo) {
@@ -853,10 +853,6 @@ function onFindByCarNo(carNo) {
     'regionId': map.getRegionId(),
     'carNo': carNo,
   }
-
-  _findCarByNum.carlist = _carlist
-
-  return
 
   indoorun.idrNetworkInstance.doAjax(url, data, function(res) {
 
@@ -926,7 +922,7 @@ function showFindCarByNum() {
       },
       onSelectCar:function (car) {
 
-        var unit = map.findUnitWithName(car.floorId, car.placeCode)
+        var unit = map.findUnitWithId(car.unitId)
 
         addCarMarker(unit)
 
@@ -935,7 +931,7 @@ function showFindCarByNum() {
           map.doRoute(null, unit.getPos())
         }
 
-        _findCarByNum.show = false
+        this.show = false
       },
       onClose:function () {
 
