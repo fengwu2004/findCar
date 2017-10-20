@@ -62,7 +62,7 @@ var zoomView = null
 
 var endMarker = null
 
-indoorun.idrDebug.showDebugInfo(false)
+// indoorun.idrDebug.showDebugInfo(false)
 
 function enableClickMarker() {
 
@@ -556,7 +556,7 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
     getSaveUnit = true
   }
 
-  indoorun.idrDebug.showDebugInfo(false)
+  indoorun.idrDebug.showDebugInfo(true)
 
   indoorun.idrDebug.debugInfo('加载时间:' + (new Date().getTime() - gmtime).toString())
 
@@ -569,18 +569,20 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
       if (pos) {
 
         floorListView.locateFloorId = pos.floorId
+
+        if (!startLocate) {
+
+          indoorun.idrDebug.debugInfo(JSON.stringify(pos))
+
+          map.centerPos(pos, false)
+        }
       }
       else {
 
         floorListView.locateFloorId = null
       }
 
-      if (!startLocate) {
-
-        map.centerPos(pos, false)
-      }
-
-      indoorun.idrDebug.debugInfo('定位成功')
+      // indoorun.idrDebug.debugInfo('定位成功')
 
     }, function(errorId) {
 

@@ -1,14 +1,14 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
-var build_assetsPublicPath = 'https://wx.indoorun.com/indoorun/test/app/webapp/'
+var build_assetsPublicPath = 'http://wx.indoorun.com/indoorun/indoorun2/yfzx/app/guozheng2/'
 var dev_assetsPublicPath = '/'
 
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../webapp/index.html'),
-    assetsRoot: path.resolve(__dirname, '../webapp'),
+    index: path.resolve(__dirname, '../guozheng2/index.htm'),
+    assetsRoot: path.resolve(__dirname, '../guozheng2'),
     assetsSubDirectory: 'static',
     assetsPublicPath:build_assetsPublicPath,
     productionSourceMap: false,
