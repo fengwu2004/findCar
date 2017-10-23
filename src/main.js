@@ -534,6 +534,7 @@ function askSpaceUnitWhenChangeFloor() {
 var getSaveUnit = false
 
 var startLocate = false
+var firsttime = true
 map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
   askSpaceUnitWhenChangeFloor()
@@ -558,7 +559,7 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
   indoorun.idrDebug.showDebugInfo(true)
 
-  indoorun.idrDebug.debugInfo('加载时间:' + (new Date().getTime() - gmtime).toString())
+  // indoorun.idrDebug.debugInfo('加载时间:' + (new Date().getTime() - gmtime).toString())
 
   if (!startLocate) {
 
@@ -570,19 +571,17 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
         floorListView.locateFloorId = pos.floorId
 
-        if (!startLocate) {
-
-          indoorun.idrDebug.debugInfo(JSON.stringify(pos))
+        if (firsttime) {
 
           map.centerPos(pos, false)
+
+          firsttime = false
         }
       }
       else {
 
         floorListView.locateFloorId = null
       }
-
-      // indoorun.idrDebug.debugInfo('定位成功')
 
     }, function(errorId) {
 
@@ -858,7 +857,7 @@ function onFindByCarNo(carNo) {
 
   indoorun.idrNetworkInstance.doAjax(url, data, function(res) {
 
-    alert(JSON.stringify(res))
+    // alert(JSON.stringify(res))
 
     var carlist = res.data.matchedCarList
 

@@ -202,7 +202,7 @@
     padding: 1px 10px;
     font-weight: 100;
     text-align: center;
-    /*user-select: text;*/
+    user-select: text;
     -webkit-user-select:text;
   }
 

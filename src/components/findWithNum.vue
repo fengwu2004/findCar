@@ -210,6 +210,8 @@
     font-size: 1rem;
     padding: 1px 0px;
     font-weight: 100;
+    user-select: text !important;
+    -webkit-user-select: text !important;
     text-align: center;
   }
 
