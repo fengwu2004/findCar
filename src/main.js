@@ -872,13 +872,13 @@ function onFindByCarNo(carNo) {
     }
     else {
 
-      var unit = map.findUnitWithName(carlist[0].floorId, carlist[0].placeCode)
+      var units = map.findUnitWithName(carlist[0].floorId, carlist[0].placeCode)
 
-      addCarMarker(unit)
+      addCarMarker(units[0])
 
       if (map.getUserPos()) {
 
-        map.doRoute(null, unit.getPos())
+        map.doRoute(null, units[0].getPos())
       }
 
       _findCarByNum.show = false
@@ -896,6 +896,8 @@ function showFindCarByNum() {
   if (_findCarByNum) {
 
     _findCarByNum.show = true
+
+    _findCarByNum.carlist = null
 
     return
   }
