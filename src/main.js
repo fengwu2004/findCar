@@ -915,6 +915,8 @@ function showFindCarByNum() {
     methods: {
       onFindByCarNo:function (carNum) {
 
+        this.error = false
+
         onFindByCarNo(carNum)
       },
       onChangeToSearchUnit:function () {
