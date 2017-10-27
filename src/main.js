@@ -557,7 +557,7 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
     getSaveUnit = true
   }
 
-  indoorun.idrDebug.showDebugInfo(true)
+  // indoorun.idrDebug.showDebugInfo(true)
 
   // indoorun.idrDebug.debugInfo('加载时间:' + (new Date().getTime() - gmtime).toString())
 
