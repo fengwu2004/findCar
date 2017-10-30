@@ -809,17 +809,25 @@ function onFindCar() {
     return
   }
 
+  if (!map.getUserPos()) {
+
+    errortipview.show('定位失败，无法寻车')
+
+    return
+  }
+
   if (map.doRoute(null, endMarker.position)) {
 
     map.removeMarker(endMarker)
 
     endMarker = addEndMarker(endMarker.position)
   }
-  else {
-
-    errortipview.show('定位失败，无法寻车')
-  }
 }
+
+map.addEventListener(map.eventTypes.onRouterFailed, function () {
+
+  errortipview.show('您已在目的地附近')
+})
 
 var _carlist = [
   {
