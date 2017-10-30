@@ -613,6 +613,13 @@ map.addEventListener(map.eventTypes.onNaviStatusUpdate, function(status) {
     return
   }
 
+  if (status.projDist >= 150) {
+
+    map.reRoute()
+
+    return
+  }
+
   if (status.goalDist < 150) {
 
     var confirm = {name:'知道了', callback:function() {
