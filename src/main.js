@@ -531,80 +531,83 @@ function askSpaceUnitWhenChangeFloor() {
   doFindEmptySpace()
 }
 
-var getSaveUnit = false
-
 var startLocate = false
 var firsttime = true
+
+// 必须微信初始化后，input唤出keyboard才没有bug(android上)
+function doLocating() {
+
+  map.doLocation(pos => {
+
+    map.setCurrPos(pos)
+
+    if (pos) {
+
+      floorListView.locateFloorId = pos.floorId
+
+      if (firsttime) {
+
+        map.centerPos(pos, false)
+
+        firsttime = false
+      }
+    }
+    else {
+
+      floorListView.locateFloorId = null
+    }
+
+  }, errorId => {
+
+    floorListView.locateFloorId = null
+
+    if (errorId === 0) {
+
+      var confirm = {
+
+        name: '确定', callback: function () {
+
+          alertboxview.hide()
+        }
+      }
+
+      showAlertBox(null, '手机蓝牙未开启,您可以尝试从手机设置中开启蓝牙设备', [confirm])
+    }
+  })
+}
+
 map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
   askSpaceUnitWhenChangeFloor()
 
   floorListView.currentFloorId = data.floorId
 
-  if (!getSaveUnit) {
-
-    indoorun.idrNetworkInstance.getMarkedUnit(map.getRegionId(), function(res) {
-
-      endMarker = doAddCarMarker({x:res.data.svgX, y:res.data.svgY, floorId:res.data.floorId})
-
-      enableClickMarker()
-
-    }, () => {
-
-      showFindCarByNum()
-    })
-
-    getSaveUnit = true
-  }
-
-  // indoorun.idrDebug.showDebugInfo(true)
-
-  // indoorun.idrDebug.debugInfo('加载时间:' + (new Date().getTime() - gmtime).toString())
-
   if (!startLocate) {
 
-    map.doLocation(function(pos) {
-
-      map.setCurrPos(pos)
-
-      if (pos) {
-
-        floorListView.locateFloorId = pos.floorId
-
-        if (firsttime) {
-
-          map.centerPos(pos, false)
-
-          firsttime = false
-        }
-      }
-      else {
-
-        floorListView.locateFloorId = null
-      }
-
-    }, function(errorId) {
-
-      floorListView.locateFloorId = null
-
-      if (errorId === 0) {
-
-        var confirm = {name:'确定', callback:function() {
-
-          alertboxview.hide()
-        }}
-
-        showAlertBox(null, '手机蓝牙未开启,您可以尝试从手机设置中开启蓝牙设备', [confirm])
-      }
-      else {
-
-        indoorun.idrDebug.debugInfo(JSON.stringify(errorId))
-      }
-    })
+    doLocating()
 
     startLocate = true
+
+    runOnLoopEnd(() => {
+
+      indoorun.idrNetworkInstance.getMarkedUnit(map.getRegionId(), function(res) {
+
+        endMarker = doAddCarMarker({x:res.data.svgX, y:res.data.svgY, floorId:res.data.floorId})
+
+        enableClickMarker()
+
+      }, () => {
+
+        showFindCarByNum()
+      })
+    })
   }
 })
+
+function runOnLoopEnd(callback) {
+
+  setTimeout(callback, 2000)
+}
 
 map.addEventListener(map.eventTypes.onNaviStatusUpdate, function(status) {
 
