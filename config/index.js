@@ -2,6 +2,7 @@
 var path = require('path')
 
 var build_assetsPublicPath = 'http://wx.indoorun.com/indoorun/indoorun/yfzx/guozheng2/'
+// var build_assetsPublicPath = 'http://wx.indoorun.com/indoorun/test/app/guozheng2/'
 var dev_assetsPublicPath = '/'
 
 module.exports = {

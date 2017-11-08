@@ -563,15 +563,7 @@ function doLocating() {
 
     if (errorId === 0) {
 
-      var confirm = {
-
-        name: '确定', callback: function () {
-
-          alertboxview.hide()
-        }
-      }
-
-      showAlertBox(null, '手机蓝牙未开启,您可以尝试从手机设置中开启蓝牙设备', [confirm])
+      errortipview.show('温馨提示：蓝牙未开启，请开启蓝牙')
     }
   })
 }
