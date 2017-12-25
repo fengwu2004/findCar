@@ -615,7 +615,7 @@ map.addEventListener(map.eventTypes.onNaviStatusUpdate, function(status) {
     return
   }
 
-  if (status.goalDist < 150) {
+  if (map.checkReachTargetFloor() && status.goalDist < 150) {
 
     var confirm = {name:'知道了', callback:function() {
 
