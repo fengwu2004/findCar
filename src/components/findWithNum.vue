@@ -26,11 +26,18 @@
 
   export default {
     name:'findwithnum',
-    props:['error', 'placeinfos', 'carlist'],
+    props:['error', 'placeinfos', 'carlist', 'initcarno'],
     data: function () {
       return {
         carnumber:"",
         onfocuse:false
+      }
+    },
+    mounted:function () {
+
+      if (this.initcarno != null) {
+
+        this.carnumber = this.initcarno
       }
     },
     methods: {

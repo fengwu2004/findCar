@@ -24,7 +24,7 @@ var config = require('../config')
 
 Vue.config.productionTip = false
 
-var regionId = '15131649929097296'
+var regionId = '15093302342642161'
 
 var idrMapView = indoorun.idrMapView
 
@@ -109,6 +109,15 @@ function addCarMarker(unit) {
   map.centerPos(pos, false)
 
   enableClickMarker()
+}
+
+function getQueryString(name) {
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) {
+    return decodeURI(r[2]);
+  }
+  return null;
 }
 
 var markWithBleView = null
@@ -568,6 +577,7 @@ function doLocating() {
   })
 }
 
+var carno = getQueryString('carno')
 map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
 
   askSpaceUnitWhenChangeFloor()
@@ -581,24 +591,15 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
     startLocate = true
 
     runOnLoopEnd(() => {
-
-      indoorun.idrNetworkInstance.getMarkedUnit(map.getRegionId(), function(res) {
-
-        endMarker = doAddCarMarker({x:res.data.svgX, y:res.data.svgY, floorId:res.data.floorId})
-
-        enableClickMarker()
-
-      }, () => {
-
-        showFindCarByNum()
-      })
+  
+      showFindCarByNum(carno)
     })
   }
 })
 
 function runOnLoopEnd(callback) {
 
-  setTimeout(callback, 2000)
+  setTimeout(callback, 0)
 }
 
 map.addEventListener(map.eventTypes.onNaviStatusUpdate, function(status) {
@@ -901,7 +902,7 @@ function onFindByCarNo(carNo) {
 }
 
 var _findCarByNum = null
-function showFindCarByNum() {
+function showFindCarByNum(carno) {
 
   if (_findCarByNum) {
 
@@ -919,7 +920,8 @@ function showFindCarByNum() {
       return {
         show:true,
         error:false,
-        carlist:null
+        carlist:null,
+        carno:carno
       }
     },
     methods: {
