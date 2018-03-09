@@ -98,6 +98,11 @@ map.addEventListener(map.eventTypes.onMapScroll, () => {
   locateStatusView.dolocate = false
 })
 
+map.addEventListener(map.eventTypes.onMapClick, pos => {
+  
+  // map.setCurrPos(pos)
+})
+
 function addCarMarker(unit) {
 
   var pos = unit.getPos()
@@ -169,14 +174,14 @@ function showMarkWithBle(unit) {
 }
 
 var findEmptySpaceInfo = {
-  icon:config.publicPath + '/static/kongwei.png',
+  icon:config.publicPath + '/kongwei.png',
   title:'空位引导',
   type:'0',
   cb:navigateToEmptySpace
 }
 
 var findByBleInfo = {
-  icon:config.publicPath + '/static/biaoji.png',
+  icon:config.publicPath + '/biaoji.png',
   title:'蓝牙标记',
   type:'1',
   cb:function() {
@@ -185,7 +190,7 @@ var findByBleInfo = {
 }
 
 var findCarInfo = {
-  icon:config.publicPath + '/static/zhaoche.png',
+  icon:config.publicPath + '/zhaoche.png',
   title:'找车',
   type:'2',
   cb:function() {
@@ -678,7 +683,7 @@ function doAddCarMarker(pos) {
 
   var IDRCarMarker = indoorun.idrMapMarker.IDRCarMarker
 
-  var endMarker = new IDRCarMarker(pos, config.publicPath + '/static/markericon/car.png')
+  var endMarker = new IDRCarMarker(pos, config.publicPath + '/markericon/car.png')
 
   map.addMarker(endMarker)
 
@@ -689,7 +694,7 @@ function addEndMarker(pos) {
 
   var IDREndMarker = indoorun.idrMapMarker.IDREndMarker
 
-  var endMarker = new IDREndMarker(pos, config.publicPath + '/static/markericon/end.png')
+  var endMarker = new IDREndMarker(pos, config.publicPath + '/markericon/end.png')
 
   map.addMarker(endMarker)
 

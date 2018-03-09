@@ -40,6 +40,6 @@ module.exports = {
     cssSourceMap: false
   },
   publicPath:process.env.NODE_ENV === 'production'
-    ? build_assetsPublicPath
-    : '.'
+    ? build_assetsPublicPath + 'static'
+    : dev_assetsPublicPath + 'static'
 }
