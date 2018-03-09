@@ -24,7 +24,7 @@ var config = require('../config')
 
 Vue.config.productionTip = false
 
-var regionId = '15093302342642161'
+var regionId = '15131649929097296'
 
 var idrMapView = indoorun.idrMapView
 
