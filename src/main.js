@@ -24,7 +24,9 @@ var config = require('../config')
 
 Vue.config.productionTip = false
 
-var regionId = '15131649929097296'
+window.debugtest = false
+
+var regionId = '15093302342642161'
 
 var idrMapView = indoorun.idrMapView
 
@@ -100,7 +102,10 @@ map.addEventListener(map.eventTypes.onMapScroll, () => {
 
 map.addEventListener(map.eventTypes.onMapClick, pos => {
   
-  // map.setCurrPos(pos)
+  if (window.debugtest) {
+  
+    map.setCurrPos(pos)
+  }
 })
 
 function addCarMarker(unit) {
@@ -677,6 +682,8 @@ map.addEventListener(map.eventTypes.onRouterFinish, function() {
 
     emptyUnits.length = 0
   }
+  
+  map.setStatus(YFM.Map.STATUS_TOUCH)
 })
 
 function doAddCarMarker(pos) {
@@ -729,6 +736,8 @@ map.addEventListener(map.eventTypes.onRouterSuccess, function(data) {
   map.changeFloor(data.start.floorId)
 
   map.birdLook()
+  
+  map.setStatus(YFM.Map.STATUS_NAVIGATE)
 })
 
 map.addEventListener(map.eventTypes.onInitMapSuccess, function(regionEx) {
