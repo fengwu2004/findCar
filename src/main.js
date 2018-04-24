@@ -26,7 +26,7 @@ Vue.config.productionTip = false
 
 window.debugtest = false
 
-var regionId = '15093302342642161'
+var regionId = '14639999225470024'
 
 var idrMapView = indoorun.idrMapView
 
