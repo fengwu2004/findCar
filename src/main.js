@@ -248,13 +248,35 @@ function showNavigation() {
     components:{ navigation },
     data: function() {
       return {
-        show:true
+        show:true,
+        left:true,
+        totaldistance:100,
+        nextdistance:20
       }
     },
     methods: {
       onStopNavigate() {
-
-        map.stopRoute()
+  
+        var unfind = {name:'未找到爱车', callback:function() {
+      
+            alertboxview.hide()
+      
+            map.stopRoute()
+          }}
+          
+        var found = {name:'已找到爱车', callback:function() {
+      
+            alertboxview.hide()
+      
+            map.stopRoute()
+          }}
+  
+        var cancel = {name:'取消', callback:() => {
+      
+            alertboxview.hide()
+          }}
+        
+        showAlertBox('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
       }
     }
   })
@@ -580,26 +602,30 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
   }
 })
 
-function runOnLoopEnd(callback) {
-
-  setTimeout(callback, 0)
-}
-
-function onNaviStatusUpdate(status) {
+function onNaviStatusUpdate({validate, projDist, goalDist, serialDist, nextSug}) {
   
-  if (!status.validate) {
+  if (!validate) {
     
     return
   }
   
-  if (status.projDist >= 150) {
+  if (projDist >= 150) {
     
     map.reRoute()
     
     return
   }
   
-  if (map.checkReachTargetFloor() && status.goalDist < 150) {
+  if (_navigation) {
+    
+    _navigation.totaldistance = Math.ceil(goalDist/10.0)
+  
+    _navigation.nextdistance = Math.ceil(serialDist/10.0)
+    
+    _navigation.left = YFM.Map.Navigate.NextSuggestion.LEFT == nextSug
+  }
+  
+  if (map.checkReachTargetFloor() && goalDist < 150) {
     
     var confirm = {name:'知道了', callback:function() {
         
@@ -738,16 +764,10 @@ function onInitMapSuccess(regionEx) {
   showFloorListView(true)
   
   showFindCarBtn()
-  // showEmptySpaceView(true)
   
   showLocateStatusView()
   
-  showFindFacilityBtnView(true, function() {
-    
-    showFindFacilityView()
-  })
-  
-  // showNormalBottomBar(true)
+  showFindFacilityBtnView()
   
   document.title = regionEx.name
   

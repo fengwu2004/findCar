@@ -1,5 +1,19 @@
 <template>
   <div>
+    <div class="topbar">
+      <div class="rightorleft">
+        <img v-if="left" src="../assets/left.png"/>
+        <img v-else src="../assets/right.png"/>
+      </div>
+      <div class="navistatus">
+        <div class="total">
+          <div class="title">前方路口</div><div class="detail">全程剩余: {{totaldistance}}米 {{Math.ceil(totaldistance/60)}}分钟</div>
+        </div>
+        <div class="direction">
+          {{nextdistance}}米{{left?'  左转':'  右转'}}
+        </div>
+      </div>
+    </div>
     <div class='bottombar'>
       <div onClick={this.close}>
         <img src="../assets/quit.png" v-on:click="exit" width="20"/>
@@ -14,6 +28,7 @@
 
   export default {
     name : 'navigation',
+    props:['left', 'totaldistance', 'nextdistance'],
     methods: {
       exit() {
 
@@ -23,12 +38,67 @@
 
         this.$emit('birdlook')
       }
+    },
+    data() {
+      return {
+
+      }
     }
   }
 
 </script>
 
 <style scoped lang="scss">
+
+  .topbar {
+
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: #18202A;
+    display: flex;
+  }
+
+  .rightorleft {
+
+    > img {
+      padding: 1rem;
+      width: 3rem;
+    }
+  }
+
+  .navistatus {
+
+    padding-top: 1rem;
+    flex: 1;
+
+    .total {
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      .title {
+
+        color:#C8C8C8;
+        font-size: 1rem;
+      }
+
+      .detail {
+
+        font-size: 0.4rem;
+        color: #C8C8C8;
+        padding-right: 2rem;
+      }
+    }
+
+    .direction {
+
+      font-size: 1.5rem;
+      color: #3984DD;
+    }
+  }
 
   .bottombar {
 

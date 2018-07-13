@@ -167,6 +167,7 @@
   }
 
   .errorTipHide {
+
     visibility: hidden;
     width: 80%;
     color: red;
@@ -175,27 +176,31 @@
   }
 
   .confirmBtn {
-    width: 82%;
-    background-color: #0086ff;
+
+    width: 70%;
+    background-color:#3984DD;
     color: white;
     text-align: center;
     margin: 10px auto;
     line-height: 2rem;
-    border-radius: 3px;
-    border: 2px solid #0086ff;
+    border-radius: 20px;
+    border: 2px solid #3984DD;
     padding: 0px 0px;
+    font-size: 0.7rem;
   }
 
   .cancelBtn {
-    width: 82%;
+
+    width: 70%;
     background-color: white;
-    color: #0086ff;
+    color: #3984DD;
     text-align: center;
     margin: 10px auto 10px;
     line-height: 2rem;
     border-radius: 3px;
-    border: 1px solid #0086ff;
+    border: 1px solid #3984DD;
     padding: 1px 0px;
+    font-size: 0.7rem;
   }
 
   .inputandresults {
@@ -210,6 +215,7 @@
   }
 
   input {
+
     border: 1px solid #9D9D9D;
     display: block;
     width: 100%;
@@ -222,6 +228,12 @@
     user-select: text !important;
     -webkit-user-select: text !important;
     text-align: center;
+  }
+
+  input::placeholder {
+
+    color: #636363;
+    font-size: 0.6rem;
   }
 
   span {

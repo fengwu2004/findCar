@@ -4,8 +4,8 @@
     <div class="content">
       <p v-show="title !== null" class="title">{{ title }}</p>
       <p v-show="message !== null" class="message">{{ message }}</p>
-      <div class="btns">
-        <div class="btn" v-for="button in buttons" v-bind:key="button.name" v-on:click="callback(button)">{{ button.name }}</div>
+      <div class="btns" v-bind:style="{flexDirection:buttons.length > 2 ? 'column':'', borderTop:buttons.length > 2 ? 'none':'1px solid #a7a49d'}">
+        <div class="btn" v-for="button in buttons" v-bind:key="button.name" v-on:click="callback(button)" v-bind:style="{borderTop:buttons.length > 2 ? '1px solid #a7a49d':'', borderLeft:buttons.length < 2 ? '1px solid #a7a49d':'none'}">{{ button.name }}</div>
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
 
         button.callback && button.callback()
       }
-    }
+    },
   }
 
 </script>
@@ -64,6 +64,7 @@
   }
 
   .btns {
+
     width: 100%;
     border-top:1px solid #a7a49d;
     display: flex;

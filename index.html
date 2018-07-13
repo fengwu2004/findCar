@@ -37,7 +37,7 @@
     <div id="findfacility">
       <findfacilityview v-bind:facilities="facilitys" v-on:onnavigateto="onNavigateTo"></findfacilityview>
     </div>
-    <navigation id="navigation" v-if="show" v-on:stopnavigate="onStopNavigate"></navigation>
+    <navigation id="navigation" v-if="show" v-on:stopnavigate="onStopNavigate" :left="left" :totaldistance="totaldistance" :nextdistance="nextdistance"></navigation>
     <div id="alertbox">
       <alertbox v-bind:title="title" v-bind:message="message" v-bind:buttons="buttons"></alertbox>
     </div>
