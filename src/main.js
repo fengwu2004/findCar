@@ -1,7 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import indoorun from '../../indoorunMap/map.js'
+import { indoorun } from '../../indoorunMap/map.js'
 
 import FindFacilityBtnView from './findfacilityview'
 import FindFacilityView from './findfacility'
@@ -26,7 +26,7 @@ Vue.config.productionTip = false
 
 window.debugtest = false
 
-var regionId = '14639999225470024'
+var regionId = '15252312629008368'
 
 var idrMapView = indoorun.idrMapView
 

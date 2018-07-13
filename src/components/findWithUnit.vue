@@ -12,7 +12,9 @@
       <input v-model="unitName" v-on:focus="onFocuse" placeholder="例：026">
       <p class="errortip" v-bind:style="{visibility:showerror}">输入有误，请重新输入您的车位号!</p>
       <div class="confirmBtn" v-on:click="onConfirm">确定</div>
-      <h5><span>  or  </span></h5>
+      <div class="line">
+        <div></div><span>or</span><div></div>
+      </div>
       <div class="cancelBtn" v-on:click="onCancel()">地图标记</div>
       <br>
     </div>
@@ -239,28 +241,30 @@
     padding: 1px 10px;
   }
 
-  h5 {
+  .line {
 
-    width: 80%;
     margin: auto;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .line > div {
+
+    width: 40%;
+    height: 1px;
+    background: lightgray;
+  }
+
+  .line > span {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    padding: 0 0.5rem;
     color: lightgray;
-  }
-
-  span {
-
-    line-height: 0.5rem;
-    font-weight: 100;
-  }
-
-  h5 span:before, h5 span:after {
-
-    display: inline-block;
-    content: '';
-    vertical-align: bottom;
-    height: .4rem;
-    line-height: 0.5rem;
-    border-top:1px solid lightgray;
-    width: 45%;
   }
 
   .floors {

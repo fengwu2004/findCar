@@ -15,7 +15,9 @@
       </div>
       <p v-bind:class="getErrorShow">该车辆不在此停车场，请确认车牌号!</p>
       <div class="confirmBtn" v-on:click="onConfirm">确定</div>
-      <h5><span>  or  </span></h5>
+      <div class="line">
+        <div></div><span>or</span><div></div>
+      </div>
       <div class="cancelBtn" v-on:click="onCancel">输入车位号找车</div>
       <br>
     </div>
@@ -267,6 +269,32 @@
     font-size: 0.8rem;
     position: absolute;
     right: 1rem;
+  }
+
+  .line {
+
+    margin: auto;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .line > div {
+
+    width: 40%;
+    height: 1px;
+    background: lightgray;
+  }
+
+  .line > span {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    padding: 0 0.5rem;
+    color: lightgray;
   }
 
 </style>
