@@ -92,8 +92,8 @@
     left: 0;
     right: 0;
     margin: -3.5rem auto;
-    width: 7rem;
-    height: 7rem;
+    width: 5rem;
+    height: 5rem;
   }
 
   h5 {

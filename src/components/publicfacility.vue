@@ -7,8 +7,8 @@
 export default {
   name: 'publicfacilitydiv',
   methods: {
-    onClick:function() {
-      this.$emit('onclick', 1)
+    onClick() {
+      this.$emit('onclick')
     }
   }
 }

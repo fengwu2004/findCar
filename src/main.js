@@ -3,11 +3,11 @@
 import Vue from 'vue'
 import { indoorun } from '../../indoorunMap/map.js'
 
-import FindFacilityBtnView from './findfacilityview'
+import publicfacilitydiv from './components/publicfacility'
 import FindFacilityView from './findfacility'
 import NormalBottomBar from './normalbottombar'
 import AlertBox from './AlertBox'
-import BottomBar from './bottombar'
+import bottombar from './components/bottombar'
 import UpdateMarkerView from './updatemarkerview'
 import ErrorTipView from './errortipview'
 import ZoomView from './zoomview'
@@ -16,17 +16,19 @@ import floorlistdiv from './components/floorList.vue'
 import markwithble from './components/markwithble.vue'
 import emptyspace from './components/emptyspace.vue'
 import locatestatediv from './components/locatestatus.vue'
-import navigatebottombar from './components/navigateBottombar.vue'
+import navigation from './components/navigation.vue'
 import findwithnum from './components/findWithNum.vue'
 import findwithunit from './components/findWithUnit.vue'
+import FindCarBtn from "./components/findCarBtn";
+
 
 var config = require('../config')
 
 Vue.config.productionTip = false
 
-window.debugtest = false
+window.debugtest = true
 
-var regionId = '15252312629008368'
+var regionId = '15313792400143094'
 
 var idrMapView = indoorun.idrMapView
 
@@ -40,9 +42,9 @@ var emptySpaceView = null
 
 var locateStatusView = null
 
-var findFacilityBtnView = null
+var _findFacilityBtn = null
 
-var navigateBottomBar = null
+var _navigation = null
 
 var normalBottomBar = null
 
@@ -100,12 +102,17 @@ map.addEventListener(map.eventTypes.onMapScroll, () => {
   locateStatusView.dolocate = false
 })
 
-map.addEventListener(map.eventTypes.onMapClick, pos => {
+function onMapClick(pos) {
   
   if (window.debugtest) {
-  
-    map.setCurrPos(pos)
+    
+    map.setUserPos(pos)
   }
+}
+
+map.addEventListener(map.eventTypes.onMapClick, pos => {
+  
+  onMapClick(pos)
 })
 
 function addCarMarker(unit) {
@@ -234,88 +241,77 @@ function getRouters(path) {
   return results
 }
 
-function showNavigateBottombar(bshow, path, cb) {
-
-  if (!bshow) {
-
-    if (navigateBottomBar) {
-
-      navigateBottomBar.show = false
-    }
-
-    return
-  }
-
-  var routers = getRouters(path)
-
-  if (routers.length <= 0) {
-
-    return
-  }
-
-  if (navigateBottomBar) {
-
-    navigateBottomBar.show = bshow
-
-    navigateBottomBar.routerpos = routers
-
-    navigateBottomBar.callback = cb
-
-    navigateBottomBar.initFloorId = routers[0].id
-
-    return
-  }
-
-  navigateBottomBar = new Vue({
-    el:'#navigate',
-    components:{ navigatebottombar },
+function showNavigation() {
+  
+  _navigation = new Vue({
+    el:'#navigation',
+    components:{ navigation },
     data: function() {
       return {
-        routerpos:routers,
-        callback:cb,
-        initFloorId:routers[0].id,
         show:true
       }
     },
     methods: {
-      onStopNavigate:function() {
+      onStopNavigate() {
 
-        this.callback && this.callback()
-      },
-      onShowSelectFloor:function(value) {
-
-        map.changeFloor(value)
-
-        map.birdLook()
+        map.stopRoute()
       }
     }
   })
 }
 
-function showFindFacilityBtnView(bshow, cb) {
-
-  if (!findFacilityBtnView && bshow) {
-
-    findFacilityBtnView = new FindFacilityBtnView(cb)
-  }
-
-  findFacilityBtnView && findFacilityBtnView.show(bshow)
+function showFindFacilityBtnView() {
+  
+  _findFacilityBtn = new Vue({
+    el:'#publicfacility',
+    components: { publicfacilitydiv },
+    data() {
+      return {
+        show:true
+      }
+    },
+    methods: {
+      onclick() {
+        
+        showFindFacilityView()
+      }
+    },
+  })
 }
 
-function showLocateStatusView(bshow) {
+function doLocate() {
+  
+  map.doLocation(pos => {
+    
+    map.setCurrPos(pos)
+    
+    if (pos) {
+      
+      floorListView.locateFloorId = pos.floorId
+    }
+    else {
+      
+      floorListView.locateFloorId = null
+    }
+  }, res => {
+    
+    floorListView.locateFloorId = null
+  
+    errortipview.show(res)
+  })
+    .catch(res=>{
+  
+      errortipview.show('温馨提示：蓝牙未开启，请开启蓝牙')
+    })
+}
 
-  if (locateStatusView) {
-
-    locateStatusView.show = bshow
-
-    return
-  }
+function showLocateStatusView() {
 
   locateStatusView = new Vue({
     el:'#locateState',
     components: { locatestatediv },
     methods: {
-      doLocating:function() {
+      doLocating() {
 
         if (map.getUserPos()) {
 
@@ -326,28 +322,8 @@ function showLocateStatusView(bshow) {
           map.autoChangeFloor = true
         }
         else {
-
-          map.doLocation(function(pos) {
-
-            map.setCurrPos(pos)
-
-            if (pos) {
-
-              floorListView.locateFloorId = pos.floorId
-            }
-            else {
-
-              floorListView.locateFloorId = null
-            }
-          }, function (errorId) {
-
-            floorListView.locateFloorId = null
-
-            if (errorId === 0) {
-
-              errortipview.show('温馨提示：蓝牙未开启，请开启蓝牙')
-            }
-          })
+  
+          doLocate()
         }
       }
     },
@@ -381,9 +357,12 @@ function showFloorListView(bshow) {
       }
     },
     methods:{
-      onSelect:function(val) {
+      onSelect(val) {
+        
         this.currentFloorId = val
+        
         map.changeFloor(val)
+        
         map.autoChangeFloor = false
       }
     }
@@ -553,7 +532,6 @@ function askSpaceUnitWhenChangeFloor() {
 var startLocate = false
 var firsttime = true
 
-// 必须微信初始化后，input唤出keyboard才没有bug(android上)
 function doLocating() {
 
   map.doLocation(pos => {
@@ -599,11 +577,6 @@ map.addEventListener(map.eventTypes.onFloorChangeSuccess, function(data) {
     doLocating()
 
     startLocate = true
-
-    runOnLoopEnd(() => {
-  
-      showFindCarByNum(carno)
-    })
   }
 })
 
@@ -612,31 +585,36 @@ function runOnLoopEnd(callback) {
   setTimeout(callback, 0)
 }
 
-map.addEventListener(map.eventTypes.onNaviStatusUpdate, function(status) {
-
+function onNaviStatusUpdate(status) {
+  
   if (!status.validate) {
-
+    
     return
   }
-
+  
   if (status.projDist >= 150) {
-
+    
     map.reRoute()
-
+    
     return
   }
-
+  
   if (map.checkReachTargetFloor() && status.goalDist < 150) {
-
+    
     var confirm = {name:'知道了', callback:function() {
-
-      alertboxview.hide()
-
-      map.stopRoute()
-    }}
-
+        
+        alertboxview.hide()
+        
+        map.stopRoute()
+      }}
+    
     showAlertBox('您已到达目的地', null, [confirm])
   }
+}
+
+map.addEventListener(map.eventTypes.onNaviStatusUpdate, status => {
+  
+  onNaviStatusUpdate(status)
 })
 
 function checkExit() {
@@ -656,34 +634,41 @@ function checkExit() {
   showAlertBox('是否结束本次导航', null, [cancel, confirm])
 }
 
-map.addEventListener(map.eventTypes.onRouterFinish, function() {
-
-  showNavigateBottombar(false, null, null)
-
-  showSomeUIInNavi(true)
-
+function onRouterFinish() {
+  
+  _navigation.show = false
+  
+  _findCarBtn.show = true
+  
+  _findFacilityBtn.show = true
+  
   map.removeMarker(endMarker)
-
+  
   endMarker = null
-
+  
   targetUnit = null
-
+  
   if (startEmptyNavi) {
-
+    
     startEmptyNavi = false
-
+    
     clearInterval(emptySpaceTimer)
-
+    
     emptySpaceTimer = null
-
+    
     emptySpaceView.doFind = false
-
+    
     map.clearFloorUnitsColor(true)
-
+    
     emptyUnits.length = 0
   }
   
   map.setStatus(YFM.Map.STATUS_TOUCH)
+}
+
+map.addEventListener(map.eventTypes.onRouterFinish, () => {
+  
+  onRouterFinish()
 })
 
 function doAddCarMarker(pos) {
@@ -708,30 +693,18 @@ function addEndMarker(pos) {
   return endMarker
 }
 
-function showSomeUIInNavi(bshow) {
-
-  showEmptySpaceView(bshow)
-
-  showNormalBottomBar(bshow)
-
-  showFindFacilityBtnView(bshow, function() {
-
-    showFindFacilityView()
-  })
-}
-
 map.addEventListener(map.eventTypes.onRouterSuccess, function(data) {
 
   if (!endMarker) {
 
     endMarker = addEndMarker(data.end)
   }
+  
+  _findFacilityBtn.show = false
 
-  showSomeUIInNavi(false)
+  _bottomBar.show = false
 
-  showBottomBar(false)
-
-  showNavigateBottombar(true, data.path, checkExit)
+  showNavigation()
 
   map.changeFloor(data.start.floorId)
 
@@ -740,28 +713,54 @@ map.addEventListener(map.eventTypes.onRouterSuccess, function(data) {
   map.setStatus(YFM.Map.STATUS_NAVIGATE)
 })
 
-map.addEventListener(map.eventTypes.onInitMapSuccess, function(regionEx) {
+let _findCarBtn = null
+function showFindCarBtn() {
+  
+  _findCarBtn = new Vue({
+    el:'#findcarbtn',
+    components: { FindCarBtn },
+    data(){
+      return {
+        show:true
+      }
+    },
+    methods:{
+      handleFindCar(){
+        
+        showFindCarByNum()
+      }
+    }
+  })
+}
 
+function onInitMapSuccess(regionEx) {
+  
   showFloorListView(true)
-
-  showEmptySpaceView(true)
-
-  showLocateStatusView(true)
-
+  
+  showFindCarBtn()
+  // showEmptySpaceView(true)
+  
+  showLocateStatusView()
+  
   showFindFacilityBtnView(true, function() {
-
+    
     showFindFacilityView()
   })
-
-  showNormalBottomBar(true)
-
+  
+  // showNormalBottomBar(true)
+  
   document.title = regionEx.name
-
+  
   zoomView = new ZoomView(map)
-
+  
   zoomView.show()
-
+  
   map.changeFloor(regionEx.floorList[0].id)
+}
+
+map.addEventListener(map.eventTypes.onInitMapSuccess, regionEx => {
+
+  onInitMapSuccess(regionEx)
 })
 
 var tempMarkers = []
@@ -784,27 +783,23 @@ function onFindTargetUnits(units) {
 
 function onMarkUnitInMap() {
 
-  showEmptySpaceView(false)
-
   showFindFacilityBtnView(false)
+  
+  _findCarBtn.show = false
 
-  showNormalBottomBar(false)
+  showBottomBar('取消选择')
+  
+  errortipview.show('点击地图车位框可实现车位标记')
 
-  showBottomBar(true, '点击车位进行选择')
-
-  map.addOnceEvent(map.eventTypes.onUnitClick, function (unit) {
+  map.addOnceEvent(map.eventTypes.onUnitClick, unit => {
 
     var pos = unit.getPos()
 
     addCarMarker(unit)
 
-    showBottomBar(false, '')
+    _bottomBar.show = false
 
     map.doRoute(null, pos)
-
-    showEmptySpaceView(true)
-
-    showNormalBottomBar(true)
 
     return true
   })
@@ -1073,32 +1068,49 @@ function showAlertBox(title, message, buttons) {
   alertboxview.show(title, message, buttons)
 }
 
-var bottomBar = null
+var _bottomBar = null
 
-function showBottomBar(bshow, message) {
+function showBottomBar(message) {
 
-  if (!bottomBar && bshow) {
-
-    bottomBar = new BottomBar()
+  if (_bottomBar) {
+  
+    _bottomBar.show = true
+  
+    _bottomBar.message = message
+    
+    return
   }
-
-  bottomBar && bottomBar.show(bshow, message)
+  
+  _bottomBar = new Vue({
+    el:'#bottombar',
+    components:{ bottombar },
+    data: function() {
+      return {
+        message:message,
+        show:true
+      }
+    },
+    methods:{
+      onClick() {
+      
+        this.show = false
+        
+        _findCarBtn.show = true
+      }
+    }
+  })
 }
 
 function updateMarkerPos() {
 
-  showBottomBar(true, '点击车位进行选择')
-
-  showNormalBottomBar(false)
+  showBottomBar('取消选择')
 
   map.addOnceEvent(map.eventTypes.onUnitClick, function(unit) {
 
     endMarker = map.updateMarkerLocation(endMarker, unit.getPos())
 
-    showBottomBar(false, '')
-
-    showNormalBottomBar(true)
-
+    _bottomBar.show = false
+    
     return true
   })
 }

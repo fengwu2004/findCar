@@ -18,6 +18,7 @@
     <div id="emptyspace">
       <emptyspace v-if="show" v-on:onclick="onFindEmptySpace" v-bind:dofind="doFind"></emptyspace>
     </div>
+    <find-car-btn v-show="show" @find-car="handleFindCar" id="findcarbtn"></find-car-btn>
     <div id="locateState">
       <locatestatediv v-if="show" v-bind:dolocate="dolocate" v-on:onclick="doLocating"></locatestatediv>
     </div>
@@ -32,21 +33,15 @@
     <div id="footer">
       <normalbottombar v-for="item in btnInfos" v-bind:data="item" v-bind:key="item.type"></normalbottombar>
     </div>
-    <div id="publicfacility">
-      <publicfacilitydiv v-on:onclick="onclick"></publicfacilitydiv>
-    </div>
+    <publicfacilitydiv id="publicfacility" v-on:onclick="onclick"></publicfacilitydiv>
     <div id="findfacility">
       <findfacilityview v-bind:facilities="facilitys" v-on:onnavigateto="onNavigateTo"></findfacilityview>
     </div>
-    <div id="navigate">
-      <navigatebottombar v-if="show" v-bind:routers="routerpos" v-bind:initfloorid="initFloorId" v-on:onexit="onStopNavigate" v-on:showfloor="onShowSelectFloor"></navigatebottombar>
-    </div>
+    <navigation id="navigation" v-if="show" v-on:stopnavigate="onStopNavigate"></navigation>
     <div id="alertbox">
       <alertbox v-bind:title="title" v-bind:message="message" v-bind:buttons="buttons"></alertbox>
     </div>
-    <div id="bottombar">
-     <bottombar v-bind:message="message"></bottombar>
-    </div>
+    <bottombar id="bottombar" @click="onClick" v-bind:message="message" v-show="show"></bottombar>
     <div id="updatemaker">
       <updatemarkerview v-if="show" v-bind:x="x" v-bind:y="y" v-on:ondelete="deleteMarker" v-on:onchangepos="changeMarkerPos" v-on:onshare="share"></updatemarkerview>
     </div>
