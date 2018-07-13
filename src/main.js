@@ -26,7 +26,7 @@ var config = require('../config')
 
 Vue.config.productionTip = false
 
-window.debugtest = true
+window.debugtest = false
 
 var regionId = '15313792400143094'
 
