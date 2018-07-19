@@ -16,17 +16,119 @@
 
 <script>
 
+
   import facilitybtn from './facilitybtn.vue'
 
+  const futi = {
+    type:1,
+    title:'扶梯',
+    icon:'./static/futi.png'
+  }
+
+  const dianti = {
+
+    type:2,
+    title:'电梯',
+    icon:'./static/dianti.png'
+  }
+
+  const xishoujian = {
+    type:3,
+    title:'洗手间',
+    icon:'./static/cesuo.png'
+  }
+
+  const atm = {
+    type:4,
+    title:'ATM',
+    icon:'./static/ATM.png'
+  }
+
+  const chukou = {
+    type:5,
+    title:'出口',
+    icon:'./static/chukou.png'
+  }
+
+  const rukou = {
+    type:7,
+    title:'入口',
+    icon:'./static/rukou.png'
+  }
+
+  const anquanchukou = {
+    type:8,
+    title:'安全出口',
+    icon:'./static/people.png'
+  }
+
+  const louti = {
+    type:9,
+    title:'楼梯',
+    icon:'./static/louti.png'
+  }
+
+  const xiche = {
+    type:10,
+    title:'洗车',
+    icon:'./static/xiche.png'
+  }
+
+  const shoufeichu = {
+    type:11,
+    title:'收费处',
+    icon:'./static/shoufeichu.png'
+  }
+
+  function getIcons(type) {
+
+    if (type == 1) return futi
+
+    if (type == 2) return dianti
+
+    if (type == 3) return xishoujian
+
+    if (type == 4) return atm
+
+    if (type == 5) return chukou
+
+    if (type == 7) return rukou
+
+    if (type == 8) return anquanchukou
+
+    if (type == 9) return louti
+
+    if (type == 10) return xiche
+
+    if (type == 11) return shoufeichu
+  }
+
   export default {
-    name :'findfacilityview',
-    props:['facilities'],
+    name :'FacilityPanel',
+    props:['map'],
+    data(){
+      return {
+        facilities:[]
+      }
+    },
+    mounted(){
+
+      let temps = this.map.findUnitsWithType([1, 2, 3, 4, 5, 7, 8, 9, 10, 11])
+
+      this.facilities.length = 0
+
+      for (var key in temps) {
+
+        this.facilities.push(getIcons(key))
+      }
+    },
     methods:{
-      onClose:function() {
-        this.$root.$el.style.visibility = 'hidden'
+      onClose() {
+
+        this.$emit('onclose')
       },
-      onClickUnit:function(type) {
-        this.onClose()
+      onClickUnit(type) {
+
         this.$emit('onnavigateto', type)
       }
     },

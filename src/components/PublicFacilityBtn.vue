@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'publicfacilitydiv',
+  name: 'PublicFacilityBtn',
   methods: {
     onClick() {
       this.$emit('onclick')
@@ -17,10 +17,14 @@ export default {
 <style scoped>
 
   div {
+
     background: url("../assets/public_fac1.png") no-repeat;
     background-size: 2.5rem;
-    width: 100%;
-    height: 100%;
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    bottom: 10rem;
+    left: 1rem;
   }
 
 </style>

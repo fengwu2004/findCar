@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import locatestatediv from './components/locatestatus.vue'
+import locatestatediv from './components/LocateStatusControl.vue'
 
 function LocateStatusView(map) {
   

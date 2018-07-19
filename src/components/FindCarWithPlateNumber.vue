@@ -8,17 +8,17 @@
       <p class="tip">请输入您的车牌号</p>
       <div class="inputandresults">
         <input placeholder="例：粤B NB001" v-model="carnumber" v-on:focus="onFocuse"/>
-        <div v-for="(car, index) in carlist" v-bind:key="car.carNo" class="droplist" v-on:click="onSelect(car)">
+        <div v-for="(car) in carlist" v-bind:key="car.carNo" class="droplist" v-on:click="onSelect(car)">
           <label class="carNo">{{ car.carNo }}</label>
           <label class="placeCode">{{ car.placeCode }}</label>
         </div>
       </div>
       <p v-bind:class="getErrorShow">该车辆不在此停车场，请确认车牌号!</p>
-      <div class="confirmBtn" v-on:click="onConfirm">确定</div>
+      <div class="confirmBtn" v-on:click="onFindByCarNo">确定</div>
       <div class="line">
         <div></div><span>or</span><div></div>
       </div>
-      <div class="cancelBtn" v-on:click="onCancel">输入车位号找车</div>
+      <div class="cancelBtn" v-on:click="onChangeToSearchUnit">输入车位号找车</div>
       <br>
     </div>
   </div>
@@ -26,13 +26,17 @@
 
 <script>
 
+  import { networkInstance } from "../../../indoorunMap/map";
+
   export default {
-    name:'findwithnum',
-    props:['error', 'placeinfos', 'carlist', 'initcarno'],
-    data: function () {
+    name:'FindCarWithPlateNumber',
+    props:['initcarno'],
+    data() {
       return {
         carnumber:"",
-        onfocuse:false
+        onfocuse:false,
+        error:false,
+        carlist:[]
       }
     },
     mounted:function () {
@@ -43,27 +47,57 @@
       }
     },
     methods: {
-      onClose:function () {
+      onFindByCarNo(carNo) {
 
-        this.$emit('close')
+        networkInstance.getParkingPlaceUnitByCarNo(carNo)
+          .then(({data})=>{
+
+            const { matchedCarList } = data
+
+            if (!matchedCarList) {
+
+              return Promise.reject(null)
+            }
+
+            if (matchedCarList.length == 1) {
+
+              this.$emit('navigatetocar', matchedCarList)
+
+              this.onClose()
+            }
+            else {
+
+              this.carlist = matchedCarList
+            }
+          })
+          .catch(e=>{
+
+            this.error = true
+
+            console.log(e)
+          })
       },
-      onConfirm:function() {
+      onClose() {
 
-        this.onfocuse = false
-
-        this.$emit('confirm', this.carnumber)
+        this.$store.dispatch('finishSearchCarByPlateNumber')
+          .catch(e=>console.log(e))
       },
-      onSelect:function (car) {
+      onSelect(car) {
 
-        console.log('selectcar')
+        this.$emit('navigatetocar', car)
 
-        this.$emit('selectcar', car)
+        this.onClose()
       },
-      onCancel:function () {
+      onChangeToSearchUnit() {
 
-        this.$emit('changetosearchunit')
+        this.$store.dispatch('finishSearchCarByPlateNumber')
+          .then(()=>{
+
+            return this.$store.dispatch('startSearchCarByUnit')
+          })
+          .catch(e=>console.log(e))
       },
-      onFocuse:function () {
+      onFocuse() {
 
         this.onfocuse = true
       }
@@ -84,7 +118,7 @@
         return 'errorTipHide'
       }
     }
-}
+  }
 
 </script>
 

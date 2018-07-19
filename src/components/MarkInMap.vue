@@ -1,16 +1,16 @@
 <template>
   <div @click="onClick">
-    <p>{{ message }}</p>
+    <p>取消选点</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'bottombar',
-  props:['message'],
+  name: 'MarkInMap',
   methods:{
     onClick() {
-      this.$emit('click')
+
+      this.$store.dispatch('finishMarkInMap')
     }
   }
 }

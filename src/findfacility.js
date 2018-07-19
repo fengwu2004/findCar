@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import findfacilityview from './components/findfacilityview.vue'
+import findfacilityview from './components/FacilityPanel.vue'
 
 var futi = {
   type:1,

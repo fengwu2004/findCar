@@ -23,62 +23,8 @@
 
 <script>
 
-  function onClose() {
-
-    this.$emit('onclose', 2)
-  }
-
-  function onCancel() {
-
-    this.onClose()
-
-    this.$emit('onmarkinmap')
-  }
-
-  function onConfirm() {
-
-    var units = this.map.findUnitWithName(this.selectedFloorId, this.unitName)
-
-    if (!units) {
-
-      this.findError = true
-    }
-    else {
-
-      this.onClose()
-
-      this.$emit('onfindunits', units)
-    }
-  }
-
-  function onSelectFloor(floorId) {
-
-    this.selectedFloorId = floorId
-
-    this.map.autoChangeFloor = false
-
-    this.map.changeFloor(floorId)
-  }
-
-  function getFloorStyle(floorId) {
-
-    if (floorId === this.selectedFloorId) {
-
-      return 'floor floorSelected'
-    }
-    else {
-
-      return 'floor'
-    }
-  }
-
-  function onFocuse() {
-
-    this.findError = false
-  }
-
   export default {
-    name:'findwithunit',
+    name:'FindCarWithUnit',
     props:['map'],
     data:function() {
       return {
@@ -88,13 +34,66 @@
         selectedFloorId:this.map.getFloorId()
       }
     },
+    mounted() {
+
+      this.floorlist = this.map.regionEx.floorList
+    },
     methods:{
-      onClose:onClose,
-      onCancel:onCancel,
-      onConfirm:onConfirm,
-      onSelectFloor:onSelectFloor,
-      getFloorStyle:getFloorStyle,
-      onFocuse:onFocuse
+      onClose() {
+
+        this.$store.dispatch('finishSearchCarByUnit').catch(e=>console.log(e))
+      },
+      onCancel() {
+
+        this.$store.dispatch('finishSearchCarByUnit')
+          .then(()=>{
+
+            return this.$store.dispatch('startMarkInMap')
+          })
+          .then(()=>{
+
+            Toast.show('点击车位进行标记')
+          })
+          .catch(e=>console.log(e))
+      },
+      onConfirm() {
+
+        var units = this.map.findUnitWithName(this.selectedFloorId, this.unitName)
+
+        if (!units) {
+
+          this.findError = true
+        }
+        else {
+
+          this.onClose()
+
+          this.$emit('onfindunits', units)
+        }
+      },
+      onSelectFloor(floorId) {
+
+        this.selectedFloorId = floorId
+
+        this.map.autoChangeFloor = false
+
+        this.map.changeFloor(floorId)
+      },
+      getFloorStyle(floorId) {
+
+        if (floorId === this.selectedFloorId) {
+
+          return 'floor floorSelected'
+        }
+        else {
+
+          return 'floor'
+        }
+      },
+      onFocuse() {
+
+        this.findError = false
+      }
     },
     computed:{
       showerror:function() {

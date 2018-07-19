@@ -11,11 +11,11 @@
 
 <script>
   export default {
-    name : 'zoom',
+    name : 'Zoom',
     props:['map'],
-    data: function() {
+    data() {
       return {
-        _time:null
+        time:null
       }
     },
     methods: {
@@ -23,22 +23,22 @@
 
         var time = (new Date()).getTime()
 
-        if (!this._time || time - this._time > 1000) {
+        if (!this.time || time - this.time > 1000) {
 
           this.map.zoom(0.75)
 
-          this._time = time
+          this.time = time
         }
       },
       zoomin:function() {
 
         var time = (new Date()).getTime()
 
-        if (!this._time || time - this._time > 1000) {
+        if (!this.time || time - this.time > 1000) {
 
           this.map.zoom(1.35)
 
-          this._time = time
+          this.time = time
         }
       },
     }

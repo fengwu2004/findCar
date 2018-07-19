@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import publicfacilitydiv from './components/publicfacility.vue'
+import publicfacilitydiv from './components/PublicFacilityBtn.vue'
 
 function FindFacilityView(cb) {
   

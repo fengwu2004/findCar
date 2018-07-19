@@ -2,15 +2,15 @@
   <div>
     <div class="topbar">
       <div class="rightorleft">
-        <img v-if="left" src="../assets/left.png"/>
+        <img v-if="navigation.nextLeft" src="../assets/left.png"/>
         <img v-else src="../assets/right.png"/>
       </div>
       <div class="navistatus">
         <div class="total">
-          <div class="title">前方路口</div><div class="detail">全程剩余: {{totaldistance}}米 {{Math.ceil(totaldistance/60)}}分钟</div>
+          <div class="title">前方路口</div><div class="detail">全程剩余: {{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
         </div>
         <div class="direction">
-          {{nextdistance}}米{{left?'  左转':'  右转'}}
+          {{navigation.nextDistance}}米{{navigation.nextLeft?'  左转':'  右转'}}
         </div>
       </div>
     </div>
@@ -26,9 +26,15 @@
 
 <script>
 
+  import { mapGetters } from 'vuex'
+
   export default {
     name : 'navigation',
-    props:['left', 'totaldistance', 'nextdistance'],
+    computed: {
+      ...mapGetters([
+        'navigation'
+      ])
+    },
     methods: {
       exit() {
 
@@ -37,11 +43,6 @@
       birdlook() {
 
         this.$emit('birdlook')
-      }
-    },
-    data() {
-      return {
-
       }
     }
   }

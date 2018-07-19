@@ -14,43 +14,9 @@
     <script type="text/javascript" src="./static/yfmap.min.js"></script>
   </head>
   <body id="body">
-    <div id="map" class="page"></div>
-    <div id="emptyspace">
-      <emptyspace v-if="show" v-on:onclick="onFindEmptySpace" v-bind:dofind="doFind"></emptyspace>
-    </div>
-    <find-car-btn v-show="show" @find-car="handleFindCar" id="findcarbtn"></find-car-btn>
-    <div id="locateState">
-      <locatestatediv v-if="show" v-bind:dolocate="dolocate" v-on:onclick="doLocating"></locatestatediv>
-    </div>
-    <div id="floorList">
-      <floorlistdiv v-if="show" v-bind:floorlist="floorList" v-bind:selectfloorid="currentFloorId" v-bind:locatefloorid="locateFloorId" v-on:onselect="onSelect"></floorlistdiv>
-    </div>
-    <findwithnum id="findwithnum" v-show="show" v-on:selectcar="onSelectCar"  v-bind:initcarno="carno" v-bind:error="error" v-bind:carlist="carlist" v-on:close="onClose" v-on:changetosearchunit="onChangeToSearchUnit" v-on:confirm="onFindByCarNo"></findwithnum>
-    <findwithunit id="findwithunit" v-show="show" v-on:onfindunits="onFindUnits" v-bind:map="map" v-on:onclose="onClose" v-on:onmarkinmap="onMarkInMap"></findwithunit>
-    <div id="markwithble">
-      <markwithble v-show="show" v-bind:name="name" v-on:confirm="onConfirm" v-on:close="onClose"></markwithble>
-    </div>
-    <div id="footer">
-      <normalbottombar v-for="item in btnInfos" v-bind:data="item" v-bind:key="item.type"></normalbottombar>
-    </div>
-    <publicfacilitydiv id="publicfacility" v-on:onclick="onclick"></publicfacilitydiv>
-    <div id="findfacility">
-      <findfacilityview v-bind:facilities="facilitys" v-on:onnavigateto="onNavigateTo"></findfacilityview>
-    </div>
-    <navigation id="navigation" v-if="show" v-on:stopnavigate="onStopNavigate" :left="left" :totaldistance="totaldistance" :nextdistance="nextdistance"></navigation>
-    <div id="alertbox">
-      <alertbox v-bind:title="title" v-bind:message="message" v-bind:buttons="buttons"></alertbox>
-    </div>
-    <bottombar id="bottombar" @click="onClick" v-bind:message="message" v-show="show"></bottombar>
-    <div id="updatemaker">
-      <updatemarkerview v-if="show" v-bind:x="x" v-bind:y="y" v-on:ondelete="deleteMarker" v-on:onchangepos="changeMarkerPos" v-on:onshare="share"></updatemarkerview>
-    </div>
-    <div id="errortip">
-      <errortipview v-bind:message="message" v-bind:opacity="display"></errortipview>
-    </div>
-    <div id="zoom">
-      <zoom v-bind:map="map"></zoom>
-    </div>
+    <div id="app"></div>
+    <alertbox id="alertbox" :message="message" :title="title" :buttons="buttons"></alertbox>
+    <errortipview id="errortip" :message="message" v-show="display"></errortipview>
     <label id="debug"></label>
   </body>
 </html>

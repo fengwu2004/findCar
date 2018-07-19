@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import alertbox from './components/alertbox.vue'
+import alertbox from '@/components/alertbox.vue'
 
 function AlertBox() {
   

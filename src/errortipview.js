@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import errortipview from './components/errortipview.vue'
+import errortipview from '@/components/errortipview.vue'
 
 function ErrorTipView() {
   
@@ -12,7 +12,7 @@ function ErrorTipView() {
     _vm = new Vue({
       el:'#errortip',
       components: { errortipview },
-      data:function() {
+      data() {
         return {
           message:_message,
           display:1
@@ -29,7 +29,7 @@ function ErrorTipView() {
   
       load()
   
-      setTimeout(function() {
+      setTimeout(()=> {
     
         _vm.display = 0
     
