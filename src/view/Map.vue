@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="map" class="page"></div>
-    <find-car-btn v-if="showFindCarBtn && !mapState.markInMap && !navigation.start" @find-car="beginFindCar"></find-car-btn>
+    <find-car-btn v-if="!mapState.markInMap && !navigation.start" @find-car="beginFindCar"></find-car-btn>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
     <floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno"></find-car-with-plate-number>
@@ -10,7 +10,7 @@
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
     <navigation v-if='navigation.start' v-on:stopnavigate="onStopNavigate"></navigation>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
-    <zoom v-bind:map="map" v-if="showZoom"></zoom>
+    <zoom v-bind:map="map"></zoom>
   </div>
 </template>
 
@@ -57,10 +57,6 @@
         regionEx:null,
         map:null,
         dolocate:false,
-        showFindCarBtn:true,
-        showZoom:true,
-        firsttime:true,
-        navigationState:{},
         regionId:'15313792400143094',
         carno:'',
         endMarker:null
