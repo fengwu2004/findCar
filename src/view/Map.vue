@@ -144,24 +144,24 @@
 
         var unfind = {name:'未找到爱车', callback:()=> {
 
-            alertboxview.hide()
+            Alertboxview.hide()
 
             this.map.stopRoute()
           }}
 
         var found = {name:'已找到爱车', callback:()=> {
 
-            alertboxview.hide()
+            Alertboxview.hide()
 
             this.map.stopRoute()
           }}
 
         var cancel = {name:'取消', callback:() => {
 
-            alertboxview.hide()
+            Alertboxview.hide()
           }}
 
-        showAlertBox('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
+        Alertboxview.show('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
       },
       onNavigateTo(unitType) {
 
@@ -189,6 +189,8 @@
         }
 
         this.currentFloorName = this.getCurrentName()
+
+        this.map.addUnit(this.regionEx.getFloorbyId(floorId).unitList)
       },
       getCurrentName() {
 
