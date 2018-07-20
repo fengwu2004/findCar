@@ -10,7 +10,12 @@
           <div class="title">前方路口</div><div class="detail">全程剩余: {{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
         </div>
         <div class="direction">
-          {{navigation.nextDistance}}米{{navigation.nextLeft?'  左转':'  右转'}}
+          <div>
+            {{navigation.nextDistance}}米{{navigation.nextLeft?'  左转':'  右转'}}
+          </div>
+          <div class="speaker">
+
+          </div>
         </div>
       </div>
     </div>
@@ -98,8 +103,17 @@
 
     .direction {
 
+      display: flex;
+      justify-content: space-between;
       font-size: 1.5rem;
       color: #3984DD;
+
+      .speaker {
+
+        width: 2.5rem;
+        height: 2.5rem;
+        background: url("../assets/speaker.png") no-repeat center/100%;
+      }
     }
   }
 
