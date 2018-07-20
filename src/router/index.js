@@ -6,11 +6,17 @@ import EmptySpace from '@/view/EmptySpace'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/emptyspace',
       name: 'emptyspace',
       component: EmptySpace
+    },
+    {
+      path: '/',
+      name: 'map',
+      component: map
     }
   ]
 })
