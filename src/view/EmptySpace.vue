@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="map" class="page"></div>
+    <empty-space-list></empty-space-list>
     <floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>
     <zoom v-bind:map="map"></zoom>
   </div>
@@ -14,12 +15,14 @@
   import navigation from '@/components/navigation.vue'
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
+  import EmptySpaceList from "@/components/EmptySpaceList";
 
   window.debugtest = true
 
   export default {
     name: "EmptySpace",
     components: {
+      EmptySpaceList,
       Zoom,
       FloorListControl,
       },
@@ -73,16 +76,27 @@
       },
       onUnitClick(unit) {
 
-        if (!this.mapState.markInMap) {
+        if (unit.fakeName == undefined) {
 
           return
         }
 
-        this.$store.dispatch('finishMarkInMap')
-          .then(()=>{
+        var unfind = {name:'车位编号: ' + unit.name, callback:()=> {
 
-            this.map.doRoute(null, unit.position)
-          })
+            Alertboxview.hide()
+          }}
+
+        var found = {name:'车位类型: ' + unit.fakeName, callback:()=> {
+
+            Alertboxview.hide()
+          }}
+
+        var cancel = {name:unit.spaceStatus ? '使用情况: 已停车位' : '使用情况: 空车位', callback:() => {
+
+            Alertboxview.hide()
+          }}
+
+        Alertboxview.show('车位使用情况', null, [unfind, found, cancel])
       },
       onInitMapSuccess(regionEx) {
 

@@ -21,11 +21,6 @@ new Vue({
   template: '<App/>'
 })
 
-window.alertboxview = new AlertBox()
-
-window.showAlertBox = function(title, message, buttons) {
-  
-  window.alertboxview.show(title, message, buttons)
-}
+window.Alertboxview = new AlertBox()
 
 window.Toast = new ErrorTipView()
