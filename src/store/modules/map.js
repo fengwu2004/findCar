@@ -56,7 +56,7 @@ export const map = {
       return new Promise(resolve => {
   
         commit('SEARCHCAR_WITH_UNIT', false)
-    
+        
         resolve()
       })
     },

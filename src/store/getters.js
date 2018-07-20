@@ -4,6 +4,7 @@ const getters = {
   searchCarWithUnit: state => state.map.searchCarWithUnit,
   inNavi: state => state.map.inNavi,
   mapState: state => state.map,
-  navigation: state => state.navigation
+  navigation: state => state.navigation,
+  parkingdetail:state => state.parkingdetail,
 }
 export default getters
