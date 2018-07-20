@@ -96,17 +96,22 @@
       },
       updateUnits(regionEx, {spaceOverviewList}) {
 
+        console.log(spaceOverviewList)
+
         spaceOverviewList.forEach(({spaceType, spaceList})=>{
 
           spaceList.forEach(({floorId, unitId, carNo, spaceStatus})=> {
 
             let unit = regionEx.getUnitById(floorId, unitId)
 
-            unit.fakeName = spaceType
+            if (unit) {
 
-            unit.carNo = carNo
+              unit.fakeName = spaceType
 
-            unit.spaceStatus = spaceStatus
+              unit.carNo = carNo
+
+              unit.spaceStatus = spaceStatus
+            }
           })
         })
       },
@@ -119,7 +124,7 @@
         networkInstance.parksOverview(this.regionId)
           .then(res=>{
 
-            return this.$store.dispatch('setParkingDetail', res)
+            return this.$store.dispatch('setParkingDetail', res.data[0])
           })
           .then(()=>{
 
