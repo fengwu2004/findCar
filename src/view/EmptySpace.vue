@@ -81,17 +81,21 @@
           return
         }
 
-        var unfind = {name:'车位编号: ' + unit.name, callback:()=> {
+        var unfind = {name:'<span style="color: #636363;">车位编号: ' + unit.name + '</span>', callback:()=> {
 
             Alertboxview.hide()
           }}
 
-        var found = {name:'车位类型: ' + unit.fakeName, callback:()=> {
+        var found = {name:'<span style="color: #636363;">车位类型: ' + unit.fakeName + '</span>', callback:()=> {
 
             Alertboxview.hide()
           }}
 
-        var cancel = {name:unit.spaceStatus ? '使用情况: 已停车位' : '使用情况: 空车位', callback:() => {
+        const used = '<span style="color: #636363;">使用情况: </span>' + '<span style="color: #dc6e6e;">已停车位</span>'
+
+        const unused = '<span style="color: #636363;">使用情况: </span>' + '<span style="color: #82c33b;">空车位</span>'
+
+        var cancel = {name:unit.spaceStatus ? used : unused, callback:() => {
 
             Alertboxview.hide()
           }}
@@ -138,7 +142,12 @@
         networkInstance.parksOverview(this.regionId)
           .then(res=>{
 
-            return this.$store.dispatch('setParkingDetail', res.data[0])
+            if (res.data.length > 0) {
+
+              return this.$store.dispatch('setParkingDetail', res.data[0])
+            }
+
+            return Promise.reject(null)
           })
           .then(()=>{
 
