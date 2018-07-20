@@ -8,7 +8,7 @@
     <find-car-with-unit v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
-    <navigation v-if='navigation.start' v-on:stopnavigate="onStopNavigate"></navigation>
+    <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook"></navigation>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
     <zoom v-bind:map="map"></zoom>
   </div>
@@ -138,7 +138,10 @@
 
             this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
           })
+      },
+      birdLook() {
 
+        this.map.birdLook()
       },
       onStopNavigate() {
 

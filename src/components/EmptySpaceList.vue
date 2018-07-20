@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <div v-if="!isUp" class="up" @click="isUp = !isUp"></div>
-    <div v-else class="down" @click="isUp = !isUp"></div>
+    <div v-if="!isUp" class="down" @click="isUp = !isUp"></div>
+    <div v-else class="up" @click="isUp = !isUp"></div>
     <div class="listheader" @click="isUp = !isUp">
       <div>车位类型</div>
       <div>车位总数</div>

@@ -38,9 +38,11 @@
     methods: {
       exit() {
 
-        this.$emit('stopnavigate')
+        this.$emit('stop')
       },
       birdlook() {
+
+        console.log('birdlook')
 
         this.$emit('birdlook')
       }
