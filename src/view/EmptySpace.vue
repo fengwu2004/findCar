@@ -1,9 +1,9 @@
 <template>
   <div>
     <div id="map" class="page"></div>
-    <empty-space-list></empty-space-list>
-    <floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>
     <zoom v-bind:map="map"></zoom>
+    <empty-space-list></empty-space-list>
+    <!--<floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>-->
   </div>
 </template>
 

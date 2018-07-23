@@ -13,24 +13,6 @@
   color:#e63174;
 }
 
-/*放大缩小样式*/
-.scale_btn {
-  position: fixed;
-  right: 1rem;
-  bottom: 14%;
-  z-index: 11;
-}
-
-.scale_btn div {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-.scale_btn div img {
-  width: 100%;
-  height: 100%;
-}
-
 .fadein {
   visibility: visible;
   opacity: 1;

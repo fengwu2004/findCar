@@ -40,6 +40,7 @@
   .main {
 
     position: absolute;
+    /*z-index: 11;*/
     bottom: 0;
     width: 100%;
     display: flex;
@@ -51,7 +52,6 @@
 
     width: 6rem;
     height: 0.8rem;
-
   }
 
   .up {

@@ -13,9 +13,8 @@
           <div>
             {{navigation.nextDistance}}米{{navigation.nextLeft?'  左转':'  右转'}}
           </div>
-          <div class="speaker">
-
-          </div>
+          <div v-if="speakerOn" class="speaker" @click="speakerOn = !speakerOn"></div>
+          <div v-else class="speakeroff" @click="speakerOn = !speakerOn"></div>
         </div>
       </div>
     </div>
@@ -39,6 +38,12 @@
       ...mapGetters([
         'navigation'
       ])
+    },
+    data() {
+
+      return {
+        speakerOn:false,
+      }
     },
     methods: {
       exit() {
@@ -105,14 +110,24 @@
 
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 1.5rem;
       color: #3984DD;
 
       .speaker {
 
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 2rem;
         background: url("../assets/speaker.png") no-repeat center/100%;
+      }
+
+      .speakeroff {
+
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 2rem;
+        background: url("../assets/speakeroff.png") no-repeat center/100%;
       }
     }
   }

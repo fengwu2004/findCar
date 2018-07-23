@@ -3,7 +3,7 @@
     <div id="map" class="page"></div>
     <find-car-btn v-if="!mapState.markInMap && !navigation.start" @find-car="beginFindCar"></find-car-btn>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
-    <floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>
+    <!--<floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>-->
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno"></find-car-with-plate-number>
     <find-car-with-unit v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
@@ -31,7 +31,7 @@
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
 
-  window.debugtest = true
+  // window.debugtest = true
 
   export default {
     name: "Map",
