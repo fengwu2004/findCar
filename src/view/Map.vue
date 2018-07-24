@@ -60,7 +60,7 @@
         regionId:'15313792400143094',
         carno:'',
         endMarker:null,
-        audio:null
+        audioTime:0
       }
     },
     computed: {
@@ -301,24 +301,6 @@
 
         this.map.autoChangeFloor = false
       },
-      onSelectCar(car) {
-
-        var unit = this.map.findUnitWithId(car.unitId)
-
-        this.addCarMarker(unit)
-
-        this.map.doRoute(null, unit.getPos())
-          .then(res=>{
-
-            return this.onRouterSuccess(res)
-          })
-          .catch(res=>{
-
-            window.Toast.show(res)
-          })
-
-        this.show = false
-      },
       onMapClick(pos) {
 
         if (window.debugtest) {
@@ -338,11 +320,20 @@
       },
       playAudio(text) {
 
-        this.audio = new Audio()
+        const date = new Date().getTime()
 
-        this.audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text=' + text
+        if (date - this.audioTime < 5000) {
 
-        this.audio.play()
+          return
+        }
+
+        const audio = new Audio()
+
+        audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text=' + text
+
+        audio.play()
+
+        this.audioTime = date
       },
       onNaviStatusUpdate({validate, projDist, goalDist, serialDist, nextSug}) {
 
