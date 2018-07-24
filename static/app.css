@@ -63,9 +63,11 @@ body, html {
   bottom: 0; }
 
 #debug {
-  z-index: 1000;
+  z-index: 2000;
   position: absolute;
-  font-size: 0.5rem;
+  left: 2rem;
+  top: 5rem;
+  font-size: 1rem;
   visibility: hidden; }
 
 /*# sourceMappingURL=app.css.map */

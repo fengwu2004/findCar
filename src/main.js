@@ -12,6 +12,10 @@ Vue.config.productionTip = false
 
 Vue.use(Vuex)
 
+window.Alertboxview = new AlertBox()
+
+window.Toast = new ErrorTipView()
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -20,7 +24,3 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
-
-window.Alertboxview = new AlertBox()
-
-window.Toast = new ErrorTipView()

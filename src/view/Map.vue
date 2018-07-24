@@ -31,7 +31,7 @@
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
 
-  // window.debugtest = true
+  window.debugtest = true
 
   export default {
     name: "Map",
@@ -59,7 +59,8 @@
         dolocate:false,
         regionId:'15313792400143094',
         carno:'',
-        endMarker:null
+        endMarker:null,
+        audio:null
       }
     },
     computed: {
@@ -82,11 +83,6 @@
       this.map.addEventListener(idrMapEventTypes.onInitMapSuccess, regionEx => {
 
         this.onInitMapSuccess(regionEx)
-      })
-
-      this.map.addEventListener(idrMapEventTypes.onRouterSuccess, (data) => {
-
-        this.onRouterSuccess(data)
       })
 
       this.map.addEventListener(idrMapEventTypes.onRouterFinish, () => {
@@ -120,30 +116,48 @@
         this.$store.dispatch('finishMarkInMap')
           .then(()=>{
 
-            this.map.doRoute(null, unit.position)
+            return this.map.doRoute(null, unit.position)
+          })
+          .then((res)=>{
+
+            return this.onRouterSuccess(res)
+          })
+          .catch(res=>{
+
+            window.Toast.show(res)
           })
       },
-      onRouterSuccess({start, end}) {
+      onRouterSuccess({start, end}, findcar = true) {
 
-        this.$store.dispatch('startNavigation')
-          .then(()=>{
+        return new Promise((resolve => {
 
-            this.map.removeMarker(this.endMarker)
+          this.$store.dispatch('startNavigation', findcar)
+            .then(()=>{
 
-            this.endMarker = this.addEndMarker(end)
+              this.addEndMarker(end)
 
-            this.map.changeFloor(start.floorId)
+              this.map.changeFloor(start.floorId)
 
-            this.map.birdLook()
+              this.map.birdLook()
 
-            this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
-          })
+              this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
+
+              resolve()
+            })
+        }))
       },
       birdLook() {
 
         this.map.birdLook()
       },
       onStopNavigate() {
+
+        if (!this.navigation.findCar) {
+
+          this.map.stopRoute()
+
+          return
+        }
 
         var unfind = {name:'未找到爱车', callback:()=> {
 
@@ -168,7 +182,27 @@
       },
       onNavigateTo(unitType) {
 
+        this.showFacilityPanel = false
 
+        const units = this.regionEx.findUnitsWithType([unitType])
+
+        if (unitType in units) {
+
+          const unit = this.regionEx.findNearUnit(this.map.getUserPos(), units[unitType])
+
+          if (unit) {
+
+            this.map.doRoute(null, unit.position)
+              .then(res=>{
+
+                return this.onRouterSuccess(res, false)
+              })
+              .catch(res=>{
+
+                window.Toast.show(res)
+              })
+          }
+        }
       },
       onInitMapSuccess(regionEx) {
 
@@ -217,10 +251,15 @@
 
         this.addCarMarker(unit)
 
-        if (this.map.getUserPos()) {
+        this.map.doRoute(null, unit.getPos())
+          .then(res=>{
 
-          this.map.doRoute(null, unit.getPos())
-        }
+            return this.onRouterSuccess(res)
+          })
+          .catch(res=>{
+
+            window.Toast.show(res)
+          })
       },
       doLocating() {
 
@@ -268,10 +307,15 @@
 
         this.addCarMarker(unit)
 
-        if (this.map.getUserPos()) {
+        this.map.doRoute(null, unit.getPos())
+          .then(res=>{
 
-          this.map.doRoute(null, unit.getPos())
-        }
+            return this.onRouterSuccess(res)
+          })
+          .catch(res=>{
+
+            window.Toast.show(res)
+          })
 
         this.show = false
       },
@@ -292,6 +336,14 @@
 
         this.map.centerPos(pos, false)
       },
+      playAudio(text) {
+
+        this.audio = new Audio()
+
+        this.audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text=' + text
+
+        this.audio.play()
+      },
       onNaviStatusUpdate({validate, projDist, goalDist, serialDist, nextSug}) {
 
         if (!validate) {
@@ -310,18 +362,28 @@
 
         const nextDistance = Math.ceil(serialDist/10.0)
 
+        const leftrighttext = YFM.Map.Navigate.NextSuggestion.LEFT == nextSug ? '左转' : '右转'
+
+        const text = '前方' + nextDistance + '米' + leftrighttext
+
+        this.playAudio(text)
+
         this.$store.dispatch('setNaviStatus', {nextLeft:YFM.Map.Navigate.NextSuggestion.LEFT == nextSug, totalDistance, nextDistance})
+          .catch(res=>{
+
+            console.log(res)
+          })
 
         if (totalDistance < 15) {
 
           var confirm = {name:'知道了', callback:() => {
 
-              alertboxview.hide()
+              window.Alertboxview.hide()
 
               this.map.stopRoute()
             }}
 
-          showAlertBox('您已到达目的地', null, [confirm])
+          window.Alertboxview.show('您已到达目的地', null, [confirm])
         }
       },
       onRouterFinish() {
@@ -346,13 +408,11 @@
       },
       addEndMarker(pos) {
 
-        var IDREndMarker = idrMarkers.IDREndMarker
+        this.map.removeMarker(this.endMarker)
 
-        var endMarker = new IDREndMarker(pos, './static/markericon/end.png')
+        var endMarker = new idrMarkers.IDREndMarker(pos, './static/markericon/end.png')
 
-        this.map.addMarker(endMarker)
-
-        return endMarker
+        this.endMarker = this.map.addMarker(endMarker)
       },
     }
   }

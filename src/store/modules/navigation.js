@@ -4,12 +4,15 @@ export const navigation = {
     totalDistance:0,
     nextLeft:false,
     nextDistance:0,
+    findCar:false
   },
   mutations: {
     
-    START:(state)=> {
+    START:(state, value)=> {
       
       state.start = true
+      
+      state.findCar = value
     },
     STOP:(state)=> {
     
@@ -26,11 +29,11 @@ export const navigation = {
   },
   actions:{
     
-    startNavigation({commit}) {
+    startNavigation({commit}, value) {
       
       return new Promise(resolve => {
         
-        commit('START')
+        commit('START', value)
         
         resolve()
       })
@@ -52,6 +55,6 @@ export const navigation = {
         
         resolve()
       })
-    }
+    },
   }
 }
