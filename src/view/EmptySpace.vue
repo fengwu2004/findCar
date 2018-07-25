@@ -66,14 +66,6 @@
       })
     },
     methods:{
-      onSelect(val) {
-
-        this.currentFloorId = val
-
-        this.map.changeFloor(val)
-
-        this.map.autoChangeFloor = false
-      },
       onUnitClick(unit) {
 
         if (unit.fakeName == undefined) {

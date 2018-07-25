@@ -71,6 +71,8 @@
     },
     mounted() {
 
+      this.regionId = this.$route.params.regionId || '15313792400143094'
+
       this.map = new idrMapView()
 
       this.map.initMap('yf1248331604', 'map', this.regionId)
@@ -273,7 +275,7 @@
         }
         else {
 
-          this.map.doLocation((pos)=>{this.onLocateSuccess(pos)}, msg=>{
+          this.map.doLocation(pos => this.onLocateSuccess(pos), msg => {
 
             this.onLocateFailed(msg)
           })
