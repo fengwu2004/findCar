@@ -14,9 +14,9 @@
   </div>
 </template>
 
-
 <script>
 
+  // import '@/yfmap.min'
   import { idrMapView , networkInstance, idrMarkers, idrMapEventTypes, idrDebug } from '../../../indoorunMap/map'
 
   import MarkInMap from '@/components/MarkInMap'
@@ -325,9 +325,10 @@
       },
       preparePlayAudio() {
 
-        this.audio = new Audio()
+        if (!this.audio) {
 
-        this.audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text='
+          this.audio = new Audio()
+        }
       },
       playAudio(text) {
 
@@ -338,12 +339,7 @@
 
         const date = new Date().getTime()
 
-        if (date - this.audioTime < 3000) {
-
-          return
-        }
-
-        if (!this.audio.ended) {
+        if (date - this.audioTime < 5000) {
 
           return
         }
@@ -429,7 +425,6 @@
 </script>
 <style scoped lang="scss">
 
-  @import "app.css";
   @import "indoorun.css";
 
 </style>

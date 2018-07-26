@@ -13,18 +13,6 @@
   color:#e63174;
 }
 
-.fadein {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 1s linear;
-}
-
-.fadeout {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 2s, opacity 1s linear;
-}
-
 .canvas-frame {
   position:absolute;
   left:0;

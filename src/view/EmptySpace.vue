@@ -10,6 +10,7 @@
 
 <script>
 
+  // import '@/yfmap.min'
   import { idrMapView , networkInstance, idrMapEventTypes } from '../../../indoorunMap/map'
   import FloorListControl from '@/components/FloorListControl.vue'
   import navigation from '@/components/navigation.vue'
@@ -171,7 +172,6 @@
 </script>
 <style scoped lang="scss">
 
-  @import "app.css";
   @import "indoorun.css";
 
 </style>
