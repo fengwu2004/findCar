@@ -12,6 +12,8 @@ Vue.config.productionTip = false
 
 Vue.use(Vuex)
 
+window.debugtest = true
+
 window.Alertboxview = new AlertBox()
 
 window.Toast = new ErrorTipView()
@@ -24,3 +26,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+

@@ -17,8 +17,6 @@
   import Zoom from "@/components/Zoom";
   import EmptySpaceList from "@/components/EmptySpaceList";
 
-  window.debugtest = true
-
   export default {
     name: "EmptySpace",
     components: {
@@ -45,6 +43,8 @@
       ])
     },
     mounted() {
+
+      this.regionId = this.$route.params.regionId || '15313792400143094',
 
       this.map = new idrMapView()
 

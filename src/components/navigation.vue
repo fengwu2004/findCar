@@ -13,8 +13,8 @@
           <div>
             {{navigation.nextDistance}}米{{navigation.nextLeft?'  左转':'  右转'}}
           </div>
-          <div v-if="speakerOn" class="speaker" @click="speakerOn = !speakerOn"></div>
-          <div v-else class="speakeroff" @click="speakerOn = !speakerOn"></div>
+          <div v-if="navigation.enableSpeack" class="speaker" @click="speakControl()"></div>
+          <div v-else class="speakeroff" @click="speakControl()"></div>
         </div>
       </div>
     </div>
@@ -48,6 +48,10 @@
       exit() {
 
         this.$emit('stop')
+      },
+      speakControl() {
+
+        this.$store.dispatch('toggleSpeak')
       },
       birdlook() {
 

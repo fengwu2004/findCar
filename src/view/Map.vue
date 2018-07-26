@@ -17,7 +17,7 @@
 
 <script>
 
-  import { idrMapView , networkInstance, idrMarkers, idrMapEventTypes } from '../../../indoorunMap/map'
+  import { idrMapView , networkInstance, idrMarkers, idrMapEventTypes, idrDebug } from '../../../indoorunMap/map'
 
   import MarkInMap from '@/components/MarkInMap'
   import FloorListControl from '@/components/FloorListControl.vue'
@@ -30,8 +30,6 @@
   import FacilityPanel from '@/components/FacilityPanel'
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
-
-  window.debugtest = true
 
   export default {
     name: "Map",
@@ -60,7 +58,8 @@
         regionId:'15313792400143094',
         carno:'',
         endMarker:null,
-        audioTime:0
+        audioTime:0,
+        audio:null
       }
     },
     computed: {
@@ -173,6 +172,8 @@
             Alertboxview.hide()
 
             this.map.stopRoute()
+
+            this.playAudio('已找到爱车')
           }}
 
         var cancel = {name:'取消', callback:() => {
@@ -246,6 +247,8 @@
       beginFindCar(){
 
         this.$store.dispatch('startSearchCarByPlateNumber').catch(e=>console.log(e))
+
+        this.preparePlayAudio()
       },
       navigateToCar({unitId}) {
 
@@ -320,20 +323,34 @@
 
         this.map.centerPos(pos, false)
       },
+      preparePlayAudio() {
+
+        this.audio = new Audio()
+
+        this.audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text='
+      },
       playAudio(text) {
 
-        const date = new Date().getTime()
-
-        if (date - this.audioTime < 5000) {
+        if (!text) {
 
           return
         }
 
-        const audio = new Audio()
+        const date = new Date().getTime()
 
-        audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text=' + text
+        if (date - this.audioTime < 3000) {
 
-        audio.play()
+          return
+        }
+
+        if (!this.audio.ended) {
+
+          return
+        }
+
+        this.audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text=' + text
+
+        this.audio.play()
 
         this.audioTime = date
       },
@@ -355,19 +372,11 @@
 
         const nextDistance = Math.ceil(serialDist/10.0)
 
-        const leftrighttext = YFM.Map.Navigate.NextSuggestion.LEFT == nextSug ? '左转' : '右转'
-
-        const text = '前方' + nextDistance + '米' + leftrighttext
-
-        this.playAudio(text)
-
         this.$store.dispatch('setNaviStatus', {nextLeft:YFM.Map.Navigate.NextSuggestion.LEFT == nextSug, totalDistance, nextDistance})
-          .catch(res=>{
-
-            console.log(res)
-          })
 
         if (totalDistance < 15) {
+
+          this.playAudio('您已到达目的地')
 
           var confirm = {name:'知道了', callback:() => {
 
@@ -377,6 +386,14 @@
             }}
 
           window.Alertboxview.show('您已到达目的地', null, [confirm])
+        }
+        else  {
+
+          const leftrighttext = YFM.Map.Navigate.NextSuggestion.LEFT == nextSug ? '左转' : '右转'
+
+          const text = '前方' + nextDistance + '米' + leftrighttext
+
+          this.playAudio(text)
         }
       },
       onRouterFinish() {

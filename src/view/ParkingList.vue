@@ -7,23 +7,87 @@
 </template>
 
 <script>
-	export default {
+
+  import { idrLocateServerInstance } from "../../../indoorunMap/map";
+
+  export default {
 
 		name: "ParkingList",
     data(){
 		  return {
 		    regionList:[
-		      {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094'},
-          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195'},
-          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010'},
-          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013'}]
+		      {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094', floorId:'15313804821833137'},
+          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896'},
+          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010', floorId:'15323294173829181'},
+          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013', floorId:'15323290763798360'}],
+        regionIndex:0,
+        emptySpace:false
       }
+    },
+    beforeDestroy() {
+
+      idrLocateServerInstance.stop()
     },
     methods:{
       gotoRegion(regionId) {
 
-        this.$router.push({name:'map', params:{regionId}})
+        if (!this.emptySpace) {
+
+          this.$router.push({name:'map', params:{regionId}})
+        }
+        else {
+
+          this.$router.push({name:'emptyspace', params:{regionId}})
+        }
+      },
+      doLocateSuccess() {
+
+        const { regionId } =  this.regionList[this.regionIndex]
+
+        idrLocateServerInstance.stop()
+
+        this.gotoRegion(regionId)
+      },
+      doLocateFailed() {
+
+        this.regionIndex += 1
+
+        this.doLocate()
+      },
+      async nextRegion() {
+
+        if (this.regionIndex >= this.regionList.length) {
+
+          return Promise.reject(null)
+        }
+
+        return Promise.resolve(this.regionList[this.regionIndex])
+      },
+      doLocate() {
+
+        this.nextRegion()
+          .then((regionId, floorId)=>{
+
+            return idrLocateServerInstance.start(regionId, floorId)
+          })
+          .then(()=>{
+
+            idrLocateServerInstance.setLocateDelegate(()=>{this.doLocateSuccess()}, ()=>this.doLocateFailed())
+          })
+          .catch(msg=>{
+
+            if (msg) {
+
+              window.Toast.show(msg)
+            }
+          })
       }
+    },
+    created() {
+
+		  this.emptySpace = this.$route.query.emptyspace == 1
+
+      this.doLocate()
     }
 	}
 </script>

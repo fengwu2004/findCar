@@ -4,7 +4,8 @@ export const navigation = {
     totalDistance:0,
     nextLeft:false,
     nextDistance:0,
-    findCar:false
+    findCar:false,
+    enableSpeack:true
   },
   mutations: {
     
@@ -13,6 +14,10 @@ export const navigation = {
       state.start = true
       
       state.findCar = value
+    },
+    TOGGLE_SPEAK:(state)=> {
+    
+      state.enableSpeack = !state.enableSpeack
     },
     STOP:(state)=> {
     
@@ -56,5 +61,14 @@ export const navigation = {
         resolve()
       })
     },
+    toggleSpeak({commit}) {
+  
+      return new Promise(resolve => {
+    
+        commit('TOGGLE_SPEAK')
+    
+        resolve()
+      })
+    }
   }
 }

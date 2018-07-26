@@ -6,9 +6,11 @@ import ParkingList from '@/view/ParkingList'
 
 Vue.use(Router)
 
+const base = process.env.NODE_ENV === 'production' ? '/thxz/' : '/'
+
 export default new Router({
   mode: 'history',
-  base:'/thxz/',
+  base,
   routes: [
     {
       path: '/emptyspace',
