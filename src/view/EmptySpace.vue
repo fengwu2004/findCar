@@ -172,6 +172,5 @@
 </script>
 <style scoped lang="scss">
 
-  @import "indoorun.css";
 
 </style>
