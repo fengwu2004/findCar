@@ -11,7 +11,14 @@
 
 	export default {
 		name: "EmptySpaceListCell",
-    props:['data'],
+    props:{
+		  data:{
+        spaceType:String,
+        totalCount:Number,
+        parkingCount:Number,
+        emptyCount:Number
+      }
+    },
 	}
 </script>
 

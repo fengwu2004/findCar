@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import map from '@/view/Map'
 import EmptySpace from '@/view/EmptySpace'
 import ParkingList from '@/view/ParkingList'
+import EmptyList from '@/view/EmptyList'
 
 Vue.use(Router)
 
@@ -23,9 +24,14 @@ export default new Router({
       component: map
     },
     {
-      path: '/',
+      path: '/parkinglist',
       name: 'parkinglist',
       component: ParkingList
+    },
+    {
+      path: '/',
+      name: 'emptylist',
+      component: EmptyList
     }
   ]
 })

@@ -13,7 +13,6 @@
   // import '@/yfmap.min'
   import { idrMapView , networkInstance, idrMapEventTypes } from '../../../indoorunMap/map'
   import FloorListControl from '@/components/FloorListControl.vue'
-  import navigation from '@/components/navigation.vue'
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
   import EmptySpaceList from "@/components/EmptySpaceList";
