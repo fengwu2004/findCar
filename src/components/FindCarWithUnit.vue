@@ -111,7 +111,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
   .main {
     position: absolute;
@@ -235,7 +235,7 @@
     text-align: center;
     margin: 10px auto 10px;
     line-height: 2rem;
-    border-radius: 3px;
+    border-radius: 20px;
     border: 1px solid #3984DD;
     padding: 1px 0px;
     font-size: 0.7rem;
@@ -244,8 +244,8 @@
 
   .line {
 
-    margin: auto;
-    width: 90%;
+    margin: 1rem auto;
+    width: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
