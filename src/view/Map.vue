@@ -70,7 +70,7 @@
     },
     mounted() {
 
-      this.regionId = this.$route.params.regionId || '15313792400143094'
+      this.regionId = this.$route.query.regionId || '15313792400143094'
 
       this.map = new idrMapView()
 

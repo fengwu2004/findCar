@@ -2,10 +2,9 @@
   <div class="main">
     <div class="bg" v-on:click="onClose"></div>
     <div class="content">
-      <div class="closeBtn" v-on:click="onClose"></div>
       <img class="tag" src="../assets/car.png">
-      <p class="title">车牌找车</p>
-      <p class="tip">请输入您的车牌号</p>
+      <div class="title">车牌找车</div>
+      <div class="tip">请输入您的车牌号</div>
       <div class="inputandresults">
         <input placeholder="例：粤B NB001" v-model="carnumber" v-on:focus="onFocuse"/>
         <div v-for="(car) in carlist" v-bind:key="car.carNo" class="droplist" v-on:click="onSelect(car)">
@@ -146,51 +145,44 @@
   }
 
   .content {
-    border-radius: 5px;
+    border-radius: 0.9rem;
     background-color: white;
     position: absolute;
     width: 80%;
-    top: 20%;
+    top: 15%;
     left: 0;
     right: 0;
     margin: auto;
     z-index: 1001;
   }
 
-  .closeBtn {
+  .tag {
 
     position: absolute;
-    right:20px;
-    top:20px;
-    width: 10px;
-    height: 10px;
-    background: url("../assets/close1.png") no-repeat center /1rem 1rem;
-  }
-
-  .tag {
-    display: block;
     left: 0;
     right: 0;
-    margin: -3.5rem auto;
-    width: 7rem;
-    height: 7rem;
+    top: -4.5rem;
+    display: block;
+    margin: auto;
+    width: 9rem;
+    height: 9rem;
   }
 
   .title {
+
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 2.1rem;
     font-weight: 400;
-    margin: 0;
-    padding: 3.5rem 0 10px 0;
+    padding: 5.5rem 0 0 0;
   }
 
   .tip {
+
     text-align: center;
-    margin: 0 auto;
-    padding-bottom: 10px;
     color: #9D9D9D;
     font-weight: 200;
-    font-size: 0.875rem;
+    margin-top: 1rem;
+    font-size: 1.4rem;
   }
 
   .errorTip {
@@ -211,38 +203,38 @@
 
   .confirmBtn {
 
-    width: 70%;
+    width: 84%;
     background-color:#3984DD;
     color: white;
     text-align: center;
-    margin: 10px auto;
-    line-height: 2rem;
-    border-radius: 20px;
+    margin: 25px auto;
+    line-height: 4rem;
+    border-radius: 50px;
     border: 2px solid #3984DD;
     padding: 0px 0px;
-    font-size: 0.7rem;
+    font-size: 1.4rem;
   }
 
   .cancelBtn {
 
-    width: 70%;
+    width: 84%;
     background-color: white;
     color: #3984DD;
     text-align: center;
-    margin: 10px auto 10px;
-    line-height: 2rem;
-    border-radius: 20px;
+    margin: 25px auto 10px;
+    line-height: 4rem;
+    border-radius: 50px;
     border: 1px solid #3984DD;
     padding: 1px 0px;
-    font-size: 0.7rem;
+    font-size: 1.4rem;
   }
 
   .inputandresults {
 
     width: 84%;
-    height: 2rem;
+    height: 4rem;
     padding: 1px 0px;
-    margin: 10px auto 5px;
+    margin: 25px auto 5px;
     overflow-y: visible;
     z-index: 1003;
     position: relative;
@@ -254,9 +246,9 @@
     display: block;
     width: 100%;
     margin: 0;
-    line-height: 2rem;
-    /*border-radius: 3px;*/
-    font-size: 1rem;
+    border-radius: 3px;
+    line-height: 4rem;
+    font-size: 1.2rem;
     padding: 1px 0px;
     font-weight: 100;
     user-select: text !important;
@@ -267,29 +259,7 @@
   input::placeholder {
 
     color: #636363;
-    font-size: 0.6rem;
-  }
-
-  span {
-    line-height: 0.5rem;
-    font-weight: 100;
-  }
-
-  h5 {
-    width: 80%;
-    margin: auto;
-    color: lightgray;
-  }
-
-  h5 span:before, h5 span:after {
-
-    display: inline-block;
-    content: '';
-    vertical-align: bottom;
-    height: .4rem;
-    line-height: 0.5rem;
-    border-top:1px solid lightgray;
-    width: 45%;
+    font-size: 1.2rem;
   }
 
   .droplist {
@@ -338,7 +308,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
+    font-size: 1.4rem;
     padding: 0 0.5rem;
     color: lightgray;
   }

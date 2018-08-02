@@ -29,20 +29,43 @@
 #composs {
   position: absolute;
   left: 1rem;
-  top: 4rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  top: 7.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   transform: rotate(0deg);
   background: url("./resetMap.png") transparent no-repeat;
   background-size: contain;
 }
 
-#debug {
-  z-index: 1000;
-  position: absolute;
-  font-size: 0.5rem;
-  visibility: hidden; }
+* {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none; }
 
+body, html {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 10px;
+  font-family: "Microsoft Yahei", "Arial", "Helvetica"; }
+
+input {
+
+  -webkit-appearance: none;
+}
 
 #alertbox {
   z-index: 999; }
+
+#debug {
+  z-index: 2000;
+  position: absolute;
+  left: 2rem;
+  top: 5rem;
+  font-size: 1rem;
+  visibility: hidden; }

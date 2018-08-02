@@ -48,18 +48,20 @@
 <style scoped>
 
   .scale_btn{
+
     position: absolute;
     right:1rem;
-    bottom:7rem;
-    /*z-index: 11;*/
+    bottom:10rem;
   }
 
   .scale_btn div {
-    width: 2.5rem;
-    height: 2.5rem;
+
+    width: 3.5rem;
+    height: 3.5rem;
   }
 
   .scale_btn div img{
+
     width: 100%;
     height: 100%;
   }

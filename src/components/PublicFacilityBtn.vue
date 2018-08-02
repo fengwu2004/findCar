@@ -19,11 +19,11 @@ export default {
   div {
 
     background: url("../assets/public_fac1.png") no-repeat;
-    background-size: 2.5rem;
-    width: 2.5rem;
-    height: 2.5rem;
+    background-size: 3.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
     position: absolute;
-    bottom: 10rem;
+    bottom: 23.5rem;
     left: 1rem;
   }
 

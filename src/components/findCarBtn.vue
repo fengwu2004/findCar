@@ -21,11 +21,11 @@
   .main {
 
     position: absolute;
-    z-index: 1001;
+    z-index: 1000;
     left: 0.5rem;
-    top: 8rem;
-    width: 4rem;
-    height: 4rem;
+    top: 14rem;
+    width: 5rem;
+    height: 5rem;
     background: url("../assets/fanxiangxunche.png") no-repeat center/100%;
   }
 

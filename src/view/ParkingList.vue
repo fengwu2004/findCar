@@ -33,11 +33,11 @@
 
         if (!this.emptySpace) {
 
-          this.$router.push({name:'map', params:{regionId}})
+          this.$router.push({path:'/map', query:{regionId}})
         }
         else {
 
-          this.$router.push({name:'emptyspace', params:{regionId}})
+          this.$router.push({path:'/emptyspace', query:{regionId}})
         }
       },
       doLocateSuccess() {
