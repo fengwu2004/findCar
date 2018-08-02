@@ -12,7 +12,7 @@
           <label class="placeCode">{{ car.placeCode }}</label>
         </div>
       </div>
-      <p v-bind:class="getErrorShow">该车辆不在此停车场，请确认车牌号!</p>
+      <div v-bind:class="getErrorShow">该车辆不在此停车场，请确认车牌号!</div>
       <div class="confirmBtn" v-on:click="onFindByCarNo">确定</div>
       <div class="line">
         <div></div><span>or</span><div></div>
@@ -26,6 +26,7 @@
 <script>
 
   import { networkInstance } from "../../../indoorunMap/map";
+  import { Indicator } from 'mint-ui';
 
   export default {
     name:'FindCarWithPlateNumber',
@@ -47,6 +48,8 @@
     },
     methods: {
       onFindByCarNo(carNo) {
+
+        Indicator.open()
 
         networkInstance.getParkingPlaceUnitByCarNo(carNo)
           .then(({data})=>{
@@ -75,6 +78,10 @@
 
             console.log(e)
           })
+          .finally(()=>{
+
+            Indicator.close()
+          })
       },
       onClose() {
 
@@ -102,7 +109,7 @@
       }
     },
     computed:{
-      getErrorShow:function () {
+      getErrorShow() {
 
         if (this.onfocuse) {
 
@@ -141,7 +148,7 @@
     margin: 0;
     background-color: black;
     opacity: 0.4;
-    z-index: 1000;
+    /*z-index: 1000;*/
   }
 
   .content {
@@ -153,7 +160,7 @@
     left: 0;
     right: 0;
     margin: auto;
-    z-index: 1001;
+    /*z-index: 1001;*/
   }
 
   .tag {
@@ -186,10 +193,12 @@
   }
 
   .errorTip {
+
     width: 80%;
     color: red;
-    font-size: 0.5rem;
+    font-size: 1.2rem;
     margin: auto;
+    margin-top: 1rem;
   }
 
   .errorTipHide {

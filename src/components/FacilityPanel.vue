@@ -3,10 +3,8 @@
     <div class="bg" v-on:click="onClose"></div>
     <div class="content">
       <img class="tag" src="../assets/public_img.png">
-      <div class="closeBtn" v-on:click="onClose"></div>
       <p class="title">公共设施</p>
       <p class="tip">智能搜索 一键导航 规划最短路线</p>
-      <h5><span>  搜一下  </span></h5>
       <div class="facilities">
         <facilitybtn class="facility" v-for="facility in facilities" v-bind:key="facility.type" v-bind:item="facility" v-on:onclickunitwith="onClickUnit"></facilitybtn>
       </div>
@@ -160,7 +158,8 @@
   }
 
   .content {
-    border-radius: 5px;
+
+    border-radius: 9px;
     background-color: white;
     position: absolute;
     left:0;
@@ -172,65 +171,31 @@
   }
 
   .title {
+
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 2.1rem;
     font-weight: 400;
-    margin: 0;
-    padding: 4rem 0 10px 0;
+    padding: 5.5rem 0 0 0;
   }
 
   .tip {
 
     text-align: center;
-    margin: 0 auto;
-    padding-bottom: 30px;
     color: #9D9D9D;
     font-weight: 200;
-    font-size: 0.875rem;
+    margin-top: 1rem;
+    font-size: 1.4rem;
   }
 
   .tag {
-    display: block;
-    left: 0;
-    right: 0;
-    margin: -3.5rem auto;
-    width: 5rem;
-    height: 5rem;
-  }
-
-  h5 {
-    width: 70%;
-    margin: auto;
-    color: lightgray;
-    text-align: center;
-    padding-bottom: 10px;
-  }
-
-  span {
-    text-align: center;
-    line-height: 0.5rem;
-    font-weight: 100;
-  }
-
-  h5 span:before, h5 span:after {
-
-    display: inline-block;
-    content: '';
-    vertical-align: bottom;
-    height: .4rem;
-    line-height: 0.5rem;
-    border-top:1px solid lightgray;
-    width: 35%;
-  }
-
-  .closeBtn {
 
     position: absolute;
-    right:20px;
-    top:20px;
-    width: 10px;
-    height: 10px;
-    background: url("../assets/close1.png") no-repeat center /1rem 1rem;
+    top: -4.5rem;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 9rem;
+    height: 9rem;
   }
 
   .facilities {

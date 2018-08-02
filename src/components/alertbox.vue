@@ -2,8 +2,8 @@
   <div>
     <div class="bg"></div>
     <div class="content">
-      <p v-show="title !== null" class="title">{{ title }}</p>
-      <p v-show="message !== null" class="message">{{ message }}</p>
+      <div v-show="title !== null" class="title">{{ title }}</div>
+      <div v-show="message !== null" class="message">{{ message }}</div>
       <div class="btns" v-bind:style="{flexDirection:buttons.length > 2 ? 'column':'', borderTop:buttons.length > 2 ? 'none':'1px solid #a7a49d'}">
         <div class="btn" v-for="(button, index) in buttons" v-bind:key="button.name" v-on:click="callback(button)" v-bind:style="{borderTop:buttons.length > 2 ? '1px solid #a7a49d':'', borderLeft:buttons.length <= 2 && index == 1  ? '1px solid #a7a49d':'none'}" v-html="button.name"></div>
       </div>
@@ -39,26 +39,28 @@
   }
 
   .title {
+
+    padding-top: 1rem;
     text-align: center;
-    line-height: 2rem;
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 1.7rem;
   }
 
   .message {
+
+    font-size: 1.7rem;
     text-align: center;
-    line-height: 1rem;
-    font-size: 0.8rem;
+    padding-bottom: 1rem;
   }
 
   .content {
+
     border-radius: 5px;
     background-color: white;
     position: absolute;
     left:0;
     right:0;
     width: 80%;
-    top: 40%;
+    top: 30%;
     margin:auto;
     z-index: 1001;
   }
@@ -71,11 +73,13 @@
   }
 
   .btns div {
+
     flex:1;
-    height: 3rem;
+    height: 4.4rem;
     color:#0188fe;
     text-align: center;
-    line-height: 3rem;
+    line-height: 4.4rem;
+    font-size: 1.7rem;
   }
 
   .btn:nth-child(2) {

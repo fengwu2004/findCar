@@ -78,8 +78,9 @@
   .rightorleft {
 
     > img {
+
       padding: 1rem;
-      width: 3rem;
+      width: 5.75rem;
     }
   }
 
@@ -98,12 +99,12 @@
       .title {
 
         color:#C8C8C8;
-        font-size: 1rem;
+        font-size: 1.5rem;
       }
 
       .detail {
 
-        font-size: 0.4rem;
+        font-size: 1.2rem;
         color: #C8C8C8;
         padding-right: 2rem;
       }
@@ -114,21 +115,21 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1.5rem;
+      font-size: 3.2rem;
       color: #3984DD;
 
       .speaker {
 
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 2rem;
+        height: 2rem;
         margin-right: 2rem;
         background: url("../assets/speaker.png") no-repeat center/100%;
       }
 
       .speakeroff {
 
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 2rem;
+        height: 2rem;
         margin-right: 2rem;
         background: url("../assets/speakeroff.png") no-repeat center/100%;
       }
@@ -140,7 +141,7 @@
     position: absolute;
     bottom: 0;
     display: flex;
-    height: 3rem;
+    height: 5.6rem;
     align-items: center;
     background: #18202A;
     width: 100%;
@@ -175,6 +176,7 @@
 
     .title {
 
+      font-size: 1.5rem;
       position: absolute;
       width: 100%;
       color: #3984DD;

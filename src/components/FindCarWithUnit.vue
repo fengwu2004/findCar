@@ -9,7 +9,7 @@
         <div v-for="floor in floorlist" v-bind:key="floor.id" class="floor" v-bind:class="getFloorStyle(floor.id)" v-on:click="onSelectFloor(floor.id)">{{ floor.name }}</div>
       </div>
       <input v-model="unitName" v-on:focus="onFocuse" placeholder="例：026">
-      <div class="errortip" v-bind:style="{visibility:showerror}">输入有误，请重新输入您的车位号!</div>
+      <div class="myerrortip" v-bind:style="{visibility:showerror}">输入有误，请重新输入您的车位号!</div>
       <div class="confirmBtn" v-on:click="onConfirm">确定</div>
       <div class="line">
         <div></div><span>or</span><div></div>
@@ -112,25 +112,6 @@
 
 <style scoped lang="scss">
 
-  .title {
-
-    text-align: center;
-    font-size: 1.4rem;
-    font-weight: 400;
-    margin: 0;
-    padding: 3.5rem 0 10px 0;
-  }
-
-  .tip {
-
-    text-align: center;
-    margin: 0 auto;
-    padding-bottom: 10px;
-    color: #9D9D9D;
-    font-weight: 200;
-    font-size: 0.7rem;
-  }
-
   input {
 
     border: 1px solid #9D9D9D;
@@ -201,7 +182,7 @@
     margin: 0;
     background-color: black;
     opacity: 0.4;
-    z-index: 1000;
+    /*z-index: 1000;*/
   }
 
   .content {
@@ -213,7 +194,7 @@
     left: 0;
     right: 0;
     margin: auto;
-    z-index: 1001;
+    /*z-index: 1001;*/
   }
 
   .tag {
@@ -245,21 +226,12 @@
     font-size: 1.4rem;
   }
 
-  .errorTip {
+  .myerrortip {
 
-    background-color: red;
+    margin-left: 2.5rem;
     width: 80%;
     color: red;
-    font-size: 0.5rem;
-  }
-
-  .errorTipHide {
-
-    visibility: hidden;
-    width: 80%;
-    color: red;
-    font-size: 0.5rem;
-    margin: auto;
+    font-size: 1.2rem;
   }
 
   .confirmBtn {
@@ -288,27 +260,6 @@
     border: 1px solid #3984DD;
     padding: 1px 0px;
     font-size: 1.4rem;
-  }
-
-  .inputandresults {
-
-    width: 84%;
-    height: 4rem;
-    padding: 1px 0px;
-    margin: 25px auto 5px;
-    overflow-y: visible;
-    z-index: 1003;
-    position: relative;
-  }
-
-  .droplist {
-
-    background-color: white;
-    border-bottom: 1px solid #9D9D9D;
-    border-right: 1px solid #9D9D9D;
-    border-left: 1px solid #9D9D9D;
-    height: 2rem;
-    width: 100%;
   }
 
   .carNo {

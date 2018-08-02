@@ -2,15 +2,14 @@
   <div>
     <div id="map" class="page"></div>
     <find-car-btn v-if="!mapState.markInMap && !navigation.start" @find-car="beginFindCar"></find-car-btn>
+    <zoom v-bind:map="map"></zoom>
+    <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
-    <!--<floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>-->
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno"></find-car-with-plate-number>
     <find-car-with-unit v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
-    <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook"></navigation>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
-    <zoom v-bind:map="map"></zoom>
   </div>
 </template>
 
@@ -56,10 +55,10 @@
         map:null,
         dolocate:false,
         regionId:'15313792400143094',
-        carno:'',
+        carno:null,
         endMarker:null,
         audioTime:0,
-        audio:null
+        audio:null,
       }
     },
     computed: {
@@ -70,43 +69,55 @@
     },
     mounted() {
 
-      this.regionId = this.$route.query.regionId || '15313792400143094'
+      const parkCode = this.$route.query.parkCode
 
-      this.map = new idrMapView()
+      this.carno = this.$route.query.carNo
 
-      this.map.initMap('yf1248331604', 'map', this.regionId)
+      networkInstance.getRegionIdByParkCode(parkCode)
+        .then(({regionId})=>{
 
-      this.map.addEventListener(idrMapEventTypes.onFloorChangeSuccess, data => {
+          this.regionId = regionId
 
-        this.onFloorChangeSuccess(data)
-      })
-
-      this.map.addEventListener(idrMapEventTypes.onInitMapSuccess, regionEx => {
-
-        this.onInitMapSuccess(regionEx)
-      })
-
-      this.map.addEventListener(idrMapEventTypes.onRouterFinish, () => {
-
-        this.onRouterFinish()
-      })
-
-      this.map.addEventListener(idrMapEventTypes.onNaviStatusUpdate, (data) => {
-
-        this.onNaviStatusUpdate(data)
-      })
-
-      this.map.addEventListener(idrMapEventTypes.onMapClick, (pos) => {
-
-        this.onMapClick(pos)
-      })
-
-      this.map.addEventListener(idrMapEventTypes.onUnitClick, (unit) => {
-
-        this.onUnitClick(unit)
-      })
+          this.initMap(regionId)
+        })
     },
     methods:{
+      initMap() {
+
+        this.map = new idrMapView()
+
+        this.map.initMap('yf1248331604', 'map', this.regionId)
+
+        this.map.addEventListener(idrMapEventTypes.onFloorChangeSuccess, data => {
+
+          this.onFloorChangeSuccess(data)
+        })
+
+        this.map.addEventListener(idrMapEventTypes.onInitMapSuccess, regionEx => {
+
+          this.onInitMapSuccess(regionEx)
+        })
+
+        this.map.addEventListener(idrMapEventTypes.onRouterFinish, () => {
+
+          this.onRouterFinish()
+        })
+
+        this.map.addEventListener(idrMapEventTypes.onNaviStatusUpdate, (data) => {
+
+          this.onNaviStatusUpdate(data)
+        })
+
+        this.map.addEventListener(idrMapEventTypes.onMapClick, (pos) => {
+
+          this.onMapClick(pos)
+        })
+
+        this.map.addEventListener(idrMapEventTypes.onUnitClick, (unit) => {
+
+          this.onUnitClick(unit)
+        })
+      },
       onUnitClick(unit) {
 
         if (!this.mapState.markInMap) {
@@ -216,6 +227,14 @@
         this.floorList = regionEx.floorList
 
         this.map.changeFloor(regionEx.floorList[0].id)
+
+        if (this.carno) {
+
+          this.$store.dispatch('startSearchCarByPlateNumber')
+            .catch(e=>{
+              console.log(e)
+            })
+        }
       },
       onFloorChangeSuccess({floorId}) {
 

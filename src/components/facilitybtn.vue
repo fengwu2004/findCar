@@ -36,7 +36,7 @@
 
   p {
     line-height: 14px;
-    font-size: 0.6rem;
+    font-size: 1.2rem;
     text-align: center;
     padding: 5px 0;
     margin: 0 0 10px 0;
