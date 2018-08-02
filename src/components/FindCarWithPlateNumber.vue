@@ -245,7 +245,7 @@
     padding: 1px 0px;
     margin: 25px auto 5px;
     overflow-y: visible;
-    z-index: 1003;
+    /*z-index: 1003;*/
     position: relative;
   }
 
