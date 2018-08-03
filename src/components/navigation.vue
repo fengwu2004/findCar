@@ -52,6 +52,15 @@
       speakControl() {
 
         this.$store.dispatch('toggleSpeak')
+
+        if (this.navigation.enableSpeack) {
+
+          window.FloatView.show('语音播报已开启')
+        }
+        else {
+
+          window.FloatView.show('语音播报已关闭')
+        }
       },
       birdlook() {
 

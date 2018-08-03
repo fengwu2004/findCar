@@ -7,6 +7,8 @@ import Vuex from 'vuex'
 import store from './store'
 import AlertBox from './AlertBox.js'
 import ErrorTipView from './ErrorTipView.js'
+import {FloatAlert} from "./FloatAlert";
+
 import 'mint-ui/lib/style.css'
 
 Vue.config.productionTip = false
@@ -18,6 +20,8 @@ window.debugtest = true
 window.Alertboxview = new AlertBox()
 
 window.Toast = new ErrorTipView()
+
+window.FloatView = new FloatAlert()
 
 /* eslint-disable no-new */
 new Vue({

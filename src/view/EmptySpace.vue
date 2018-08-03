@@ -3,8 +3,8 @@
     <div id="map" class="page"></div>
     <zoom v-bind:map="map"></zoom>
     <empty-space-list></empty-space-list>
-    <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
-    <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
+    <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
+    <locate-status-control :dolocate="dolocate" @onclick="doLocating" v-show="enableNavi || isWx"></locate-status-control>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook"></navigation>
     <!--<floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>-->
   </div>
@@ -43,11 +43,12 @@
         regionEx:null,
         map:null,
         regionId:'15313792400143094',
-        enableNavi:true,
+        enableNavi:false,
         showDetail:false,
         audioTime:0,
         audio:null,
         endMarker:null,
+        isWx:false,
         clickedUnit:{
           spaceStatus:true,
           name:"0055",
@@ -64,15 +65,28 @@
     },
     mounted() {
 
-      const parkCode = this.$route.query.parkCode
+      let userAgent = window.navigator.userAgent.toLowerCase();
 
-      networkInstance.getRegionIdByParkCode(parkCode)
-        .then(({regionId})=>{
+      this.isWx = userAgent.match(/MicroMessenger/i) == 'micromessenger'
 
-          this.regionId = regionId
+      const {parkCode, regionId} = this.$route.query
 
-          this.initMap(regionId)
-        })
+      if (regionId) {
+
+        this.regionId = regionId
+
+        this.initMap(regionId)
+      }
+      else {
+
+        networkInstance.getRegionIdByParkCode(parkCode)
+          .then(({regionId})=>{
+
+            this.regionId = regionId
+
+            this.initMap(regionId)
+          })
+      }
     },
     methods:{
       preparePlayAudio() {
@@ -199,14 +213,14 @@
       },
       onUnitClick(unit) {
 
-        this.clickedUnit = unit
-
-        this.showDetail = true
-
         if (unit.fakeName == undefined) {
 
           return
         }
+
+        this.clickedUnit = unit
+
+        this.showDetail = true
       },
       onNaviToUnit(unit) {
 

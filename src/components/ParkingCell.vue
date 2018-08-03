@@ -23,7 +23,7 @@
     methods:{
       gotoMap() {
 
-        this.$router.push({name:'emptyspace', params:{regionId:this.data.regionId}})
+        this.$router.push({name:'emptyspace', params:{regionId:this.data.regionId, parkCode:this.data.parkCode}})
       }
     }
 	}
