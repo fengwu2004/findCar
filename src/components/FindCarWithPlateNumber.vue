@@ -30,7 +30,7 @@
 
   export default {
     name:'FindCarWithPlateNumber',
-    props:['initcarno'],
+    props:['initcarno', 'regionId'],
     data() {
       return {
         carnumber:"",
@@ -51,8 +51,10 @@
 
         Indicator.open()
 
-        networkInstance.getParkingPlaceUnitByCarNo(carNo)
+        networkInstance.getParkingPlaceUnitByCarNo(carNo, this.regionId)
           .then(({data})=>{
+
+            Indicator.close()
 
             const { matchedCarList } = data
 
@@ -73,6 +75,8 @@
             }
           })
           .catch(e=>{
+
+            Indicator.close()
 
             this.error = true
 

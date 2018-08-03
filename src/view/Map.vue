@@ -5,7 +5,7 @@
     <zoom v-bind:map="map"></zoom>
     <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
-    <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno"></find-car-with-plate-number>
+    <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno" :region-id="regionId"></find-car-with-plate-number>
     <find-car-with-unit v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook"></navigation>
