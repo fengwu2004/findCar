@@ -28,11 +28,11 @@
 
     background-color: white;
     border-bottom: 1px solid #DCDCDC;
-    font-size: 0.6rem;
+    font-size: 1.2rem;
     color: #1B1C1C;
     width: 100%;
     display: flex;
-    height: 2.5rem;
+    height: 3.8rem;
     justify-content: center;
     align-items: center;
 
@@ -43,7 +43,7 @@
 
     > div:first-child {
 
-      padding-left: 1rem;
+      padding-left: 1.5rem;
     }
   }
 

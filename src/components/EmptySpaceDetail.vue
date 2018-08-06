@@ -46,7 +46,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    padding-top: 20rem;
+    padding-top: 15rem;
     background-color: rgba(1, 1, 1, 0.5);
   }
 
@@ -59,12 +59,12 @@
 
     > div {
 
-      padding: 1rem;
+      height: 5rem;
       font-size: 1.7rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-bottom: 1px solid #a7a49d;
+      border-bottom: 1px solid #dcdcdc;
       color: #636363;
     }
 

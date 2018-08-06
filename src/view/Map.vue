@@ -8,7 +8,7 @@
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno" :region-id="regionId"></find-car-with-plate-number>
     <find-car-with-unit v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
-    <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook"></navigation>
+    <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="onBirdLook" @followme="onFollowMe"></navigation>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
   </div>
 </template>
@@ -69,7 +69,7 @@
     },
     mounted() {
 
-      const parkCode = this.$route.query.parkCode
+      const parkCode = this.$route.query.parkCode || "th0732"
 
       this.carno = this.$route.query.carNo
 
@@ -96,11 +96,6 @@
         this.map.addEventListener(idrMapEventTypes.onInitMapSuccess, regionEx => {
 
           this.onInitMapSuccess(regionEx)
-        })
-
-        this.map.addEventListener(idrMapEventTypes.onRouterFinish, () => {
-
-          this.onRouterFinish()
         })
 
         this.map.addEventListener(idrMapEventTypes.onNaviStatusUpdate, (data) => {
@@ -158,15 +153,21 @@
             })
         }))
       },
-      birdLook() {
+      onBirdLook() {
 
         this.map.birdLook()
+
+        this.map.setStatus(YFM.Map.STATUS_TOUCH)
+      },
+      onFollowMe() {
+
+        this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
       },
       onStopNavigate() {
 
         if (!this.navigation.findCar) {
 
-          this.map.stopRoute()
+          this.stopRouteAndClean(true)
 
           return
         }
@@ -175,16 +176,18 @@
 
             Alertboxview.hide()
 
-            this.map.stopRoute()
+            this.stopRouteAndClean(false)
           }}
 
         var found = {name:'已找到爱车', callback:()=> {
 
             Alertboxview.hide()
 
-            this.map.stopRoute()
+            this.stopRouteAndClean(true)
 
             this.playAudio('已找到爱车')
+
+            this.onNaviToOuter()
           }}
 
         var cancel = {name:'取消', callback:() => {
@@ -193,6 +196,36 @@
           }}
 
         Alertboxview.show('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
+      },
+      onNaviToOuter() {
+
+        let units = this.regionEx.findUnitsWithType([5])
+
+        console.log(units)
+
+        if (!('5' in units)) {
+
+          return
+        }
+
+        let btns = units[5].map(unit=>{
+
+          return {
+            name:unit.name, callback:()=>{
+
+              Alertboxview.hide()
+
+              this.onNaviToUnit(unit)
+            }
+          }
+        })
+
+        btns.push({name:'取消', callback:() => {
+
+            Alertboxview.hide()
+          }})
+
+        Alertboxview.show('离场引导', null, btns)
       },
       onNavigateTo(unitType) {
 
@@ -265,6 +298,21 @@
       },
       beginFindCar(){
 
+        if (this.endMarker) {
+
+          this.map.doRoute(null, this.endMarker.position)
+            .then(res=>{
+
+              return this.onRouterSuccess(res)
+            })
+            .catch(res=>{
+
+              window.Toast.show(res)
+            })
+
+          return
+        }
+
         this.$store.dispatch('startSearchCarByPlateNumber').catch(e=>console.log(e))
 
         this.preparePlayAudio()
@@ -273,9 +321,9 @@
 
         var unit = this.map.findUnitWithId(unitId)
 
-        this.addCarMarker(unit)
+        this.addEndMarker(unit.position)
 
-        this.map.doRoute(null, unit.getPos())
+        this.map.doRoute(null, unit.position)
           .then(res=>{
 
             return this.onRouterSuccess(res)
@@ -332,16 +380,6 @@
           this.map.setUserPos(pos)
         }
       },
-      addCarMarker(unit) {
-
-        var pos = unit.position
-
-        networkInstance.saveMarkedUnit(unit, null, null)
-
-        this.endMarker = this.doAddCarMarker(pos)
-
-        this.map.centerPos(pos, false)
-      },
       preparePlayAudio() {
 
         if (!this.audio) {
@@ -397,7 +435,7 @@
 
               window.Alertboxview.hide()
 
-              this.map.stopRoute()
+              this.stopRouteAndClean()
             }}
 
           window.Alertboxview.show('您已到达目的地', null, [confirm])
@@ -411,25 +449,24 @@
           this.playAudio(text)
         }
       },
-      onRouterFinish() {
+      stopRouteAndClean(removeEndMarker = true) {
 
-        this.$store.dispatch('stopNavigation')
+        this.map.stopRoute()
           .then(()=>{
 
-            this.map.removeMarker(this.endMarker)
+            return this.$store.dispatch('stopNavigation')
+          })
+          .then(()=>{
+
+            if (removeEndMarker) {
+
+              this.map.removeMarker(this.endMarker)
+
+              this.endMarker = null
+            }
 
             this.map.setStatus(YFM.Map.STATUS_TOUCH)
           })
-      },
-      doAddCarMarker(pos) {
-
-        var IDRCarMarker = idrMarkers.IDRCarMarker
-
-        var endMarker = new IDRCarMarker(pos, './static/markericon/car.png')
-
-        map.addMarker(endMarker)
-
-        return endMarker
       },
       addEndMarker(pos) {
 
@@ -439,6 +476,10 @@
 
         this.endMarker = this.map.addMarker(endMarker)
       },
+      toggleSpeak() {
+
+        this.$store.dispatch('toggleSpeak')
+      }
     }
   }
 </script>

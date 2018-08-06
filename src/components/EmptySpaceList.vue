@@ -50,8 +50,8 @@
 
   .up, .down {
 
-    width: 6rem;
-    height: 0.8rem;
+    width: 100%;
+    height: 1.8rem;
   }
 
   .up {
@@ -69,10 +69,10 @@
     background-color: #FAFAFA;
     align-items: center;
     width: 100%;
-    height: 2rem;
+    height: 3rem;
     display: flex;
     justify-content: center;
-    font-size: 0.6rem;
+    font-size: 1.2rem;
     color: #C8C8C8;
 
     > div {
@@ -82,7 +82,7 @@
 
     > div:first-child {
 
-      padding-left: 1rem;
+      padding-left: 1.5rem;
     }
   }
 

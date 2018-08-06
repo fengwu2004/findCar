@@ -2,10 +2,10 @@
   <div>
     <div id="map" class="page"></div>
     <zoom v-bind:map="map"></zoom>
-    <empty-space-list></empty-space-list>
-    <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating" v-show="enableNavi || isWx"></locate-status-control>
-    <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook"></navigation>
+    <empty-space-list v-show="!navigation.start"></empty-space-list>
+    <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
+    <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="birdLook" @followme="onFollowMe"></navigation>
     <!--<floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>-->
   </div>
 </template>
@@ -43,7 +43,7 @@
         regionEx:null,
         map:null,
         regionId:'15313792400143094',
-        enableNavi:false,
+        enableNavi:true,
         showDetail:false,
         audioTime:0,
         audio:null,
@@ -181,9 +181,14 @@
           return
         }
 
+        if (!this.navigation.enableSpeack) {
+
+          return
+        }
+
         const date = new Date().getTime()
 
-        if (date - this.audioTime < 5000) {
+        if (date - this.audioTime < 10000) {
 
           return
         }
@@ -213,7 +218,12 @@
       },
       onUnitClick(unit) {
 
-        if (unit.fakeName == undefined) {
+        if (this.navigation.start) {
+
+          return
+        }
+
+        if (!this.enableNavi && unit.fakeName == undefined) {
 
           return
         }
@@ -280,8 +290,6 @@
               this.addEndMarker(end)
 
               this.map.changeFloor(start.floorId)
-
-              this.map.birdLook()
 
               this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
 
@@ -403,6 +411,12 @@
       birdLook() {
 
         this.map.birdLook()
+
+        this.map.setStatus(YFM.Map.STATUS_TOUCH)
+      },
+      onFollowMe() {
+
+        this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
       },
       addEndMarker(pos) {
 
@@ -412,6 +426,10 @@
 
         this.endMarker = this.map.addMarker(endMarker)
       },
+      toggleSpeak() {
+
+        this.$store.dispatch('toggleSpeak')
+      }
     }
   }
 </script>

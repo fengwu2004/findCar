@@ -23,7 +23,8 @@
         <img src="../assets/quit.png" v-on:click="exit" width="20"/>
         <span class="line"/>
       </div>
-      <div class="title" @click='birdlook'>查看全览</div>
+      <div v-if="followMe" class="title" @click='birdlook'>查看全览</div>
+      <div v-else class="title" @click='onFollowMe'>跟我走</div>
     </div>
   </div>
 </template>
@@ -41,7 +42,7 @@
     },
     data() {
       return {
-        speakerOn:false,
+        followMe:true,
       }
     },
     methods: {
@@ -64,9 +65,15 @@
       },
       birdlook() {
 
-        console.log('birdlook')
+        this.followMe = false
 
         this.$emit('birdlook')
+      },
+      onFollowMe() {
+
+        this.followMe = true
+
+        this.$emit('followme')
       }
     }
   }
