@@ -51,7 +51,7 @@
           })
           .then(()=>{
 
-            Toast.show('点击车位进行标记')
+            HeaderTip.show('点击车位进行标记')
           })
           .catch(e=>console.log(e))
       },

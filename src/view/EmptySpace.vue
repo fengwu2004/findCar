@@ -245,7 +245,7 @@
           })
           .catch(res=>{
 
-            window.Toast.show(res)
+            window.HeaderTip.show(res)
           })
       },
       doLocating() {
@@ -266,7 +266,7 @@
           })
             .catch(msg=>{
 
-              Toast.show(msg)
+              HeaderTip.show(msg)
             })
         }
       },
@@ -278,7 +278,7 @@
       },
       onLocateFailed(msg){
 
-        Toast.show(msg)
+        HeaderTip.show(msg)
       },
       onRouterSuccess({start, end}, findcar = true) {
 
@@ -364,7 +364,7 @@
 
         if (!this.startLocate) {
 
-          this.doLocating()
+          // this.doLocating()
 
           this.startLocate = true
         }

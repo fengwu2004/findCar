@@ -7,7 +7,7 @@
 
 <script>
  export default {
-   name: 'errortipview',
+   name: 'HeaderTipControl',
    props: ['message', 'opacity']
  }
 </script>

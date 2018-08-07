@@ -89,7 +89,7 @@
   <body id="body">
     <div id="app"></div>
     <alertbox id="alertbox" :message="message" :title="title" :buttons="buttons"></alertbox>
-    <errortipview id="errortip" :message="message" v-show="display"></errortipview>
+    <header-tip-control id="errortip" :message="message" v-show="display"></header-tip-control>
     <floatalertview id="floatalertview" v-show="show" v-bind:msg="msg"></floatalertview>
     <label id="debug"></label>
   </body>

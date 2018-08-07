@@ -9,8 +9,8 @@
       <div>车位总数</div>
       <div>已停车位数</div>
       <div>空车位数</div>
-      <empty-space-list-cell v-for="(list, index) in data.spaceOverviewList" v-bind:key="index" :data="list"></empty-space-list-cell>
     </div>
+    <empty-space-list-cell v-for="(list, index) in data.spaceOverviewList" v-bind:key="index" :data="list"></empty-space-list-cell>
   </div>
 </template>
 

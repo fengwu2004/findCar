@@ -6,7 +6,7 @@ import router from './router'
 import Vuex from 'vuex'
 import store from './store'
 import AlertBox from './AlertBox.js'
-import ErrorTipView from './ErrorTipView.js'
+import HeaderTip from './HeaderTip.js'
 import {FloatAlert} from "./FloatAlert";
 
 import 'mint-ui/lib/style.css'
@@ -19,7 +19,7 @@ window.debugtest = false
 
 window.Alertboxview = new AlertBox()
 
-window.Toast = new ErrorTipView()
+window.HeaderTip = new HeaderTip()
 
 window.FloatView = new FloatAlert()
 

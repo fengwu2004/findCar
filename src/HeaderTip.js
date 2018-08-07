@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import errortipview from '@/components/errortipview.vue'
+import HeaderTipControl from '@/components/HeaderErrorMsgControl.vue'
 
-function ErrorTipView() {
+function HeaderTip() {
   
   var _vm = null
   
@@ -11,7 +11,7 @@ function ErrorTipView() {
     
     _vm = new Vue({
       el:'#errortip',
-      components: { errortipview },
+      components: { HeaderTipControl },
       data() {
         return {
           message:_message,
@@ -60,4 +60,4 @@ function ErrorTipView() {
   this.show = show
 }
 
-export { ErrorTipView as default }
+export { HeaderTip as default }

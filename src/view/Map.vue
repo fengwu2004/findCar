@@ -131,7 +131,7 @@
           })
           .catch(res=>{
 
-            window.Toast.show(res)
+            window.HeaderTip.show(res)
           })
       },
       onRouterSuccess({start, end}, findcar = true) {
@@ -246,7 +246,7 @@
               })
               .catch(res=>{
 
-                window.Toast.show(res)
+                window.HeaderTip.show(res)
               })
           }
         }
@@ -307,7 +307,7 @@
             })
             .catch(res=>{
 
-              window.Toast.show(res)
+              window.HeaderTip.show(res)
             })
 
           return
@@ -330,7 +330,7 @@
           })
           .catch(res=>{
 
-            window.Toast.show(res)
+            window.HeaderTip.show(res)
           })
       },
       doLocating() {
@@ -351,7 +351,7 @@
           })
             .catch(msg=>{
 
-              Toast.show(msg)
+              HeaderTip.show(msg)
             })
         }
       },
@@ -363,7 +363,7 @@
       },
       onLocateFailed(msg){
 
-        Toast.show(msg)
+        HeaderTip.show(msg)
       },
       onSelect(val) {
 

@@ -78,7 +78,7 @@
 
             if (msg) {
 
-              window.Toast.show(msg)
+              window.HeaderTip.show(msg)
             }
           })
       }

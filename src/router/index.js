@@ -24,11 +24,6 @@ export default new Router({
       component: map
     },
     {
-      path: '/parkinglist',
-      name: 'parkinglist',
-      component: ParkingList
-    },
-    {
       path: '/',
       name: 'emptylist',
       component: EmptyList
