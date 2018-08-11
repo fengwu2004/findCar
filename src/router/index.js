@@ -27,6 +27,11 @@ export default new Router({
       path: '/',
       name: 'emptylist',
       component: EmptyList
-    }
+    },
+    {
+      path: '/parkinglist',
+      name: 'parkinglist',
+      component: ParkingList
+    },
   ]
 })
