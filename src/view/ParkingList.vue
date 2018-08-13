@@ -16,12 +16,11 @@
     data(){
 		  return {
 		    regionList:[
-		      {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094', floorId:'15313804821833137'},
-          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896'},
-          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010', floorId:'15323294173829181'},
-          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013', floorId:'15323290763798360'}],
+		      {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094', floorId:'15313804821833137', parkCode:'th0714'},
+          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896', parkCode:'th0730'},
+          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010', floorId:'15323294173829181', parkCode:'th0731'},
+          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013', floorId:'15323290763798360', parkCode:'th0732'}],
         regionIndex:0,
-        emptySpace:false
       }
     },
     beforeDestroy() {
@@ -29,24 +28,26 @@
       idrLocateServerInstance.stop()
     },
     methods:{
-      gotoRegion(regionId) {
+      gotoRegion(regionId, parkCode) {
 
-        if (!this.emptySpace) {
+        if (window.__wxjs_environment === 'miniprogram') {
 
-          this.$router.push({path:'/map', query:{regionId}})
+          let value = 'parkCode+' + parkCode
+
+          wx.miniProgram.redirectTo({url:'../paymain/paymain?' + value})
         }
         else {
 
-          this.$router.push({path:'/emptyspace', query:{regionId}})
+          alert('请在小程序中打开')
         }
       },
       doLocateSuccess() {
 
-        const { regionId } =  this.regionList[this.regionIndex]
+        const { regionId, parkCode } =  this.regionList[this.regionIndex]
 
         idrLocateServerInstance.stop()
 
-        this.gotoRegion(regionId)
+        this.gotoRegion(regionId, parkCode)
       },
       doLocateFailed() {
 
@@ -84,8 +85,6 @@
       }
     },
     created() {
-
-		  this.emptySpace = this.$route.query.emptyspace == 1
 
       this.doLocate()
     }
