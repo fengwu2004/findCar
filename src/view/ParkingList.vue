@@ -34,7 +34,7 @@
 
           let value = 'parkCode+' + parkCode
 
-          wx.miniProgram.redirectTo({url:'../paymain/paymain?' + value})
+          wx.miniProgram.navigateTo({url:'../paymain/paymain?' + value})
         }
         else {
 
