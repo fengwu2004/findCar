@@ -302,6 +302,10 @@
         if (!this.navigation.findCar) {
 
           this.map.stopRoute()
+            .then(()=>{
+
+              this.onRouterFinish()
+            })
 
           return
         }
@@ -311,6 +315,10 @@
             Alertboxview.hide()
 
             this.map.stopRoute()
+              .then(()=>{
+
+                this.onRouterFinish()
+              })
           }}
 
         var found = {name:'已找到爱车', callback:()=> {
@@ -318,6 +326,10 @@
             Alertboxview.hide()
 
             this.map.stopRoute()
+              .then(()=>{
+
+                this.onRouterFinish()
+              })
 
             this.playAudio('已找到爱车')
           }}

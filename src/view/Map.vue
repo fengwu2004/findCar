@@ -345,7 +345,7 @@
         }
         else {
 
-          this.map.doLocation(pos => this.onLocateSuccess(pos), msg => {
+          this.map.doLocation(pos => this.onLocateSuccess(pos), (msg) => {
 
             this.onLocateFailed(msg)
           })
