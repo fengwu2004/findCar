@@ -197,6 +197,20 @@
 
         Alertboxview.show('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
       },
+      onNaviToUnit(unit) {
+
+        this.preparePlayAudio()
+
+        this.map.doRoute(null, unit.position)
+          .then(res=>{
+
+            return this.onRouterSuccess(res, false)
+          })
+          .catch(res=>{
+
+            window.HeaderTip.show(res)
+          })
+      },
       onNaviToOuter() {
 
         let units = this.regionEx.findUnitsWithType([5])
@@ -317,11 +331,13 @@
 
         this.preparePlayAudio()
       },
-      navigateToCar({unitId}) {
+      navigateToCar({id:unitId}) {
 
         var unit = this.map.findUnitWithId(unitId)
 
         this.addEndMarker(unit.position)
+
+        this.map.centerPos(unit.position)
 
         this.map.doRoute(null, unit.position)
           .then(res=>{
@@ -345,7 +361,7 @@
         }
         else {
 
-          this.map.doLocation(pos => this.onLocateSuccess(pos), (msg) => {
+          this.map.doLocation(pos => this.onLocateSuccess(pos), ({msg}) => {
 
             this.onLocateFailed(msg)
           })

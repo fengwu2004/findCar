@@ -43,36 +43,34 @@
 
       if (this.initcarno != null) {
 
-        this.carnumber = this.initcarno
+        this.carnumber = this.initcarno.toUpperCase()
+      }
+    },
+    watch:{
+
+      carnumber:function (newValue) {
+
+        this.carnumber = newValue.toUpperCase()
       }
     },
     methods: {
-      onFindByCarNo(carNo) {
+      onFindByCarNo() {
 
         Indicator.open()
 
-        networkInstance.getParkingPlaceUnitByCarNo(carNo, this.regionId)
+        networkInstance.getParkingPlaceUnitByCarNo(this.carnumber.toUpperCase(), this.regionId)
           .then(({data})=>{
 
             Indicator.close()
 
-            const { matchedCarList } = data
-
-            if (!matchedCarList) {
+            if (!data) {
 
               return Promise.reject(null)
             }
 
-            if (matchedCarList.length == 1) {
+            this.$emit('navigatetocar', data)
 
-              this.$emit('navigatetocar', matchedCarList)
-
-              this.onClose()
-            }
-            else {
-
-              this.carlist = matchedCarList
-            }
+            this.onClose()
           })
           .catch(e=>{
 

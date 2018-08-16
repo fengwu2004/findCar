@@ -1,8 +1,9 @@
 <template>
 	<div class="main">
-    <div class="cell" v-for="region in regionList" v-bind:key="region.regionId" @click="gotoRegion(region.regionId)">
-      <span>{{region.name}}</span><img src="../assets/qianwang.png"/>
-    </div>
+    <div class="chanye1 btn" @click="enterRegion(2)">产业一停车场</div>
+    <div class="chanye2 btn" @click="enterRegion(3)">产业二停车场</div>
+    <div class="jiudian btn" @click="enterRegion(0)">酒店停车场</div>
+    <div class="zhanting btn" @click="enterRegion(1)">展厅停车场</div>
   </div>
 </template>
 
@@ -28,7 +29,20 @@
       idrLocateServerInstance.stop()
     },
     methods:{
+		  enterRegion(index) {
+
+		    if (index < 0 || index >= 4) {
+
+		      return
+        }
+
+        let region = this.regionList[index]
+
+        this.gotoRegion(region.regionId, region.parkCode)
+      },
       gotoRegion(regionId, parkCode) {
+
+        idrLocateServerInstance.stop()
 
         if (window.__wxjs_environment === 'miniprogram') {
 
@@ -44,8 +58,6 @@
       doLocateSuccess() {
 
         const { regionId, parkCode } =  this.regionList[this.regionIndex]
-
-        idrLocateServerInstance.stop()
 
         this.gotoRegion(regionId, parkCode)
       },
@@ -95,10 +107,10 @@
 
   .main {
 
+    background: url("../assets/totalmap.jpg") no-repeat center/100% 100%;
     position: absolute;
     bottom: 0;
     top: 0;
-    background: #F0EFF6;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -106,29 +118,45 @@
     padding-top: 3rem;
   }
 
-  .cell {
+  .btn {
 
-    margin-top: 1rem;
-    width: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-    background: #FFFFFF;
-    border: 1px solid rgba(219,223,227,0.30);
-    box-shadow: 0 5px 12px 0 rgba(217,226,233,0.50);
-    border-radius: 3px;
+    background: #3C961E;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
+    border-radius: 4.5px;
+    font-size: 1.4rem;
+    color: #fff;
+    width: 11rem;
+    height: 3rem;
+    text-align: center;
+    line-height: 3rem;
+  }
 
-    >span {
+  .chanye1 {
 
-      color: #485465;
-      font-size: 0.8rem;
-    }
+    position: absolute;
+    left: 2rem;
+    top: 18rem;
+  }
 
-    >img {
+  .chanye2 {
 
-      width: 0.5rem;
-    }
+    position: absolute;
+    left: 8rem;
+    top: 23rem;
+  }
+
+  .jiudian {
+
+    position: absolute;
+    right: 1.6rem;
+    top: 15.4rem;
+  }
+
+  .zhanting {
+
+    position: absolute;
+    right: 1rem;
+    top: 9.5rem;
   }
 
 </style>
