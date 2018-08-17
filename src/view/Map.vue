@@ -6,7 +6,7 @@
     <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno" :region-id="regionId"></find-car-with-plate-number>
-    <find-car-with-unit v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
+    <find-car-with-unit @onfindunits="navigateToCar" v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="onBirdLook" @followme="onFollowMe"></navigation>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
@@ -59,6 +59,7 @@
         endMarker:null,
         audioTime:0,
         audio:null,
+        errorCount:0
       }
     },
     computed: {
@@ -379,7 +380,12 @@
       },
       onLocateFailed(msg){
 
-        HeaderTip.show(msg)
+        this.errorCount += 1
+
+        if (this.errorCount % 30 == 0) {
+
+          HeaderTip.show(msg)
+        }
       },
       onSelect(val) {
 

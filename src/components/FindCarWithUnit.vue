@@ -57,7 +57,7 @@
       },
       onConfirm() {
 
-        var units = this.map.findUnitWithName(this.selectedFloorId, this.unitName)
+        var units = this.map.findUnitWithNameAndFloor(this.unitName, this.selectedFloorId)
 
         if (!units) {
 
