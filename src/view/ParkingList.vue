@@ -89,14 +89,18 @@
           })
           .catch(msg=>{
 
-            if (msg) {
+            if (msg == 'Bluetooth_poweroff') {
 
-              window.HeaderTip.show(msg)
+              HeaderTip.show('蓝牙未开启，请打开蓝牙')
+            }
+            else {
+
+              HeaderTip.show(msg)
             }
           })
       }
     },
-    created() {
+    mounted() {
 
       this.doLocate()
     }

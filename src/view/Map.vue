@@ -16,7 +16,14 @@
 <script>
 
   // import '@/yfmap.min'
-  import { idrMapView , networkInstance, idrMarkers, idrMapEventTypes, idrDebug } from '../../../indoorunMap/map'
+  import {
+    idrMapView,
+    networkInstance,
+    idrMarkers,
+    idrMapEventTypes,
+    idrDebug,
+    idrWxManager
+  } from '../../../indoorunMap/map'
 
   import MarkInMap from '@/components/MarkInMap'
   import FloorListControl from '@/components/FloorListControl.vue'
@@ -121,8 +128,15 @@
           return
         }
 
+        this.addEndMarker(unit.position)
+
         this.$store.dispatch('finishMarkInMap')
           .then(()=>{
+
+            if (!idrWxManager._beaconStart) {
+
+              return Promise.reject('蓝牙未开启，请开启蓝牙')
+            }
 
             return this.map.doRoute(null, unit.position)
           })
@@ -315,6 +329,13 @@
 
         if (this.endMarker) {
 
+          if (!idrWxManager._beaconStart) {
+
+            window.HeaderTip.show('蓝牙未开启，请开启蓝牙')
+
+            return
+          }
+
           this.map.doRoute(null, this.endMarker.position)
             .then(res=>{
 
@@ -368,7 +389,14 @@
           })
             .catch(msg=>{
 
-              HeaderTip.show(msg)
+              if (msg == 'Bluetooth_poweroff') {
+
+                HeaderTip.show('蓝牙未开启，请打开蓝牙')
+              }
+              else {
+
+                HeaderTip.show(msg)
+              }
             })
         }
       },
@@ -382,7 +410,7 @@
 
         this.errorCount += 1
 
-        if (this.errorCount % 30 == 0) {
+        if (this.errorCount % 5 == 0) {
 
           HeaderTip.show(msg)
         }
