@@ -67,7 +67,7 @@
 
         this.doLocate()
       },
-      async nextRegion() {
+      nextRegion() {
 
         if (this.regionIndex >= this.regionList.length) {
 
