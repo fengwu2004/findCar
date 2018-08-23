@@ -1,6 +1,6 @@
 <template>
 	<div class="cell_main">
-    <div>{{data.spaceType ? data.spaceType : '全部'}}</div>
+    <div>{{data.areaName ? data.areaName : '全部'}}</div>
     <div>{{data.totalCount}}</div>
     <div class="parkingCount">{{data.parkingCount}}</div>
     <div class="emptyCount">{{data.emptyCount}}</div>
@@ -13,7 +13,7 @@
 		name: "EmptySpaceListCell",
     props:{
 		  data:{
-        spaceType:String,
+        areaName:String,
         totalCount:Number,
         parkingCount:Number,
         emptyCount:Number

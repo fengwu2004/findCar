@@ -355,7 +355,7 @@
 
         console.log(spaceOverviewList)
 
-        spaceOverviewList.forEach(({spaceType, spaceList})=>{
+        spaceOverviewList.forEach(({areaName, spaceList})=>{
 
           spaceList.forEach(({floorId, unitId, carNo, spaceStatus})=> {
 
@@ -363,7 +363,7 @@
 
             if (unit) {
 
-              unit.fakeName = spaceType
+              unit.fakeName = areaName
 
               unit.carNo = carNo
 
@@ -396,6 +396,8 @@
             return Promise.reject(null)
           })
           .then(()=>{
+
+            console.log('updateUnits')
 
             this.updateUnits(this.regionEx, this.parkingdetail)
 
