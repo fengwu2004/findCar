@@ -2,11 +2,11 @@
   <div>
     <div id="map" class="page"></div>
     <zoom v-bind:map="map"></zoom>
+    <div class="shortcut"></div>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating" v-show="enableNavi || isWx"></locate-status-control>
     <empty-space-list v-show="!navigation.start"></empty-space-list>
     <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="birdLook" @followme="onFollowMe"></navigation>
-    <div class="shortcut"></div>
   </div>
 </template>
 
@@ -350,6 +350,30 @@
 
         this.map.changeFloor(regionEx.floorList[0].id)
       },
+      getShortCut(name) {
+
+        if (!name) {
+
+          return name
+        }
+
+        if (name.indexOf('VIP') != -1) {
+
+          return 'VIP'
+        }
+
+        if (name.indexOf('企业') != -1) {
+
+          return '企业'
+        }
+
+        if (name.indexOf('临时') != -1) {
+
+          return '临时'
+        }
+
+        return name
+      },
       updateUnits(regionEx, {spaceOverviewList}) {
 
         console.log(spaceOverviewList)
@@ -362,7 +386,7 @@
 
             if (unit) {
 
-              unit.fakeName = areaName
+              unit.fakeName = this.getShortCut(areaName)
 
               unit.carNo = carNo
 

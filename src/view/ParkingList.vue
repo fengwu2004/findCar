@@ -9,7 +9,7 @@
 
 <script>
 
-  import { idrLocateServerInstance } from "../../../indoorunMap/map";
+  import { idrLocateServerInstance, networkInstance  } from "../../../indoorunMap/map";
 
   export default {
 
@@ -17,10 +17,10 @@
     data(){
 		  return {
 		    regionList:[
-		      {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094', floorId:'15313804821833137', parkCode:'th0714'},
-          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896', parkCode:'th0730'},
-          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010', floorId:'15323294173829181', parkCode:'th0731'},
-          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013', floorId:'15323290763798360', parkCode:'th0732'}],
+		      {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094', floorId:'15313804821833137'},
+          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896'},
+          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010', floorId:'15323294173829181'},
+          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013', floorId:'15323290763798360'}],
         regionIndex:0,
       }
     },
@@ -29,6 +29,16 @@
       idrLocateServerInstance.stop()
     },
     methods:{
+      updateParkingInfo({regionId, parkCode}) {
+
+        for (let i = 0; i < this.regionList.length; ++i) {
+
+          if (regionId == this.regionList[i].regionId) {
+
+            this.regionList[i].parkCode = parkCode
+          }
+        }
+      },
 		  enterRegion(index) {
 
 		    if (index < 0 || index >= 4) {
@@ -102,7 +112,24 @@
     },
     mounted() {
 
-      // this.doLocate()
+      networkInstance.parksOverview()
+        .then(res=>{
+
+          if (res.code != 'success') {
+
+            return Promise.reject(res.msg)
+          }
+
+          let parkingList = res.data
+
+          parkingList.forEach(parking => this.updateParkingInfo(parking))
+
+          console.log(this.regionList)
+        })
+        .catch((msg)=>{
+
+          window.HeaderTip.show(msg)
+        })
     }
 	}
 </script>

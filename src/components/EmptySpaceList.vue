@@ -40,7 +40,7 @@
   .main {
 
     position: absolute;
-    /*z-index: 11;*/
+    z-index: 2;
     bottom: 0;
     width: 100%;
     display: flex;

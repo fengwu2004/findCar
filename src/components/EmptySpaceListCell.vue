@@ -1,6 +1,6 @@
 <template>
 	<div class="cell_main">
-    <div>{{data.areaName ? data.areaName : '全部'}}</div>
+    <div>{{name}}</div>
     <div>{{data.totalCount}}</div>
     <div class="parkingCount">{{data.parkingCount}}</div>
     <div class="emptyCount">{{data.emptyCount}}</div>
@@ -17,6 +17,44 @@
         totalCount:Number,
         parkingCount:Number,
         emptyCount:Number
+      }
+    },
+    computed:{
+		  name:function () {
+
+		    let areaName = this.data.areaName
+
+		    if (!areaName) {
+
+		      return '全部'
+        }
+
+        if (areaName.indexOf('VIP') != -1) {
+
+          return 'VIP'
+        }
+
+        if (areaName.indexOf('企业') != -1) {
+
+          return '企业'
+        }
+
+        if (areaName.indexOf('临时') != -1) {
+
+          return '临时'
+        }
+
+        if (areaName.indexOf('酒店') != -1) {
+
+          return '酒店'
+        }
+
+        if (areaName.indexOf('月租') != -1) {
+
+          return '月租'
+        }
+
+        return areaName
       }
     },
 	}
