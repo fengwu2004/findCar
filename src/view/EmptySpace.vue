@@ -6,14 +6,13 @@
     <empty-space-list v-show="!navigation.start"></empty-space-list>
     <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="birdLook" @followme="onFollowMe"></navigation>
-    <!--<floor-list-control :floorlist="floorList" :currentName="currentFloorName" :selectfloorid="currentFloorId" :locatefloorid="locateFloorId" v-on:onselect="onSelect"></floor-list-control>-->
+    <div class="shortcut"></div>
   </div>
 </template>
 
 
 <script>
 
-  // import '@/yfmap.min'
   import { idrMapView , idrMarkers, networkInstance, idrMapEventTypes } from '../../../indoorunMap/map'
   import FloorListControl from '@/components/FloorListControl.vue'
   import { mapGetters } from 'vuex'
@@ -449,5 +448,15 @@
 </script>
 <style scoped lang="scss">
 
+  .shortcut {
+
+    position: absolute;
+    left: 1rem;
+    bottom: 14rem;
+    z-index: 1;
+    width: 5.75rem;
+    height: 12.5rem;
+    background: url("../assets/kongcheweizhishi.png") no-repeat center/100% 100%;
+  }
 
 </style>

@@ -124,63 +124,63 @@
   .chanye1 {
 
     position: absolute;
-    left: 2rem;
-    top: 18rem;
+    left: 7%;
+    top: 33%;
   }
 
   .chanye1_paopao {
 
     position: absolute;
-    left: 4rem;
-    top: 15rem;
+    left: 12%;
+    top: 27%;
   }
 
   .chanye2 {
 
     position: absolute;
-    left: 12rem;
-    top: 23rem;
+    left: 40%;
+    top: 42%;
   }
 
   .chanye2_paopao {
 
     position: absolute;
-    left: 14rem;
-    top: 20rem;
+    left: 45%;
+    top: 36%;
   }
 
   .jiudian {
 
     position: absolute;
-    right: 1.6rem;
-    top: 16.4rem;
+    right: 5%;
+    top: 30%;
   }
 
   .jiudian_paopao {
 
     position: absolute;
-    right: 3.3rem;
-    top: 13.4rem;
+    right: 10%;
+    top: 24%;
   }
 
   .zhanting {
 
     position: absolute;
-    right: 1rem;
-    top: 9.5rem;
+    right: 4%;
+    top: 17%;
   }
 
   .zhanting_paopao {
 
     position: absolute;
-    right: 3rem;
-    top: 6.5rem;
+    right: 8%;
+    top: 11%;
   }
 
   .paopao {
 
     width: 7.5rem;
-    height: 2.8rem;
+    height: 3.2rem;
     background: url("../assets/paopao.png") no-repeat center/100% 100%;
     display: flex;
     flex-direction: column;
