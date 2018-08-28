@@ -1,21 +1,9 @@
 <template>
   <div class="main">
-    <div v-if="finishAjax" class="paopao chanye1_paopao">
-      <span>{{regionList[2].emptyCount}}</span>
-    </div>
-    <div v-if="finishAjax" class="paopao chanye2_paopao">
-      <span>{{regionList[3].emptyCount}}</span>
-    </div>
-    <div v-if="finishAjax" class="paopao jiudian_paopao">
-      <span>{{regionList[0].emptyCount}}</span>
-    </div>
-    <div v-if="finishAjax" class="paopao zhanting_paopao">
-      <span>{{regionList[1].emptyCount}}</span>
-    </div>
-    <div class="chanye1 btn" @click="enterRegion(2)">产业一停车场</div>
-    <div class="chanye2 btn" @click="enterRegion(3)">产业二停车场</div>
-    <div class="jiudian btn" @click="enterRegion(0)">酒店停车场</div>
-    <div class="zhanting btn" @click="enterRegion(1)">展厅停车场</div>
+    <empty-paopao v-if="finishAjax" :region="regionList[2]" class="chanye1" name="产业一停车场"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[3]" class="chanye2" name="产业二停车场"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[0]" class="jiudian" name="酒店停车场"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[1]" class="zhanting" name="展厅停车场"></empty-paopao>
   </div>
 </template>
 
@@ -24,18 +12,19 @@
 
   import { networkInstance } from '../../../indoorunMap/map'
   import ParkingCell from "@/components/ParkingCell";
+  import EmptyPaopao from "@/components/EmptyPaopao";
 
   export default {
     name: "EmptyList",
-    components: {ParkingCell},
+    components: {EmptyPaopao, ParkingCell},
     data() {
       return {
         finishAjax:false,
         regionList:[
-          {name:'潼湖科技小镇_商业停车场', regionId:'15313792400143094', floorId:'15313804821833137'},
-          {name:'潼湖科技小镇_展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896'},
-          {name:'潼湖科技小镇_产业1停车场', regionId:'14533784131830010', floorId:'15323294173829181'},
-          {name:'潼湖科技小镇_产业2停车场', regionId:'14504321009170013', floorId:'15323290763798360'}],
+          {name:'酒店停车场', regionId:'15313792400143094', floorId:'15313804821833137'},
+          {name:'展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896'},
+          {name:'产业一停车场', regionId:'14533784131830010', floorId:'15323294173829181'},
+          {name:'产业二停车场', regionId:'14504321009170013', floorId:'15323290763798360'}],
       }
     },
     methods:{
@@ -102,44 +91,17 @@
     padding-top: 3rem;
   }
 
-  .btn {
-
-    background: #0cb175;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
-    border-radius: 4.5px;
-    font-size: 1.4rem;
-    color: #fff;
-    width: 10rem;
-    height: 3rem;
-    text-align: center;
-    line-height: 3rem;
-  }
-
   .chanye1 {
 
     position: absolute;
     left: 7%;
-    top: 33%;
-  }
-
-  .chanye1_paopao {
-
-    position: absolute;
-    left: 15%;
-    top: 23%;
+    top: 20%;
   }
 
   .chanye2 {
 
     position: absolute;
-    left: 40%;
-    top: 44%;
-  }
-
-  .chanye2_paopao {
-
-    position: absolute;
-    left: 47%;
+    left: 30%;
     top: 34%;
   }
 
@@ -147,44 +109,14 @@
 
     position: absolute;
     right: 5%;
-    top: 33%;
-  }
-
-  .jiudian_paopao {
-
-    position: absolute;
-    right: 16%;
-    top: 23%;
+    top: 24%;
   }
 
   .zhanting {
 
     position: absolute;
     right: 4%;
-    top: 17%;
-  }
-
-  .zhanting_paopao {
-
-    position: absolute;
-    right: 14%;
-    top: 8%;
-  }
-
-  .paopao {
-
-    width: 4.3rem;
-    height: 5rem;
-    background: url("../assets/paopao.png") no-repeat center/100% 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    span {
-
-      color: white;
-      font-size: 0.8rem;
-    }
+    top: 7%;
   }
 
 </style>
