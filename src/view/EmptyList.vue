@@ -1,20 +1,16 @@
 <template>
   <div class="main">
     <div v-if="finishAjax" class="paopao chanye1_paopao">
-      <span>空车位:{{regionList[2].emptyCount}}</span>
-      <span>充电桩:{{regionList[2].chargeStick}}</span>
+      <span>{{regionList[2].emptyCount}}</span>
     </div>
     <div v-if="finishAjax" class="paopao chanye2_paopao">
-      <span>空车位:{{regionList[3].emptyCount}}</span>
-      <span>充电桩:{{regionList[3].chargeStick}}</span>
+      <span>{{regionList[3].emptyCount}}</span>
     </div>
     <div v-if="finishAjax" class="paopao jiudian_paopao">
-      <span>空车位:{{regionList[0].emptyCount}}</span>
-      <span>充电桩:{{regionList[0].chargeStick}}</span>
+      <span>{{regionList[0].emptyCount}}</span>
     </div>
     <div v-if="finishAjax" class="paopao zhanting_paopao">
-      <span>空车位:{{regionList[1].emptyCount}}</span>
-      <span>充电桩:{{regionList[1].chargeStick}}</span>
+      <span>{{regionList[1].emptyCount}}</span>
     </div>
     <div class="chanye1 btn" @click="enterRegion(2)">产业一停车场</div>
     <div class="chanye2 btn" @click="enterRegion(3)">产业二停车场</div>
@@ -54,15 +50,13 @@
 
         this.$router.push({path:'/emptyspace', query:{regionId:region.regionId, parkCode:region.parkCode}})
       },
-      updateParkingInfo({regionId, emptyCount, chargeStick}) {
+      updateParkingInfo({regionId, emptyCount}) {
 
         for (let i = 0; i < this.regionList.length; ++i) {
 
           if (regionId == this.regionList[i].regionId) {
 
             this.regionList[i].emptyCount = emptyCount
-
-            this.regionList[i].chargeStick = 0
           }
         }
       }
@@ -110,12 +104,12 @@
 
   .btn {
 
-    background: #3C961E;
+    background: #0cb175;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
     border-radius: 4.5px;
     font-size: 1.4rem;
     color: #fff;
-    width: 11rem;
+    width: 10rem;
     height: 3rem;
     text-align: center;
     line-height: 3rem;
@@ -131,36 +125,36 @@
   .chanye1_paopao {
 
     position: absolute;
-    left: 12%;
-    top: 27%;
+    left: 15%;
+    top: 23%;
   }
 
   .chanye2 {
 
     position: absolute;
     left: 40%;
-    top: 42%;
+    top: 44%;
   }
 
   .chanye2_paopao {
 
     position: absolute;
-    left: 45%;
-    top: 36%;
+    left: 47%;
+    top: 34%;
   }
 
   .jiudian {
 
     position: absolute;
     right: 5%;
-    top: 30%;
+    top: 33%;
   }
 
   .jiudian_paopao {
 
     position: absolute;
-    right: 10%;
-    top: 24%;
+    right: 16%;
+    top: 23%;
   }
 
   .zhanting {
@@ -173,14 +167,14 @@
   .zhanting_paopao {
 
     position: absolute;
-    right: 8%;
-    top: 11%;
+    right: 14%;
+    top: 8%;
   }
 
   .paopao {
 
-    width: 7.5rem;
-    height: 3.2rem;
+    width: 4.3rem;
+    height: 5rem;
     background: url("../assets/paopao.png") no-repeat center/100% 100%;
     display: flex;
     flex-direction: column;
