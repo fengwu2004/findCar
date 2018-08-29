@@ -15,6 +15,46 @@ export const parkingdetail = {
   
       state.parkingCount = parkingCount
   
+      for (let i = 0; i < spaceOverviewList.length; ++i) {
+  
+        spaceOverviewList[i].level = 999
+        
+        if (spaceOverviewList[i].areaName.indexOf('临时') != -1) {
+  
+          spaceOverviewList[i].level = 0
+        }
+  
+        if (spaceOverviewList[i].areaName.indexOf('充电桩') != -1) {
+    
+          spaceOverviewList[i].level = 1
+        }
+  
+        if (spaceOverviewList[i].areaName.indexOf('VIP') != -1) {
+    
+          spaceOverviewList[i].level = 2
+        }
+  
+        if (spaceOverviewList[i].areaName.indexOf('企业') != -1) {
+    
+          spaceOverviewList[i].level = 3
+        }
+  
+        if (spaceOverviewList[i].areaName.indexOf('酒店') != -1) {
+    
+          spaceOverviewList[i].level = 4
+        }
+  
+        if (spaceOverviewList[i].areaName.indexOf('月租') != -1) {
+    
+          spaceOverviewList[i].level = 5
+        }
+      }
+      
+      spaceOverviewList.sort((a, b)=>{
+        
+        return a.level > b.level
+      })
+      
       state.spaceOverviewList = spaceOverviewList
     }
   },

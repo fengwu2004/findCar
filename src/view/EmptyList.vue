@@ -21,10 +21,10 @@
       return {
         finishAjax:false,
         regionList:[
-          {name:'酒店停车场', regionId:'15313792400143094', floorId:'15313804821833137'},
-          {name:'展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896'},
-          {name:'产业一停车场', regionId:'14533784131830010', floorId:'15323294173829181'},
-          {name:'产业二停车场', regionId:'14504321009170013', floorId:'15323290763798360'}],
+          {name:'酒店停车场', regionId:'15313792400143094', floorId:'15313804821833137', emptyCount:0},
+          {name:'展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896', emptyCount:0},
+          {name:'产业一停车场', regionId:'14533784131830010', floorId:'15323294173829181', emptyCount:0},
+          {name:'产业二停车场', regionId:'14504321009170013', floorId:'15323290763798360', emptyCount:0}],
       }
     },
     methods:{

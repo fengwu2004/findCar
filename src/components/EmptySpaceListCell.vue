@@ -39,6 +39,16 @@
           return '企业'
         }
 
+        if (areaName.indexOf('充电桩') != -1) {
+
+          return '充电桩'
+        }
+
+        if (areaName.indexOf('展厅') != -1) {
+
+          return '展厅'
+        }
+
         if (areaName.indexOf('临时') != -1) {
 
           return '临时'

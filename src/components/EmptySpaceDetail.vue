@@ -46,6 +46,7 @@
     right: 0;
     top: 0;
     bottom: 0;
+    z-index: 1000;
     padding-top: 15rem;
     background-color: rgba(1, 1, 1, 0.5);
   }

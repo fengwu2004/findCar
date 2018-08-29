@@ -5,7 +5,7 @@
     <div class="listheader" @click="isUp = !isUp">
       <div>车位类型</div>
       <div>车位总数</div>
-      <div>已停车位数</div>
+      <div>已占用车位数</div>
       <div>空车位数</div>
     </div>
     <div class="list">
@@ -24,7 +24,7 @@
     components: {EmptySpaceListCell},
     data(){
 		  return {
-		    isUp:false,
+		    isUp:true,
       }
     },
     computed: {

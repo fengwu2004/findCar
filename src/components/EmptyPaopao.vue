@@ -1,6 +1,6 @@
 <template>
   <div class="paopao_main">
-    <div class="paopao">
+    <div class="paopao" @click="enterRegion()">
       <span>{{region.emptyCount}}</span>
     </div>
     <div class="btn" @click="enterRegion()">{{region.name}}</div>

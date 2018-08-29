@@ -379,6 +379,16 @@
           return '临时'
         }
 
+        if (name.indexOf('充电桩') != -1) {
+
+          return '充电桩'
+        }
+
+        if (name.indexOf('展厅') != -1) {
+
+          return '展厅'
+        }
+
         return name
       },
       updateUnits(regionEx, {spaceOverviewList}) {
@@ -387,26 +397,29 @@
 
         spaceOverviewList.forEach(({areaName, spaceList})=>{
 
-          spaceList.forEach(({floorId, unitId, carNo, spaceStatus})=> {
+          if (spaceList) {
 
-            let unit = regionEx.getUnitById(floorId, unitId)
+            spaceList.forEach(({floorId, unitId, carNo, spaceStatus})=> {
 
-            if (unit) {
+              let unit = regionEx.getUnitById(floorId, unitId)
 
-              unit.fakeName = this.getShortCut(areaName)
+              if (unit) {
 
-              unit.carNo = carNo
+                unit.fakeName = this.getShortCut(areaName)
 
-              unit.spaceStatus = spaceStatus
-            }
-          })
+                unit.carNo = carNo
+
+                unit.spaceStatus = spaceStatus
+              }
+            })
+          }
         })
       },
       onFloorChangeSuccess({floorId}) {
 
         if (!this.startLocate) {
 
-          // this.doLocating()
+          this.doLocating()
 
           this.startLocate = true
         }
