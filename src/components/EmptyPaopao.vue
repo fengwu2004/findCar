@@ -51,7 +51,7 @@
 
       padding-top: 1.3rem;
       color: #0CB175;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
     }
   }
 
