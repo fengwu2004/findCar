@@ -85,7 +85,7 @@
 
         this.regionId = regionId
 
-        this.initMap(regionId)
+        this.initMap()
       }
       else {
 
@@ -96,7 +96,7 @@
 
             this.regionId = regionId
 
-            this.initMap(regionId)
+            this.initMap()
           })
       }
     },
