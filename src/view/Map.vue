@@ -77,17 +77,28 @@
     },
     mounted() {
 
-      const parkCode = this.$route.query.parkCode || "th0732"
+      const regionId = this.$route.query.regionId
 
       this.carno = this.$route.query.carNo
 
-      networkInstance.getRegionIdByParkCode(parkCode)
-        .then(({regionId})=>{
+      if (regionId) {
 
-          this.regionId = regionId
+        this.regionId = regionId
 
-          this.initMap(regionId)
-        })
+        this.initMap(regionId)
+      }
+      else {
+
+        const parkCode = this.$route.query.parkCode
+
+        networkInstance.getRegionIdByParkCode(parkCode)
+          .then(({regionId})=>{
+
+            this.regionId = regionId
+
+            this.initMap(regionId)
+          })
+      }
     },
     methods:{
       initMap() {
