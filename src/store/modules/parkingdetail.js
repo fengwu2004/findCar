@@ -3,15 +3,18 @@ export const parkingdetail = {
     emptyCount:0,
     totalCount:0,
     parkingCount:0,
+    spaceList:[],
     spaceOverviewList:[]
   },
   mutations: {
   
-    SET_PARKING_DETAIL:(state, {emptyCount, totalCount, parkingCount, spaceOverviewList}) => {
+    SET_PARKING_DETAIL:(state, {emptyCount, totalCount, parkingCount, spaceList, spaceOverviewList}) => {
       
       state.emptyCount = emptyCount
   
       state.totalCount = totalCount
+      
+      state.spaceList = spaceList
   
       state.parkingCount = parkingCount
   

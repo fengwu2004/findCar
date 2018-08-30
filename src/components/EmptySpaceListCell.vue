@@ -51,7 +51,7 @@
 
         if (areaName.indexOf('临时') != -1) {
 
-          return '临时'
+          return '临停'
         }
 
         if (areaName.indexOf('酒店') != -1) {

@@ -3,7 +3,7 @@
     <div id="map" class="page"></div>
     <zoom v-bind:map="map"></zoom>
     <div class="shortcut"></div>
-    <locate-status-control :dolocate="dolocate" @onclick="doLocating" v-show="enableNavi || isWx"></locate-status-control>
+    <locate-status-control :dolocate="dolocate" @onclick="doLocating" v-show="enableNavi && isWx"></locate-status-control>
     <empty-space-list v-show="!navigation.start"></empty-space-list>
     <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="birdLook" @followme="onFollowMe"></navigation>
@@ -217,6 +217,11 @@
       },
       onUnitClick(unit) {
 
+        if (!this.isWx) {
+
+          return
+        }
+
         if (this.navigation.start) {
 
           return
@@ -248,6 +253,11 @@
           })
       },
       doLocating() {
+
+        if (!this.isWx) {
+
+          return
+        }
 
         if (this.map.getUserPos()) {
 
@@ -284,7 +294,7 @@
       },
       onLocateFailed(msg){
 
-        HeaderTip.show(msg)
+        // HeaderTip.show(msg)
       },
       onRouterSuccess({start, end}, findcar = true) {
 
@@ -374,9 +384,9 @@
           return '企业'
         }
 
-        if (name.indexOf('临时') != -1) {
+        if (name.indexOf('临停') != -1) {
 
-          return '临时'
+          return '临停'
         }
 
         if (name.indexOf('充电桩') != -1) {
@@ -391,27 +401,19 @@
 
         return name
       },
-      updateUnits(regionEx, {spaceOverviewList}) {
+      updateUnits(regionEx, {spaceList}) {
 
-        console.log(spaceOverviewList)
+        spaceList.forEach(({areaName, floorId, unitId, carNo, spaceStatus})=>{
 
-        spaceOverviewList.forEach(({areaName, spaceList})=>{
+          let unit = regionEx.getUnitById(floorId, unitId)
 
-          if (spaceList) {
+          if (unit) {
 
-            spaceList.forEach(({floorId, unitId, carNo, spaceStatus})=> {
+            unit.fakeName = this.getShortCut(areaName)
 
-              let unit = regionEx.getUnitById(floorId, unitId)
+            unit.carNo = carNo
 
-              if (unit) {
-
-                unit.fakeName = this.getShortCut(areaName)
-
-                unit.carNo = carNo
-
-                unit.spaceStatus = spaceStatus
-              }
-            })
+            unit.spaceStatus = spaceStatus
           }
         })
       },
@@ -430,6 +432,8 @@
 
         networkInstance.parksOverview(this.regionId)
           .then(res=>{
+
+            console.log(res)
 
             if (res.data.length > 0) {
 

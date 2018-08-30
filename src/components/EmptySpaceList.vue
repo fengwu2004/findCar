@@ -9,8 +9,9 @@
       <div>空车位数</div>
     </div>
     <div class="list">
-      <empty-space-list-cell :data="parkingdetail"></empty-space-list-cell>
+      <empty-space-list-cell v-if="isUp" :data="parkingdetail"></empty-space-list-cell>
       <empty-space-list-cell v-if="!isUp" v-for="(spaceground, index) in parkingdetail.spaceOverviewList" :data="spaceground" v-bind:key="index"></empty-space-list-cell>
+      <empty-space-list-cell v-if="!isUp" :data="parkingdetail"></empty-space-list-cell>
     </div>
   </div>
 </template>

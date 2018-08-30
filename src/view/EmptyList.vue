@@ -27,6 +27,10 @@
           {name:'产业二停车场', regionId:'14504321009170013', floorId:'15323290763798360', emptyCount:0}],
       }
     },
+    created() {
+
+      document.title = '潼湖科技小镇'
+    },
     methods:{
       enterRegion(index) {
 
