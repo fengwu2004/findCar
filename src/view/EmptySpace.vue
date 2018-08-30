@@ -292,9 +292,9 @@
 
         this.locateFloorId = pos.floorId
       },
-      onLocateFailed(msg){
+      onLocateFailed({msg}){
 
-        // HeaderTip.show(msg)
+        HeaderTip.show('当前位置蓝牙信号较少，请耐心等待!')
       },
       onRouterSuccess({start, end}, findcar = true) {
 
