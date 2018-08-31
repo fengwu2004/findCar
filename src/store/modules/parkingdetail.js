@@ -4,7 +4,8 @@ export const parkingdetail = {
     totalCount:0,
     parkingCount:0,
     spaceList:[],
-    spaceOverviewList:[]
+    spaceOverviewList:[],
+    valid:false
   },
   mutations: {
   
@@ -18,6 +19,8 @@ export const parkingdetail = {
   
       state.parkingCount = parkingCount
   
+      state.valid = true
+      
       for (let i = 0; i < spaceOverviewList.length; ++i) {
   
         spaceOverviewList[i].level = 999
