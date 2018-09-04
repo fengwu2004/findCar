@@ -384,7 +384,7 @@
           return '企业'
         }
 
-        if (name.indexOf('临停') != -1) {
+        if (name.indexOf('临时') != -1) {
 
           return '临停'
         }

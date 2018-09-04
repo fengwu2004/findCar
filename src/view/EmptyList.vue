@@ -43,13 +43,19 @@
 
         this.$router.push({path:'/emptyspace', query:{regionId:region.regionId, parkCode:region.parkCode}})
       },
-      updateParkingInfo({regionId, emptyCount}) {
+      updateParkingInfo({regionId, spaceOverviewList}) {
 
         for (let i = 0; i < this.regionList.length; ++i) {
 
           if (regionId == this.regionList[i].regionId) {
 
-            this.regionList[i].emptyCount = emptyCount
+            for (let j = 0; j < spaceOverviewList.length; ++j) {
+
+              if (spaceOverviewList[j].areaName.indexOf("临时")) {
+
+                this.regionList[i].emptyCount = spaceOverviewList[j].emptyCount
+              }
+            }
           }
         }
       }
