@@ -51,7 +51,7 @@
 
             for (let j = 0; j < spaceOverviewList.length; ++j) {
 
-              if (spaceOverviewList[j].areaName.indexOf("临时")) {
+              if (spaceOverviewList[j].areaName.indexOf("临时") != -1) {
 
                 this.regionList[i].emptyCount = spaceOverviewList[j].emptyCount
               }
