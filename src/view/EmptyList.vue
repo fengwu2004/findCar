@@ -1,9 +1,9 @@
 <template>
   <div class="main">
-    <empty-paopao v-if="finishAjax" :region="regionList[2]" class="chanye1" name="产业一停车场"></empty-paopao>
-    <empty-paopao v-if="finishAjax" :region="regionList[3]" class="chanye2" name="产业二停车场"></empty-paopao>
-    <empty-paopao v-if="finishAjax" :region="regionList[0]" class="jiudian" name="酒店停车场"></empty-paopao>
-    <empty-paopao v-if="finishAjax" :region="regionList[1]" class="zhanting" name="展厅停车场"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[2]" class="chanye1" name="创新A区"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[3]" class="chanye2" name="创新B区"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[0]" class="jiudian" name="凤凰国际商务中心"></empty-paopao>
+    <empty-paopao v-if="finishAjax" :region="regionList[1]" class="zhanting" name="产业发展中心"></empty-paopao>
   </div>
 </template>
 
@@ -21,10 +21,10 @@
       return {
         finishAjax:false,
         regionList:[
-          {name:'酒店停车场', regionId:'15313792400143094', floorId:'15313804821833137', emptyCount:0},
-          {name:'展厅停车场', regionId:'14559560656150195', floorId:'15323294861499896', emptyCount:0},
-          {name:'产业一停车场', regionId:'14533784131830010', floorId:'15323294173829181', emptyCount:0},
-          {name:'产业二停车场', regionId:'14504321009170013', floorId:'15323290763798360', emptyCount:0}],
+          {name:'凤凰国际商务中心', regionId:'15313792400143094', floorId:'15313804821833137', emptyCount:0},
+          {name:'产业发展中心', regionId:'14559560656150195', floorId:'15323294861499896', emptyCount:0},
+          {name:'创新A区', regionId:'14533784131830010', floorId:'15323294173829181', emptyCount:0},
+          {name:'创新B区', regionId:'14504321009170013', floorId:'15323290763798360', emptyCount:0}],
       }
     },
     created() {
@@ -68,6 +68,8 @@
 
             return Promise.reject(res.msg)
           }
+
+          console.log(res.data)
 
           let parkingList = res.data
 
