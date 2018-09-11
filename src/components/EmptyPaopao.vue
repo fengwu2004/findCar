@@ -39,7 +39,8 @@
 
   .paopao {
 
-    margin-bottom: 0.5rem;
+    transform: scale(0.8);
+    margin-bottom: 0.0rem;
     width: 4.3rem;
     height: 5rem;
     background: url("../assets/paopao.png") no-repeat center/100% 100%;
