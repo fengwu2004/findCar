@@ -403,7 +403,11 @@
       },
       updateUnits(regionEx, {spaceList}) {
 
+        console.log(spaceList)
+
         spaceList.forEach(({areaName, floorId, unitId, carNo, spaceStatus})=>{
+
+          console.log(spaceStatus)
 
           let unit = regionEx.getUnitById(floorId, unitId)
 
@@ -432,8 +436,6 @@
 
         networkInstance.parksOverview(this.regionId)
           .then(res=>{
-
-            console.log(res)
 
             if (res.data.length > 0) {
 
