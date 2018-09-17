@@ -2,7 +2,7 @@
   <div>
     <div id="map" class="page"></div>
     <zoom v-bind:map="map"></zoom>
-    <div class="shortcut"></div>
+    <unit-color-instument v-if="!navigation.start && parkingdetail.valid"></unit-color-instument>
     <locate-status-control :dolocate="dolocate" @onclick="doLocating" v-show="enableNavi && isWx"></locate-status-control>
     <empty-space-list v-if="!navigation.start && parkingdetail.valid"></empty-space-list>
     <empty-space-detail v-show="showDetail" :unit="clickedUnit" v-bind:enable-navi="enableNavi || isWx" @onNavi="onNaviToUnit" @onClose="showDetail = false"></empty-space-detail>
@@ -21,10 +21,12 @@
   import EmptySpaceDetail from "@/components/EmptySpaceDetail";
   import Navigation from "@/components/navigation";
   import LocateStatusControl from "@/components/LocateStatusControl";
+  import UnitColorInstument from "@/components/UnitColorInstument";
 
   export default {
     name: "EmptySpace",
     components: {
+      UnitColorInstument,
       LocateStatusControl,
       Navigation,
       EmptySpaceDetail,
@@ -269,10 +271,7 @@
         }
         else {
 
-          this.map.doLocation(pos => this.onLocateSuccess(pos), msg => {
-
-            this.onLocateFailed(msg)
-          })
+          this.map.doLocation(this.onLocateSuccess, this.onLocateFailed)
             .catch(msg=>{
 
               if (msg == 'Bluetooth_poweroff') {
@@ -281,7 +280,7 @@
               }
               else {
 
-                HeaderTip.show('当前位置蓝牙信号较少，请耐心等待!')
+                HeaderTip.show('微信sdk初始化失败')
               }
             })
         }

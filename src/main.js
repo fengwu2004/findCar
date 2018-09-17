@@ -10,6 +10,7 @@ import HeaderTip from './HeaderTip.js'
 import {FloatAlert} from "./FloatAlert";
 
 import 'mint-ui/lib/style.css'
+import {idrWxManager} from "../../indoorunMap/map";
 
 Vue.config.productionTip = false
 
@@ -22,6 +23,15 @@ window.Alertboxview = new AlertBox()
 window.HeaderTip = new HeaderTip()
 
 window.FloatView = new FloatAlert()
+
+var userAgent = navigator.userAgent.toLowerCase();
+
+var isAndroid = userAgent.match(/android/i) == "android";
+
+if (!isAndroid) {
+  
+  idrWxManager.init()
+}
 
 /* eslint-disable no-new */
 new Vue({

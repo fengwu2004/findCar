@@ -24,10 +24,6 @@
         regionIndex:0,
       }
     },
-    beforeDestroy() {
-
-      idrLocateServerInstance.stop()
-    },
     methods:{
       updateParkingInfo({regionId, parkCode}) {
 
@@ -52,8 +48,6 @@
       },
       gotoRegion(regionId, parkCode) {
 
-        idrLocateServerInstance.stop()
-
         if (window.__wxjs_environment === 'miniprogram') {
 
           let value = 'parkCode+' + parkCode
@@ -65,50 +59,6 @@
           alert('请在小程序中打开')
         }
       },
-      doLocateSuccess() {
-
-        const { regionId, parkCode } =  this.regionList[this.regionIndex]
-
-        this.gotoRegion(regionId, parkCode)
-      },
-      doLocateFailed() {
-
-        this.regionIndex += 1
-
-        this.doLocate()
-      },
-      nextRegion() {
-
-        if (this.regionIndex >= this.regionList.length) {
-
-          return Promise.reject(null)
-        }
-
-        return Promise.resolve(this.regionList[this.regionIndex])
-      },
-      doLocate() {
-
-        this.nextRegion()
-          .then((regionId, floorId)=>{
-
-            return idrLocateServerInstance.start(regionId, floorId)
-          })
-          .then(()=>{
-
-            idrLocateServerInstance.setLocateDelegate(()=>{this.doLocateSuccess()}, ()=>this.doLocateFailed())
-          })
-          .catch(msg=>{
-
-            if (msg == 'Bluetooth_poweroff') {
-
-              HeaderTip.show('蓝牙未开启，请打开蓝牙')
-            }
-            else {
-
-              HeaderTip.show(msg)
-            }
-          })
-      }
     },
     mounted() {
 
