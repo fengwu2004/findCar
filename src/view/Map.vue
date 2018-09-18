@@ -4,7 +4,7 @@
     <find-car-btn v-if="!mapState.markInMap && !navigation.start" @find-car="beginFindCar"></find-car-btn>
     <zoom v-bind:map="map"></zoom>
     <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
-    <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
+    <locate-status-control :dolocate="dolocate" @onclick="onLocateClick"></locate-status-control>
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno" :region-id="regionId"></find-car-with-plate-number>
     <find-car-with-unit @onfindunits="navigateToCar" v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
@@ -36,6 +36,7 @@
   import FacilityPanel from '@/components/FacilityPanel'
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
+  import { Indicator } from 'mint-ui';
 
   export default {
     name: "Map",
@@ -66,7 +67,9 @@
         endMarker:null,
         audioTime:0,
         audio:null,
-        errorCount:0
+        errorCount:0,
+        willnavigatecar:false,
+        enableError:false,
       }
     },
     computed: {
@@ -80,6 +83,11 @@
       const regionId = this.$route.query.regionId
 
       this.carno = this.$route.query.carNo
+
+      if (this.carno && this.carno.length > 4) {
+
+        this.willnavigatecar = true
+      }
 
       if (regionId) {
 
@@ -301,13 +309,13 @@
 
         this.map.changeFloor(regionEx.floorList[0].id)
 
-        if (this.carno) {
-
-          this.$store.dispatch('startSearchCarByPlateNumber')
-            .catch(e=>{
-              console.log(e)
-            })
-        }
+        // if (this.carno) {
+        //
+        //   this.$store.dispatch('startSearchCarByPlateNumber')
+        //     .catch(e=>{
+        //       console.log(e)
+        //     })
+        // }
       },
       onFloorChangeSuccess({floorId}) {
 
@@ -382,6 +390,12 @@
             window.HeaderTip.show(res)
           })
       },
+      onLocateClick() {
+
+        this.enableError = true
+
+        this.doLocating()
+      },
       doLocating() {
 
         if (this.map.getUserPos()) {
@@ -404,26 +418,56 @@
 
                 HeaderTip.show('蓝牙未开启，请打开蓝牙')
               }
-              else {
-
-                HeaderTip.show('当前位置蓝牙信号较少，请耐心等待!')
-              }
             })
         }
+      },
+      dofindCarWhenLocateSuccess() {
+
+        Indicator.open()
+
+        networkInstance.getParkingPlaceUnitByCarNo(this.carno.toUpperCase(), this.regionId)
+          .then(({data})=>{
+
+            Indicator.close()
+
+            if (!data) {
+
+              return Promise.reject(null)
+            }
+
+            this.navigateToCar(data)
+          })
+          .catch(e=>{
+
+            Indicator.close()
+
+            console.log(e)
+          })
+          .finally(()=>{
+
+            Indicator.close()
+          })
       },
       onLocateSuccess(pos){
 
         this.map.setUserPos(pos)
 
         this.locateFloorId = pos.floorId
+
+        if (this.willnavigatecar) {
+
+          this.dofindCarWhenLocateSuccess()
+
+          this.willnavigatecar = false
+        }
       },
       onLocateFailed(msg){
 
-        this.errorCount += 1
+        if (this.enableError) {
 
-        if (this.errorCount % 5 == 0) {
+          HeaderTip.show("当前位置蓝牙信号较少，请耐心等待")
 
-          HeaderTip.show(msg)
+          this.enableError = false
         }
       },
       onSelect(val) {
