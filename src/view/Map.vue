@@ -1,14 +1,15 @@
 <template>
   <div>
     <div id="map" class="page"></div>
-    <find-car-btn v-if="!mapState.markInMap && !navigation.start" @find-car="beginFindCar"></find-car-btn>
+    <find-car-btn v-if="!mapState.markInMap && !navigation.start && !needConfirm" @find-car="beginFindCar"></find-car-btn>
     <zoom v-bind:map="map"></zoom>
-    <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start"></public-facility-btn>
+    <public-facility-btn v-on:onclick='showFacilityPanel = true' v-if="!mapState.markInMap && !navigation.start && !needConfirm"></public-facility-btn>
     <locate-status-control :dolocate="dolocate" @onclick="onLocateClick"></locate-status-control>
     <find-car-with-plate-number v-if="mapState.searchCarWithPlate" v-on:navigatetocar="navigateToCar" v-bind:initcarno="carno" :region-id="regionId"></find-car-with-plate-number>
     <find-car-with-unit @onfindunits="navigateToCar" v-bind:map="map" v-if="mapState.searchCarWithUnit"></find-car-with-unit>
     <facility-panel v-if="showFacilityPanel" v-bind:map="map" @onnavigateto="onNavigateTo" @onclose="showFacilityPanel = false"></facility-panel>
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="onBirdLook" @followme="onFollowMe"></navigation>
+    <confirm-navigate-bar @confirmNavigate="handleConfirmNavigate" v-if="needConfirm"></confirm-navigate-bar>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
   </div>
 </template>
@@ -37,10 +38,12 @@
   import { mapGetters } from 'vuex'
   import Zoom from "@/components/Zoom";
   import { Indicator } from 'mint-ui';
+  import ConfirmNavigateBar from "@/components/ConfirmNavigateBar";
 
   export default {
     name: "Map",
     components: {
+      ConfirmNavigateBar,
       MarkInMap,
       Zoom,
       FloorListControl,
@@ -70,6 +73,8 @@
         errorCount:0,
         willnavigatecar:false,
         enableError:false,
+        needConfirm:false,
+        confirmObj:{start:null, end:null}
       }
     },
     computed: {
@@ -308,14 +313,6 @@
         this.floorList = regionEx.floorList
 
         this.map.changeFloor(regionEx.floorList[0].id)
-
-        // if (this.carno) {
-        //
-        //   this.$store.dispatch('startSearchCarByPlateNumber')
-        //     .catch(e=>{
-        //       console.log(e)
-        //     })
-        // }
       },
       onFloorChangeSuccess({floorId}) {
 
@@ -372,7 +369,21 @@
 
         this.preparePlayAudio()
       },
-      navigateToCar({id:unitId}) {
+      handleConfirmNavigate() {
+
+        this.preparePlayAudio()
+
+        this.onRouterSuccess(this.confirmObj)
+
+        this.needConfirm = false
+      },
+      doBirdLookFirst(res) {
+
+        this.confirmObj = res
+
+        this.needConfirm = true
+      },
+      navigateToCar({id:unitId}, birdLookFirst = false) {
 
         var unit = this.map.findUnitWithId(unitId)
 
@@ -383,7 +394,14 @@
         this.map.doRoute(null, unit.position)
           .then(res=>{
 
-            return this.onRouterSuccess(res)
+            if (birdLookFirst) {
+
+              this.doBirdLookFirst(res)
+            }
+            else {
+
+              return this.onRouterSuccess(res)
+            }
           })
           .catch(res=>{
 
@@ -435,7 +453,7 @@
               return Promise.reject(null)
             }
 
-            this.navigateToCar(data)
+            this.navigateToCar(data, true)
           })
           .catch(e=>{
 
@@ -506,6 +524,11 @@
           return
         }
 
+        if (!this.audio) {
+
+          this.preparePlayAudio()
+        }
+
         this.audio.src = 'https://wx.indoorun.com/thxz/pc/speech?text=' + text
 
         this.audio.play()
@@ -514,7 +537,7 @@
       },
       onNaviStatusUpdate({validate, projDist, goalDist, serialDist, nextSug}) {
 
-        if (!validate) {
+        if (!validate || this.needConfirm) {
 
           return
         }
