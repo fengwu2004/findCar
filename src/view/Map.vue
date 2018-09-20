@@ -22,7 +22,7 @@
     networkInstance,
     idrMarkers,
     idrMapEventTypes,
-    idrDebug,
+    idrLocateServerInstance,
     idrWxManager
   } from '../../../indoorunMap/map'
 
@@ -500,7 +500,7 @@
 
         if (window.debugtest) {
 
-          this.map.setUserPos(pos)
+          idrLocateServerInstance.debugPos = pos
         }
       },
       preparePlayAudio() {
