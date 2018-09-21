@@ -261,7 +261,17 @@
           return
         }
 
-        let btns = units[5].map(unit=>{
+        let outers = units[5].filter(unit=>{
+
+          if (unit.extInfo && unit.extInfo.outerExit == true) {
+
+            return true
+          }
+
+          return false
+        })
+
+        let btns = outers.map(unit=>{
 
           return {
             name:unit.name, callback:()=>{
@@ -288,7 +298,26 @@
 
         if (unitType in units) {
 
-          const unit = this.regionEx.findNearUnit(this.map.getUserPos(), units[unitType])
+          let unit = null
+
+          if (unitType == '5') {
+
+            let outers = units[unitType].filter(unit=>{
+
+              if (unit.extInfo && unit.extInfo.outerExit == true) {
+
+                return true
+              }
+
+              return false
+            })
+
+            unit = this.map.findNearUnit(this.map.getUserPos(), outers, true)
+          }
+          else {
+
+            unit = this.regionEx.findNearUnit(this.map.getUserPos(), units[unitType])
+          }
 
           if (unit) {
 
@@ -559,11 +588,11 @@
 
           this.playAudio('您已到达目的地')
 
+          this.stopRouteAndClean()
+
           var confirm = {name:'知道了', callback:() => {
 
               window.Alertboxview.hide()
-
-              this.stopRouteAndClean()
             }}
 
           window.Alertboxview.show('您已到达目的地', null, [confirm])

@@ -157,11 +157,11 @@
 
           this.playAudio('您已到达目的地')
 
+          this.map.stopRoute()
+
           var confirm = {name:'知道了', callback:() => {
 
               window.Alertboxview.hide()
-
-              this.map.stopRoute()
             }}
 
           window.Alertboxview.show('您已到达目的地', null, [confirm])
