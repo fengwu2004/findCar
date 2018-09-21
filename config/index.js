@@ -38,12 +38,12 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../thxz/index.html'),
+    index: path.resolve(__dirname, '../thxztest/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../thxz'),
+    assetsRoot: path.resolve(__dirname, '../thxztest'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/thxz/',
+    assetsPublicPath: '/thxztest/',
 
     /**
      * Source Maps

@@ -2,7 +2,7 @@ export const navigation = {
   state:{
     start:false,
     totalDistance:0,
-    nextLeft:false,
+    nextdir:'',
     nextDistance:0,
     findCar:false,
     enableSpeack:true
@@ -23,11 +23,11 @@ export const navigation = {
     
       state.start = false
     },
-    SET_NAVI_STATUS:(state, {totalDistance, nextLeft, nextDistance})=> {
+    SET_NAVI_STATUS:(state, {totalDistance, nextdir, nextDistance})=> {
       
       state.totalDistance = totalDistance
   
-      state.nextLeft = nextLeft
+      state.nextdir = nextdir
   
       state.nextDistance = nextDistance
     },

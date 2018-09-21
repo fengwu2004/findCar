@@ -50,6 +50,7 @@
         audio:null,
         endMarker:null,
         isWx:false,
+        enableError:false,
         clickedUnit:{
           spaceStatus:true,
           name:"0055",
@@ -151,7 +152,24 @@
 
         const nextDistance = Math.ceil(serialDist/10.0)
 
-        this.$store.dispatch('setNaviStatus', {nextLeft:YFM.Map.Navigate.NextSuggestion.LEFT == nextSug, totalDistance, nextDistance})
+        let nextdir = -1
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.LEFT) {
+
+          nextdir = 0
+        }
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.RIGHT) {
+
+          nextdir = 1
+        }
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.FRONT) {
+
+          nextdir = 2
+        }
+
+        this.$store.dispatch('setNaviStatus', {nextdir:nextdir, totalDistance, nextDistance})
 
         if (totalDistance < 15) {
 
@@ -168,9 +186,24 @@
         }
         else  {
 
-          const leftrighttext = YFM.Map.Navigate.NextSuggestion.LEFT == nextSug ? '左转' : '右转'
+          var dir = ''
 
-          const text = '前方' + nextDistance + '米' + leftrighttext
+          if (nextdir == 0) {
+
+            dir = '左转'
+          }
+
+          if (nextdir == 1) {
+
+            dir = '右转'
+          }
+
+          if (nextdir == 2) {
+
+            dir = '直行'
+          }
+
+          const text = '前方' + nextDistance + '米' + dir
 
           this.playAudio(text)
         }
@@ -293,7 +326,12 @@
       },
       onLocateFailed({msg}){
 
-        HeaderTip.show('当前位置蓝牙信号较少，请耐心等待!')
+        if (this.enableError) {
+
+          HeaderTip.show("当前位置蓝牙信号较少，请耐心等待")
+
+          this.enableError = false
+        }
       },
       onRouterSuccess({start, end}, findcar = true) {
 

@@ -571,7 +571,7 @@
           return
         }
 
-        if (projDist >= 150) {
+        if (projDist >= 120) {
 
           this.map.reRoute()
 
@@ -582,7 +582,24 @@
 
         const nextDistance = Math.ceil(serialDist/10.0)
 
-        this.$store.dispatch('setNaviStatus', {nextLeft:YFM.Map.Navigate.NextSuggestion.LEFT == nextSug, totalDistance, nextDistance})
+        let nextdir = -1
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.LEFT) {
+
+          nextdir = 0
+        }
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.RIGHT) {
+
+          nextdir = 1
+        }
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.FRONT) {
+
+          nextdir = 2
+        }
+
+        this.$store.dispatch('setNaviStatus', {nextdir, totalDistance, nextDistance})
 
         if (totalDistance < 15) {
 
@@ -599,9 +616,24 @@
         }
         else  {
 
-          const leftrighttext = YFM.Map.Navigate.NextSuggestion.LEFT == nextSug ? '左转' : '右转'
+          var dir = ''
 
-          const text = '前方' + nextDistance + '米' + leftrighttext
+          if (nextdir == 0) {
+
+            dir = '左转'
+          }
+
+          if (nextdir == 1) {
+
+            dir = '右转'
+          }
+
+          if (nextdir == 2) {
+
+            dir = '直行'
+          }
+
+          const text = '前方' + nextDistance + '米' + dir
 
           this.playAudio(text)
         }

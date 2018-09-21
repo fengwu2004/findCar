@@ -2,17 +2,18 @@
   <div>
     <div class="topbar">
       <div class="rightorleft">
-        <img v-if="navigation.nextLeft" src="../assets/left.png"/>
-        <img v-else src="../assets/right.png"/>
+        <img v-if="navigation.nextdir === 0" src="../assets/left.png"/>
+        <img v-if="navigation.nextdir === 1" src="../assets/right.png"/>
+        <img v-if="navigation.nextdir === 2" src="../assets/front.png"/>
       </div>
       <div class="navistatus">
         <div class="total">
           <div class="title">前方路口</div><div class="detail">全程剩余: {{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
         </div>
         <div class="direction">
-          <div>
-            {{navigation.nextDistance}}米{{navigation.nextLeft?'  左转':'  右转'}}
-          </div>
+          <div v-if="navigation.nextdir === 0">{{navigation.nextDistance}}米左转</div>
+          <div v-if="navigation.nextdir === 1">{{navigation.nextDistance}}米右转</div>
+          <div v-if="navigation.nextdir === 2">{{navigation.nextDistance}}米直行</div>
           <div v-if="navigation.enableSpeack" class="speaker" @click="speakControl()"></div>
           <div v-else class="speakeroff" @click="speakControl()"></div>
         </div>
