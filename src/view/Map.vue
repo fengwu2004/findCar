@@ -87,7 +87,7 @@
 
       const regionId = this.$route.query.regionId
 
-      this.carno = this.$route.query.carNo
+      this.carno = decodeURI(this.$route.query.carNo)
 
       if (this.carno && this.carno.length > 4) {
 
@@ -349,6 +349,8 @@
 
         if (!this.startLocate) {
 
+          this.addCarEndMarkWhenMapLoaded()
+
           this.doLocating()
 
           this.startLocate = true
@@ -411,6 +413,19 @@
         this.confirmObj = res
 
         this.needConfirm = true
+      },
+      addCarEndMarkWhenMapLoaded() {
+
+        var unitId = this.$route.query.unitId
+
+        var unit = this.map.findUnitWithId(unitId)
+
+        if (unit) {
+
+          this.addEndMarker(unit.position)
+
+          this.map.centerPos(unit.position)
+        }
       },
       navigateToCar({id:unitId}, birdLookFirst = false) {
 
