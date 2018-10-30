@@ -19,11 +19,11 @@
   // import '@/yfmap.min'
   import {
     idrMapView,
-    networkInstance,
-    idrMarkers,
-    idrMapEventTypes,
+    idrNetworkInstance,
+    idrMapEvent,
+    idrMarker,
     idrLocateServerInstance,
-    idrWxManager
+    idrWxManagerIntance
   } from '../../../indoorunMap/map'
 
   import MarkInMap from '@/components/MarkInMap'
@@ -60,8 +60,8 @@
         startLocate:false,
         floorList:[],
         currentFloorName:'',
-        currentFloorId:null,
-        locateFloorId:null,
+        currentFloorIndex:null,
+        locateFloorIndex:null,
         regionEx:null,
         map:null,
         dolocate:false,
@@ -85,7 +85,7 @@
     },
     mounted() {
 
-      const regionId = this.$route.query.regionId
+      const regionId = this.$route.query.regionId || "15208407076393939"
 
       this.carno = decodeURI(this.$route.query.carNo)
 
@@ -100,18 +100,6 @@
 
         this.initMap()
       }
-      else {
-
-        const parkCode = this.$route.query.parkCode
-
-        networkInstance.getRegionIdByParkCode(parkCode)
-          .then(({regionId})=>{
-
-            this.regionId = regionId
-
-            this.initMap()
-          })
-      }
     },
     methods:{
       initMap() {
@@ -120,27 +108,27 @@
 
         this.map.initMap('yf1248331604', 'map', this.regionId)
 
-        this.map.addEventListener(idrMapEventTypes.onFloorChangeSuccess, data => {
+        this.map.addEventListener(idrMapEvent.types.onFloorChangeSuccess, data => {
 
           this.onFloorChangeSuccess(data)
         })
 
-        this.map.addEventListener(idrMapEventTypes.onInitMapSuccess, regionEx => {
+        this.map.addEventListener(idrMapEvent.types.onInitMapSuccess, mapInfo => {
 
-          this.onInitMapSuccess(regionEx)
+          this.onInitMapSuccess(mapInfo)
         })
 
-        this.map.addEventListener(idrMapEventTypes.onNaviStatusUpdate, (data) => {
+        this.map.addEventListener(idrMapEvent.types.onNaviStatusUpdate, (data) => {
 
           this.onNaviStatusUpdate(data)
         })
 
-        this.map.addEventListener(idrMapEventTypes.onMapClick, (pos) => {
+        this.map.addEventListener(idrMapEvent.types.onMapClick, (pos) => {
 
           this.onMapClick(pos)
         })
 
-        this.map.addEventListener(idrMapEventTypes.onUnitClick, (unit) => {
+        this.map.addEventListener(idrMapEvent.types.onUnitClick, (unit) => {
 
           this.onUnitClick(unit)
         })
@@ -182,7 +170,7 @@
 
               this.addEndMarker(end)
 
-              this.map.changeFloor(start.floorId)
+              this.map.changeFloor(start.floorIndex)
 
               this.map.birdLook()
 
@@ -341,11 +329,11 @@
 
         this.floorList = regionEx.floorList
 
-        this.map.changeFloor(regionEx.floorList[0].id)
+        this.map.changeFloor(regionEx.floorList[0].floorIndex)
       },
-      onFloorChangeSuccess({floorId}) {
+      onFloorChangeSuccess({floorIndex}) {
 
-        this.currentFloorId = floorId
+        this.currentFloorIndex = floorIndex
 
         if (!this.startLocate) {
 
@@ -358,13 +346,13 @@
 
         this.currentFloorName = this.getCurrentName()
 
-        this.map.addUnit(this.regionEx.getFloorbyId(floorId).unitList)
+        this.map.addUnit(this.regionEx.getFloorByIndex(floorIndex).unitList)
       },
       getCurrentName() {
 
         for (var i = 0; i < this.floorList.length; ++i) {
 
-          if (this.floorList[i].id === this.currentFloorId) {
+          if (this.floorList[i].floorIndex === this.currentFloorIndex) {
 
             return this.floorList[i].name
           }
@@ -487,7 +475,7 @@
 
         Indicator.open()
 
-        networkInstance.getParkingPlaceUnitByCarNo(this.carno.toUpperCase(), this.regionId)
+        idrNetworkInstance.getParkingPlaceUnitByCarNo(this.carno.toUpperCase(), this.regionId)
           .then(({data})=>{
 
             Indicator.close()
@@ -514,7 +502,7 @@
 
         this.map.setUserPos(pos)
 
-        this.locateFloorId = pos.floorId
+        this.locateFloorIndex = pos.floorIndex
 
         if (this.willnavigatecar) {
 
@@ -523,7 +511,7 @@
           this.willnavigatecar = false
         }
       },
-      onLocateFailed(msg){
+      onLocateFailed(){
 
         if (this.enableError) {
 
@@ -534,7 +522,7 @@
       },
       onSelect(val) {
 
-        this.currentFloorId = val
+        this.locateFloorIndex = val
 
         this.map.changeFloor(val)
 
@@ -676,7 +664,7 @@
 
         this.map.removeMarker(this.endMarker)
 
-        var endMarker = new idrMarkers.IDREndMarker(pos, './static/markericon/end.png')
+        var endMarker = new idrMarker({pos, image:'./static/markericon/end.png'})
 
         this.endMarker = this.map.addMarker(endMarker)
       },

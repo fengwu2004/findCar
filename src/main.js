@@ -10,7 +10,7 @@ import HeaderTip from './HeaderTip.js'
 import {FloatAlert} from "./FloatAlert";
 
 import 'mint-ui/lib/style.css'
-import {idrWxManager} from "../../indoorunMap/map";
+import {idrWxManagerIntance} from "../../indoorunMap/map";
 
 Vue.config.productionTip = false
 
@@ -30,7 +30,7 @@ var isAndroid = userAgent.match(/android/i) == "android";
 
 if (!isAndroid) {
   
-  idrWxManager.init()
+  idrWxManagerIntance.init()
 }
 
 /* eslint-disable no-new */

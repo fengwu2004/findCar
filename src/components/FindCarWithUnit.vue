@@ -6,7 +6,7 @@
       <div class="title">输入车位号找车</div>
       <div class="tip">请输入您的车辆所停位置的车位号</div>
       <div class="floors">
-        <div v-for="floor in floorlist" v-bind:key="floor.id" class="floor" v-bind:class="getFloorStyle(floor.id)" v-on:click="onSelectFloor(floor.id)">{{ floor.name }}</div>
+        <div v-for="floor in floorlist" v-bind:key="floor.id" class="floor" v-bind:class="getFloorStyle(floor.id)" v-on:click="onSelectFloor(floor.floorIndex)">{{ floor.name }}</div>
       </div>
       <input v-model="unitName" v-on:focus="onFocuse" placeholder="例：026">
       <div class="myerrortip" v-bind:style="{visibility:showerror}">输入有误，请重新输入您的车位号!</div>
@@ -29,13 +29,13 @@
       return {
         findError: false,
         unitName:'',
-        floorlist:this.map.regionEx.floorList,
-        selectedFloorId:this.map.getFloorId()
+        floorlist:this.map.mapInfo.floorList,
+        selectedFloorIndex:this.map._currentFloorIndex
       }
     },
     mounted() {
 
-      this.floorlist = this.map.regionEx.floorList
+      this.floorlist = this.map.mapInfo.floorList
     },
     methods:{
       onClose() {
@@ -57,7 +57,7 @@
       },
       onConfirm() {
 
-        var units = this.map.findUnitWithNameAndFloor(this.unitName, this.selectedFloorId)
+        var units = this.map.findUnitWithApproximatelyName(this.selectedFloorIndex, this.unitName)
 
         if (!units) {
 
@@ -70,17 +70,17 @@
           this.$emit('onfindunits', units)
         }
       },
-      onSelectFloor(floorId) {
+      onSelectFloor(floorIndex) {
 
-        this.selectedFloorId = floorId
+        this.selectedFloorIndex = floorIndex
 
         this.map.autoChangeFloor = false
 
-        this.map.changeFloor(floorId)
+        this.map.changeFloor(floorIndex)
       },
-      getFloorStyle(floorId) {
+      getFloorStyle(floorIndex) {
 
-        if (floorId === this.selectedFloorId) {
+        if (floorIndex === this.selectedFloorIndex) {
 
           return 'floor floorSelected'
         }
