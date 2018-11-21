@@ -25,7 +25,7 @@
 
 <script>
 
-  import { networkInstance } from "../../../indoorunMap/map";
+  import { idrNetworkInstance } from "../../../indoorunMap/map";
   import { Indicator } from 'mint-ui';
 
   export default {
@@ -58,7 +58,7 @@
 
         Indicator.open()
 
-        networkInstance.getParkingPlaceUnitByCarNo(this.carnumber.toUpperCase(), this.regionId)
+        idrNetworkInstance.getParkingPlaceUnitByCarNo(this.carnumber.toUpperCase(), this.regionId)
           .then(({data})=>{
 
             Indicator.close()

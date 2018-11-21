@@ -11,6 +11,7 @@
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="onBirdLook" @followme="onFollowMe"></navigation>
     <confirm-navigate-bar @confirmNavigate="handleConfirmNavigate" v-if="needConfirm"></confirm-navigate-bar>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
+    <FloorListControl :floorlist="floorList" ></FloorListControl>
   </div>
 </template>
 
@@ -65,7 +66,7 @@
         regionEx:null,
         map:null,
         dolocate:false,
-        regionId:'15313792400143094',
+        regionId:'14707947068300001',
         carno:null,
         endMarker:null,
         audioTime:0,
@@ -85,7 +86,7 @@
     },
     mounted() {
 
-      const regionId = this.$route.query.regionId || "15208407076393939"
+      const regionId = this.$route.query.regionId || "14707947068300001"
 
       this.carno = decodeURI(this.$route.query.carNo)
 
@@ -145,12 +146,12 @@
         this.$store.dispatch('finishMarkInMap')
           .then(()=>{
 
-            if (!idrWxManager._beaconStart) {
+            // if (!idrWxManagerIntance._beaconStart) {
+            //
+            //   return Promise.reject('蓝牙未开启，请开启蓝牙')
+            // }
 
-              return Promise.reject('蓝牙未开启，请开启蓝牙')
-            }
-
-            return this.map.doRoute(null, unit.position)
+            return this.map.doRoute({start:null, end:unit})
           })
           .then((res)=>{
 
@@ -228,7 +229,7 @@
 
         this.preparePlayAudio()
 
-        this.map.doRoute(null, unit.position)
+        this.map.doRoute({start:null, end:unit})
           .then(res=>{
 
             return this.onRouterSuccess(res, false)
@@ -309,7 +310,7 @@
 
           if (unit) {
 
-            this.map.doRoute(null, unit.position)
+            this.map.doRoute({start:null, end:unit})
               .then(res=>{
 
                 return this.onRouterSuccess(res, false)
@@ -346,7 +347,7 @@
 
         this.currentFloorName = this.getCurrentName()
 
-        this.map.addUnit(this.regionEx.getFloorByIndex(floorIndex).unitList)
+        this.map.showAllFloor()
       },
       getCurrentName() {
 
@@ -364,14 +365,14 @@
 
         if (this.endMarker) {
 
-          if (!idrWxManager._beaconStart) {
+          if (!idrWxManagerIntance._beaconStart) {
 
             window.HeaderTip.show('蓝牙未开启，请开启蓝牙')
 
             return
           }
 
-          this.map.doRoute(null, this.endMarker.position)
+          this.map.doRoute({start:null, end:this.endMarker})
             .then(res=>{
 
               return this.onRouterSuccess(res)
@@ -423,7 +424,7 @@
 
         this.map.centerPos(unit.position)
 
-        this.map.doRoute(null, unit.position)
+        this.map.doRoute({start:null, end:unit})
           .then(res=>{
 
             if (birdLookFirst) {
