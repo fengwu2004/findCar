@@ -1,9 +1,8 @@
 <template>
   <div>
     <div id="map" class="page"></div>
-    <find-car-btn v-if="!mapState.markInMap && !navigation.start && !needConfirm" @find-car="beginFindCar"></find-car-btn>
+    <find-car-btn v-if="!navigation.start" @find-car="beginFindCar"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate"></navigation>
-    <confirm-navigate-bar @confirmNavigate="handleConfirmNavigate" v-if="needConfirm"></confirm-navigate-bar>
     <floor-list-control v-if="floorList" @on-select="doChangeFloor" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
   </div>
 </template>
@@ -15,45 +14,36 @@
     idrMapView,
     idrNetworkInstance,
     idrMapEvent,
-    idrMarker,
     idrLocateServerInstance,
-    idrWxManagerIntance
   } from '../../../indoorunMap/map'
 
   import FloorListControl from '@/components/FloorListControl.vue'
   import navigation from '@/components/navigation.vue'
-  import FindCarBtn from "@/components/findCarBtn";
+  import FindCarBtn from "@/components/FindCarBtn";
   import { mapGetters } from 'vuex'
-  import { Indicator } from 'mint-ui';
-  import ConfirmNavigateBar from "@/components/ConfirmNavigateBar";
 
   export default {
     name: "Map",
     components: {
-      ConfirmNavigateBar,
       FloorListControl,
       navigation,
       FindCarBtn},
     data() {
       return {
-        showFacilityPanel:false,
         startLocate:false,
         floorList:null,
         currentFloorName:'',
         currentFloorIndex:null,
         locateFloorIndex:null,
-        regionEx:null,
+        mapInfo:null,
         map:null,
         dolocate:false,
         regionId:'14707947068300001',
-        carno:null,
-        endMarker:null,
-        audioTime:0,
-        audio:null,
-        errorCount:0,
-        willnavigatecar:false,
+        parkingUnitId:null,
+        parkingFloorIndex:null,
         enableError:false,
         needConfirm:false,
+        first:true,
         confirmObj:{start:null, end:null}
       }
     },
@@ -65,7 +55,15 @@
     },
     mounted() {
 
-      this.carno = decodeURI(this.$route.query.carNo)
+      if (this.$route.query.unit) {
+
+        this.parkingUnitId = decodeURI(this.$route.query.unit)
+      }
+
+      if (this.$route.query.floor) {
+
+        this.parkingFloorIndex = parseInt(decodeURI(this.$route.query.floor))
+      }
 
       this.regionId = "14707947068300001"
 
@@ -100,8 +98,6 @@
           this.$store.dispatch('startNavigation', findcar)
             .then(()=>{
 
-              this.addEndMarker(end)
-
               this.map.changeFloor(start.floorIndex)
 
               this.map.birdLook()
@@ -114,37 +110,7 @@
       },
       onStopNavigate() {
 
-        if (!this.navigation.findCar) {
-
-          this.stopRouteAndClean(true)
-
-          return
-        }
-
-        var unfind = {name:'未找到爱车', callback:()=> {
-
-            Alertboxview.hide()
-
-            this.stopRouteAndClean(false)
-          }}
-
-        var found = {name:'已找到爱车', callback:()=> {
-
-            Alertboxview.hide()
-
-            this.stopRouteAndClean(true)
-
-            this.playAudio('已找到爱车')
-
-            this.onNaviToOuter()
-          }}
-
-        var cancel = {name:'取消', callback:() => {
-
-            Alertboxview.hide()
-          }}
-
-        Alertboxview.show('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
+        this.stopRouteAndClean(true)
       },
       doChangeFloor(floorIndex) {
 
@@ -152,30 +118,36 @@
 
         this.map.changeFloor(floorIndex)
       },
-      onInitMapSuccess(regionEx) {
+      onInitMapSuccess(mapInfo) {
 
-        document.title = regionEx.name
+        document.title = mapInfo.name
 
-        this.regionEx = regionEx
+        this.mapInfo = mapInfo
 
-        this.floorList = regionEx.floorList
+        this.floorList = mapInfo.floorList
 
-        this.map.changeFloor(regionEx.floorList[0].floorIndex)
+        this.map.changeFloor(this.parkingFloorIndex)
+      },
+      onFirstShowFloor() {
+
+        this.doLocating()
+
+        const unit = this.map.findUnitWithId(this.parkingUnitId)
+
+        this.map.addUnitsOverlay([unit], './static/parkingcar.png')
       },
       onFloorChangeSuccess({floorIndex}) {
 
         this.currentFloorIndex = floorIndex
 
-        if (!this.startLocate) {
+        if (this.first) {
 
-          this.doLocating()
+          this.onFirstShowFloor()
 
-          this.startLocate = true
+          this.first = false
         }
 
         this.currentFloorName = this.getCurrentName()
-
-        this.map.set2DMap(true)
       },
       getCurrentName() {
 
@@ -191,31 +163,13 @@
       },
       beginFindCar(){
 
-        if (this.endMarker) {
+        const unit = this.map.findUnitWithId(this.parkingUnitId)
 
-          if (!idrWxManagerIntance._beaconStart) {
+        this.map.doRoute({end:unit})
+          .then(res=>{
 
-            window.HeaderTip.show('蓝牙未开启，请开启蓝牙')
-
-            return
-          }
-
-          this.map.doRoute({start:null, end:this.endMarker})
-            .then(res=>{
-
-              return this.onRouterSuccess(res)
-            })
-            .catch(res=>{
-
-              window.HeaderTip.show(res)
-            })
-
-          return
-        }
-
-        this.$store.dispatch('startSearchCarByPlateNumber').catch(e=>console.log(e))
-
-        this.preparePlayAudio()
+            this.onRouterSuccess(res)
+          })
       },
       handleConfirmNavigate() {
 
@@ -223,11 +177,15 @@
 
         this.needConfirm = false
       },
+      doBirdLookFirst(res) {
+
+        this.confirmObj = res
+
+        this.needConfirm = true
+      },
       navigateToCar({id:unitId}, birdLookFirst = false) {
 
         var unit = this.map.findUnitWithId(unitId)
-
-        this.addEndMarker(unit.position)
 
         this.map.centerPos(unit.position)
 
@@ -273,45 +231,11 @@
             })
         }
       },
-      dofindCarWhenLocateSuccess() {
-
-        Indicator.open()
-
-        idrNetworkInstance.getParkingPlaceUnitByCarNo(this.carno.toUpperCase(), this.regionId)
-          .then(({data})=>{
-
-            Indicator.close()
-
-            if (!data) {
-
-              return Promise.reject(null)
-            }
-
-            this.navigateToCar(data, true)
-          })
-          .catch(e=>{
-
-            Indicator.close()
-
-            console.log(e)
-          })
-          .finally(()=>{
-
-            Indicator.close()
-          })
-      },
       onLocateSuccess(pos){
 
         this.map.setUserPos(pos)
 
         this.locateFloorIndex = pos.floorIndex
-
-        if (this.willnavigatecar) {
-
-          this.dofindCarWhenLocateSuccess()
-
-          this.willnavigatecar = false
-        }
       },
       onLocateFailed(){
 
@@ -376,8 +300,6 @@
 
         if (totalDistance < 15) {
 
-          this.playAudio('您已到达目的地')
-
           this.stopRouteAndClean()
 
           var confirm = {name:'知道了', callback:() => {
@@ -391,10 +313,8 @@
       stopRouteAndClean(removeEndMarker = true) {
 
         this.map.stopRoute()
-          .then(()=>{
 
-            return this.$store.dispatch('stopNavigation')
-          })
+        this.$store.dispatch('stopNavigation')
           .then(()=>{
 
             if (removeEndMarker) {
@@ -406,14 +326,7 @@
 
             this.map.setStatus(YFM.Map.STATUS_TOUCH)
           })
-      },
-      addEndMarker(pos) {
 
-        this.map.removeMarker(this.endMarker)
-
-        var endMarker = new idrMarker({pos, image:'./static/markericon/end.png'})
-
-        this.endMarker = this.map.addMarker(endMarker)
       }
     }
   }

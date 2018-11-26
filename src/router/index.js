@@ -4,7 +4,7 @@ import map from '@/view/Map'
 
 Vue.use(Router)
 
-const base = process.env.NODE_ENV === 'production' ? '/thxz/' : '/'
+const base = process.env.NODE_ENV === 'production' ? '/gzxiaopeng/' : '/'
 
 export default new Router({
   mode: 'history',

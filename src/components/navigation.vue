@@ -1,31 +1,35 @@
 <template>
   <div>
-    <div class="topbar">
-      <div class="rightorleft">
-        <img v-if="navigation.nextdir === 0" src="../assets/left.png"/>
-        <img v-if="navigation.nextdir === 1" src="../assets/right.png"/>
-        <img v-if="navigation.nextdir === 2" src="../assets/front.png"/>
-      </div>
-      <div class="navistatus">
-        <div class="total">
-          <div class="title">前方路口</div><div class="detail">全程剩余: {{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
+    <div class="top">
+      <div class="topbar">
+        <div class="rightorleft">
+          <img v-if="navigation.nextdir === 0" src="../assets/left.png"/>
+          <img v-if="navigation.nextdir === 1" src="../assets/right.png"/>
+          <img v-if="navigation.nextdir === 2" src="../assets/front.png"/>
         </div>
         <div class="direction">
-          <div v-if="navigation.nextdir === 0">{{navigation.nextDistance}}米左转</div>
-          <div v-if="navigation.nextdir === 1">{{navigation.nextDistance}}米右转</div>
-          <div v-if="navigation.nextdir === 2">{{navigation.nextDistance}}米直行</div>
-          <div v-if="navigation.enableSpeack" class="speaker" @click="speakControl()"></div>
-          <div v-else class="speakeroff" @click="speakControl()"></div>
+          <div v-if="navigation.nextdir === 0">直行{{navigation.nextDistance}}米后 左转</div>
+          <div v-if="navigation.nextdir === 1">直行{{navigation.nextDistance}}米后 右转</div>
+          <div v-if="navigation.nextdir === 2">直行{{navigation.nextDistance}}米</div>
         </div>
       </div>
     </div>
-    <div class='bottombar'>
-      <div onClick={this.close}>
-        <img src="../assets/quit.png" v-on:click="exit" width="20"/>
-        <span class="line"/>
+    <div class="bottom">
+      <div v-if="!exitcheck" class='normal'>
+        <div @click="askExit" class="exit">
+          <span>退出</span>
+          <span class="line"/>
+        </div>
+        <div class="detail">全程剩余: {{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
+        <div>
+          <div v-if="followMe" class="title" @click='birdlook'>路线全览</div>
+          <div v-else class="title" @click='onFollowMe'>恢复导航</div>
+        </div>
       </div>
-      <div v-if="followMe" class="title" @click='birdlook'>查看全览</div>
-      <div v-else class="title" @click='onFollowMe'>跟我走</div>
+      <div v-else class="exitstatus">
+        <div @click="exit">确认退出</div>
+        <div @click="cancelExit">取消</div>
+      </div>
     </div>
   </div>
 </template>
@@ -44,25 +48,21 @@
     data() {
       return {
         followMe:true,
+        exitcheck:false
       }
     },
     methods: {
+      cancelExit() {
+
+        this.exitcheck = false
+      },
       exit() {
 
-        this.$emit('stop')
+        this.$emit("stop")
       },
-      speakControl() {
+      askExit() {
 
-        this.$store.dispatch('toggleSpeak')
-
-        if (this.navigation.enableSpeack) {
-
-          window.FloatView.show('语音播报已开启')
-        }
-        else {
-
-          window.FloatView.show('语音播报已关闭')
-        }
+        this.exitcheck = true
       },
       birdlook() {
 
@@ -83,11 +83,19 @@
 
 <style scoped lang="scss">
 
-  .topbar {
+  .top {
 
     position: absolute;
-    top: 0;
+    top: 1rem;
     width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .topbar {
+
+    border-radius: 0.5rem;
+    width: 90%;
     background: #18202A;
     display: flex;
   }
@@ -101,105 +109,92 @@
     }
   }
 
-  .navistatus {
+  .direction {
 
-    padding-top: 1rem;
-    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 3.2rem;
+    color: #3984DD;
+  }
 
-    .total {
+  .bottom {
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
+    display: flex;
+    height: 5.6rem;
+    width: 100%;
+    bottom: 1rem;
+    justify-content: center;
+    position: absolute;
+  }
 
-      .title {
+  .normal {
 
-        color:#C8C8C8;
-        font-size: 1.5rem;
-      }
+    display: flex;
+    width: 90%;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: 0.5rem;
 
-      .detail {
+    .detail {
 
-        font-size: 1.2rem;
-        color: #C8C8C8;
-        padding-right: 2rem;
-      }
+      font-size: 1.2rem;
+      color: #C8C8C8;
     }
 
-    .direction {
+    .title {
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 3.2rem;
-      color: #3984DD;
-
-      .speaker {
-
-        width: 2rem;
-        height: 2rem;
-        margin-right: 2rem;
-        background: url("../assets/speaker.png") no-repeat center/100%;
-      }
-
-      .speakeroff {
-
-        width: 2rem;
-        height: 2rem;
-        margin-right: 2rem;
-        background: url("../assets/speakeroff.png") no-repeat center/100%;
-      }
+      background-color: dodgerblue;
+      color: white;
+      padding: 0.5rem 0.8rem;
+      border-radius: 1rem;
+      margin-right: 2rem;
     }
   }
 
-  .bottombar {
+  .exit {
 
-    position: absolute;
-    bottom: 0;
     display: flex;
-    height: 5.6rem;
     align-items: center;
-    background: #18202A;
-    width: 100%;
-    text-align: center;
 
-    > div:first-child {
-
-      width: 5.6rem;
-      height: 100%;
-      position: absolute;
-      display: flex;
-      align-items: center;
-      z-index: 100;
-      justify-content: center;
-    }
-
-    > img {
+    > span {
 
       margin: 1rem;
-      position: absolute;
-      z-index: 100;
+      color: red;
     }
 
     .line {
 
       width: 1px;
-      height: 1.6rem;
-      position: absolute;
-      right: 0;
-      background-color: #c8c8c8;
+      height: 3rem;
+      background-color: red;
+    }
+  }
+
+  .exitstatus {
+
+    display: flex;
+    width: 90%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 0.5rem;
+
+    > div {
+
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
 
-    .title {
+    > div:first-child {
 
-      font-size: 1.5rem;
-      position: absolute;
-      width: 100%;
-      color: #3984DD;
-      line-height: 5.6rem;;
-      left: 50%;
-      transform: translateX(-50%);
+      color: red;
     }
   }
 
