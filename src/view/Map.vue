@@ -11,7 +11,7 @@
     <navigation v-if='navigation.start' @toggleSpeak="toggleSpeak" v-on:stop="onStopNavigate" @birdlook="onBirdLook" @followme="onFollowMe"></navigation>
     <confirm-navigate-bar @confirmNavigate="handleConfirmNavigate" v-if="needConfirm"></confirm-navigate-bar>
     <mark-in-map v-if="mapState.markInMap"></mark-in-map>
-    <FloorListControl :floorlist="floorList" ></FloorListControl>
+    <floor-list-control v-if="floorList" @on-select="doChangeFloor" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
   </div>
 </template>
 
@@ -59,7 +59,7 @@
       return {
         showFacilityPanel:false,
         startLocate:false,
-        floorList:[],
+        floorList:null,
         currentFloorName:'',
         currentFloorIndex:null,
         locateFloorIndex:null,
@@ -225,6 +225,12 @@
 
         Alertboxview.show('在中断导航前', '是否已找到您的爱车', [unfind, found, cancel])
       },
+      doChangeFloor(floorIndex) {
+
+        this.map.autoChangeFloor = false
+
+        this.map.changeFloor(floorIndex)
+      },
       onNaviToUnit(unit) {
 
         this.preparePlayAudio()
@@ -347,7 +353,7 @@
 
         this.currentFloorName = this.getCurrentName()
 
-        this.map.showAllFloor()
+        this.map.set2DMap(true)
       },
       getCurrentName() {
 

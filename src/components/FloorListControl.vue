@@ -1,22 +1,26 @@
 <template>
   <div class="main">
-    <div class="currentName" v-on:click="onShow()">{{ currentName }}<span v-show="checkShow(selectfloorid)" class="lc_dot">●</span></div>
+    <div class="currentName" v-on:click="onShow()">{{ name() }}<span v-show="checkShow(selectedIndex)" class="lc_dot">●</span></div>
     <div v-bind:class="dropDownStyle">
-      <div v-for="floor in floorlist" v-bind:key="floor.id" :class="getFloorStyle(floor.id)" @click="onSelect(floor.id)">{{ floor.name }}<span v-show="checkShow(floor.id)" class="lc_dot">●</span></div>
+      <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="getFloorStyle(floor.floorIndex)" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}<span v-show="checkShow(floor.floorIndex)" class="lc_dot">●</span></div>
     </div>
   </div>
 </template>
 
 <script>
 
+
   export default {
-    name :'FloorListControl',
-    props: ['floorlist', 'selectfloorid', 'locatefloorid', 'currentName'],
+    name :'floorlistdiv',
+    props:['floorList', 'selectedIndex', 'locatedIndex'],
     data:function() {
       return {
         show:false,
         dropDownStyle:'fadeout'
       }
+    },
+    computed:{
+
     },
     methods:{
       onShow() {
@@ -32,11 +36,9 @@
           this.dropDownStyle = 'fadeout'
         }
       },
-      onSelect(floorId) {
+      onSelect(floorIndex) {
 
-        this.$emit('onselect', floorId)
-
-        console.log('选择:' + floorId)
+        this.$emit('on-select', floorIndex)
 
         this.show = false
 
@@ -49,9 +51,9 @@
           this.dropDownStyle = 'fadeout'
         }
       },
-      getFloorStyle(floorId) {
+      getFloorStyle(floorIndex) {
 
-        if (floorId === this.selectfloorid) {
+        if (floorIndex === this.selectedIndex) {
 
           return 'dropdown selected'
         }
@@ -60,9 +62,21 @@
           return 'dropdown'
         }
       },
-      checkShow(floorId) {
+      name() {
 
-        return this.locatefloorid == floorId
+        for (var i = 0; i < this.floorList.length; ++i) {
+
+          if (this.floorList[i].floorIndex === this.selectedIndex) {
+
+            return this.floorList[i].name
+          }
+        }
+
+        return null
+      },
+      checkShow(floorIndex) {
+
+        return this.locatedIndex == floorIndex
       }
     }
   }
@@ -82,12 +96,17 @@
     visibility: visible;
     opacity: 1;
     transition: opacity 0.5s linear;
+    max-height: 16rem;
+    overflow-y: scroll;
   }
 
   .fadeout {
+
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s 0.5s, opacity 0.5s linear;
+    max-height: 18rem;
+    overflow-y: scroll;
   }
 
   .currentName {
@@ -131,23 +150,6 @@
     text-align: center;
     color: white;
     font-size: 0.9rem;
-  }
-
-  .lc_div{
-    position: absolute;
-    right:1.1rem;
-    top:15%;
-    border-radius: 5px;
-    width: 2.2rem;
-    height: 2.3rem;
-    z-index: 12;
-  }
-
-  .lc_divcom {
-    width: 100%;
-    height: 2.3rem;
-    line-height: 2.1rem;
-    font-size: 16px;
   }
 
 </style>
