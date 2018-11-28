@@ -156,6 +156,8 @@
 
           this.first = false
         }
+
+        this.map.showCurrFloor()
       },
       beginFindCar(){
 

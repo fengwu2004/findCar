@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div class="allFloor" @click="showAllFloor">
+    <div class="allFloor" v-if="floorList.length > 1" @click="showAllFloor">
       <img v-if="!showallfloor" src="../assets/allfloor.png"/>
       <img v-else src="../assets/allfloor_selected.png"/>
     </div>
@@ -69,7 +69,7 @@
 
   .selected {
 
-    background-color: #32ADEA;
+    background: url("../assets/selectedFloor.png") no-repeat center/100%;
     color: #fff;
     font-size: 0.9rem;
   }
