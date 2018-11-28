@@ -1,8 +1,11 @@
 <template>
   <div class="main">
-    <div class="showAllFloor" @click="showAllFloor"></div>
-    <div class="fadein">
-      <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="getFloorStyle(floor.floorIndex)" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>
+    <div class="allFloor" @click="showAllFloor">
+      <img v-if="!showallfloor" src="../assets/allfloor.png"/>
+      <img v-else src="../assets/allfloor_selected.png"/>
+    </div>
+    <div class="floors">
+      <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="[floor.floorIndex == selectedIndex ? 'selected' : '', 'floor']" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>
     </div>
   </div>
 </template>
@@ -12,75 +15,15 @@
 
   export default {
     name :'floorlistdiv',
-    props:['floorList', 'selectedIndex', 'locatedIndex'],
-    data:function() {
-      return {
-        show:false,
-        dropDownStyle:'fadeout'
-      }
-    },
-    computed:{
-
-    },
+    props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor'],
     methods:{
       showAllFloor() {
 
         this.$emit("show-all-floor")
       },
-      onShow() {
-
-        this.show = !this.show
-
-        if (this.show) {
-
-          this.dropDownStyle = 'fadein'
-        }
-        else {
-
-          this.dropDownStyle = 'fadeout'
-        }
-      },
       onSelect(floorIndex) {
 
         this.$emit('on-select', floorIndex)
-
-        this.show = false
-
-        if (this.show) {
-
-          this.dropDownStyle = 'fadein'
-        }
-        else {
-
-          this.dropDownStyle = 'fadeout'
-        }
-      },
-      getFloorStyle(floorIndex) {
-
-        if (floorIndex === this.selectedIndex) {
-
-          return 'dropdown selected'
-        }
-        else {
-
-          return 'dropdown'
-        }
-      },
-      name() {
-
-        for (var i = 0; i < this.floorList.length; ++i) {
-
-          if (this.floorList[i].floorIndex === this.selectedIndex) {
-
-            return this.floorList[i].name
-          }
-        }
-
-        return null
-      },
-      checkShow(floorIndex) {
-
-        return this.locatedIndex == floorIndex
       }
     }
   }
@@ -89,79 +32,65 @@
 
 <style scoped lang="scss">
 
+  $btnwidth:3rem;
+
   .main {
 
     position: absolute;
     left: 1.1rem;
-    top: 9rem;
+    top: 10rem;
   }
 
-  .fadein {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.5s linear;
-    max-height: 16rem;
+  .floors {
+
+    display: flex;
+    flex-direction: column;
+    height: 15rem;
     overflow-y: scroll;
+    justify-content: flex-start;
   }
 
-  .fadeout {
+  .floors::-webkit-scrollbar {display:none}
 
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 0.5s, opacity 0.5s linear;
-    max-height: 18rem;
-    overflow-y: scroll;
-  }
+  .floor {
 
-  .currentName {
-    background: url("../assets/楼层切换1.png") no-repeat;
-    background-size: 2.5rem;
-    color: #030303;
-    text-align: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    text-align: center;
+    background-size: $btnwidth;
+    background: white;
+    color: #2B3547;
+    width: $btnwidth;
+    height: $btnwidth;
     font-size: 0.9rem;
+
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .lc_dot{
-    color: red;
-    font-size: 8px;
-    position: absolute;
-    right: 2px;
-  }
+  .selected {
 
-  .dropdown {
-
-    background: url("../assets/楼层切换3.png") no-repeat;
-    background-size: 2.5rem;
-    color: white;
-    text-align: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    text-align: center;
-    font-size: 0.9rem;
-  }
-
-  .selected{
-    background: url("../assets/楼层切换2.png") no-repeat;
-    background-size: 2.5rem;
+    background-color: #32ADEA;
     color: #fff;
-    line-height: 2.5rem;
-    text-align: center;
-    color: white;
     font-size: 0.9rem;
   }
 
-  .showAllFloor {
+  .allFloor {
 
-    width: 2.5rem;
-    height: 2.5rem;
+    width: $btnwidth;
+    height: $btnwidth;
     margin-bottom: 1rem;
+    box-shadow: 0 4px 12px 0;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
 
-    background: url("../assets/showallfloor.png") no-repeat center/100%;
+    > img {
+
+      width: 80%;
+    }
   }
+
 
 </style>

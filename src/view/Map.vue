@@ -4,7 +4,7 @@
     <assist-bar @showCarPos="onShowCarPos"></assist-bar>
     <find-car-btn v-if="!navigation.start" @find-car="beginFindCar"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
-    <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
   </div>
 </template>
 
@@ -19,7 +19,7 @@
 
   import FloorListControl from '@/components/FloorListControl.vue'
   import navigation from '@/components/navigation.vue'
-  import FindCarBtn from "@/components/FindCarBtn";
+  import FindCarBtn from "@/components/findCarBar";
   import { mapGetters } from 'vuex'
   import AssistBar from "@/components/AssistBar";
 
@@ -92,6 +92,11 @@
         this.map.addEventListener(idrMapEvent.types.onNaviStatusUpdate, (data) => {
 
           this.onNaviStatusUpdate(data)
+        })
+
+        this.map.addEventListener(idrMapEvent.types.onMapStatusChange, (data) => {
+
+          this.onMapStatusChange(data)
         })
       },
       onRouterSuccess({start, end}, findcar = true) {
@@ -219,6 +224,15 @@
           idrLocateServerInstance.debugPos = pos
         }
       },
+      onMapStatusChange({status}) {
+
+        if (this.map.isInNavi() && status == 0) {
+
+          this.followStatus = false
+
+          this.beginTenSecondWatch()
+        }
+      },
       onNaviStatusUpdate({validate, projDist, goalDist, serialDist, nextSug}) {
 
         if (!validate || this.needConfirm) {
@@ -255,18 +269,6 @@
         }
 
         this.$store.dispatch('setNaviStatus', {nextdir, totalDistance, nextDistance})
-
-        if (totalDistance < 15) {
-
-          this.stopRouteAndClean()
-
-          var confirm = {name:'知道了', callback:() => {
-
-              window.Alertboxview.hide()
-            }}
-
-          window.Alertboxview.show('您已到达目的地', null, [confirm])
-        }
       },
       stopRouteAndClean(removeEndMarker = true) {
 

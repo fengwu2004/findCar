@@ -6,8 +6,6 @@
         <span>小鹏智能产业园地下停车场</span>
       </div>
       <div class="combin">
-        <div class="line">
-        </div>
         <div class="btn" @click="onClick">
           <img src="../assets/car.png"/>
           <span>开始导航</span>
@@ -20,7 +18,7 @@
 <script>
   export default {
     props:['unit', 'parkingname'],
-    name:'FindCarBtn',
+    name:'FindCarBar',
     methods:{
       onClick(){
         this.$emit('find-car')
@@ -66,8 +64,8 @@
 
     > span:first-child {
 
-      font-weight: bolder;
       padding-top: 1rem;
+      font-size: 1.8rem;
     }
   }
 
@@ -77,33 +75,28 @@
     align-items: center;
   }
 
-  .line {
-
-    background-color: red;
-    height: 3rem;
-    width: 1px;
-    margin-right: 1rem;
-    margin-left: 1rem;
-  }
 
   .btn {
 
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-right: 1rem;
+    border: 2px solid #32ADEA;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
 
     > img {
 
       width: 2rem;
       height: 2rem;
-      padding-top: 0.5rem;
+      padding-right: 0.5rem;
     }
 
     > span {
 
-      padding: 0.5rem 0;
+      color: #32ADEA;
+      font-size: 1.4rem;
     }
   }
 
