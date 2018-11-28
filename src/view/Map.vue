@@ -1,9 +1,10 @@
 <template>
   <div>
     <div id="map" class="page"></div>
+    <assist-bar @showCarPos="onShowCarPos"></assist-bar>
     <find-car-btn v-if="!navigation.start" @find-car="beginFindCar"></find-car-btn>
-    <navigation v-if='navigation.start' v-on:stop="onStopNavigate"></navigation>
-    <floor-list-control v-if="floorList" @on-select="doChangeFloor" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
+    <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
   </div>
 </template>
 
@@ -12,7 +13,6 @@
   // import '@/yfmap.min'
   import {
     idrMapView,
-    idrNetworkInstance,
     idrMapEvent,
     idrLocateServerInstance,
   } from '../../../indoorunMap/map'
@@ -21,18 +21,21 @@
   import navigation from '@/components/navigation.vue'
   import FindCarBtn from "@/components/FindCarBtn";
   import { mapGetters } from 'vuex'
+  import AssistBar from "@/components/AssistBar";
 
   export default {
     name: "Map",
     components: {
+      AssistBar,
       FloorListControl,
       navigation,
       FindCarBtn},
     data() {
       return {
+        tenSecondWatch:null,
+        followStatus:true,
         startLocate:false,
         floorList:null,
-        currentFloorName:'',
         currentFloorIndex:null,
         locateFloorIndex:null,
         mapInfo:null,
@@ -116,6 +119,8 @@
 
         this.map.autoChangeFloor = false
 
+        this.map.set2DMap(true)
+
         this.map.changeFloor(floorIndex)
       },
       onInitMapSuccess(mapInfo) {
@@ -146,20 +151,6 @@
 
           this.first = false
         }
-
-        this.currentFloorName = this.getCurrentName()
-      },
-      getCurrentName() {
-
-        for (var i = 0; i < this.floorList.length; ++i) {
-
-          if (this.floorList[i].floorIndex === this.currentFloorIndex) {
-
-            return this.floorList[i].name
-          }
-        }
-
-        return null
       },
       beginFindCar(){
 
@@ -168,42 +159,9 @@
         this.map.doRoute({end:unit})
           .then(res=>{
 
+            this.followStatus = true
+
             this.onRouterSuccess(res)
-          })
-      },
-      handleConfirmNavigate() {
-
-        this.onRouterSuccess(this.confirmObj)
-
-        this.needConfirm = false
-      },
-      doBirdLookFirst(res) {
-
-        this.confirmObj = res
-
-        this.needConfirm = true
-      },
-      navigateToCar({id:unitId}, birdLookFirst = false) {
-
-        var unit = this.map.findUnitWithId(unitId)
-
-        this.map.centerPos(unit.position)
-
-        this.map.doRoute({start:null, end:unit})
-          .then(res=>{
-
-            if (birdLookFirst) {
-
-              this.doBirdLookFirst(res)
-            }
-            else {
-
-              return this.onRouterSuccess(res)
-            }
-          })
-          .catch(res=>{
-
-            window.HeaderTip.show(res)
           })
       },
       doLocating() {
@@ -327,6 +285,57 @@
             this.map.setStatus(YFM.Map.STATUS_TOUCH)
           })
 
+      },
+      onShowCarPos() {
+
+        let unit = this.map.findUnitWithId(this.parkingUnitId)
+
+        this.map.centerPos(unit.position, true)
+
+        this.setMapInNormal()
+      },
+      beginTenSecondWatch() {
+
+        if (this.map.isInNavi()) {
+
+          clearTimeout(this.tenSecondWatch)
+
+          this.tenSecondWatch = setTimeout(()=>{
+
+            this.setMapInNavigate()
+
+          }, 5 * 1000)
+        }
+      },
+      setMapInNormal() {
+
+        this.map.setStatus(YFM.Map.STATUS_TOUCH)
+
+        this.followStatus = false
+
+        this.beginTenSecondWatch()
+      },
+      setMapInNavigate() {
+
+        this.followStatus = true
+
+        this.map.set2DMap(true)
+
+        this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
+      },
+      onShowAllFloor() {
+
+        this.setMapInNormal()
+
+        this.currentFloorIndex = -1
+
+        this.map.showAllFloor()
+      },
+      birdLook() {
+
+        this.map.birdLook()
+
+        this.setMapInNormal()
       }
     }
   }

@@ -22,8 +22,8 @@
         </div>
         <div class="detail">全程剩余: {{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
         <div>
-          <div v-if="followMe" class="title" @click='birdlook'>路线全览</div>
-          <div v-else class="title" @click='onFollowMe'>恢复导航</div>
+          <div v-if="followStatus" class="title" @click='birdlook'>路线全览</div>
+          <div v-else class="title" @click='changeToNavi'>恢复导航</div>
         </div>
       </div>
       <div v-else class="exitstatus">
@@ -39,6 +39,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    props: ["followStatus"],
     name : 'navigation',
     computed: {
       ...mapGetters([
@@ -47,7 +48,6 @@
     },
     data() {
       return {
-        followMe:true,
         exitcheck:false
       }
     },
@@ -66,15 +66,11 @@
       },
       birdlook() {
 
-        this.followMe = false
-
         this.$emit('birdlook')
       },
-      onFollowMe() {
+      changeToNavi() {
 
-        this.followMe = true
-
-        this.$emit('followme')
+        this.$emit('changeToNavigate')
       }
     }
   }

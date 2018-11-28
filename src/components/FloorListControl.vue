@@ -1,8 +1,8 @@
 <template>
   <div class="main">
-    <div class="currentName" v-on:click="onShow()">{{ name() }}<span v-show="checkShow(selectedIndex)" class="lc_dot">●</span></div>
-    <div v-bind:class="dropDownStyle">
-      <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="getFloorStyle(floor.floorIndex)" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}<span v-show="checkShow(floor.floorIndex)" class="lc_dot">●</span></div>
+    <div class="showAllFloor" @click="showAllFloor"></div>
+    <div class="fadein">
+      <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="getFloorStyle(floor.floorIndex)" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>
     </div>
   </div>
 </template>
@@ -23,6 +23,10 @@
 
     },
     methods:{
+      showAllFloor() {
+
+        this.$emit("show-all-floor")
+      },
       onShow() {
 
         this.show = !this.show
@@ -83,12 +87,12 @@
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
   .main {
 
     position: absolute;
-    right: 1.1rem;
+    left: 1.1rem;
     top: 9rem;
   }
 
@@ -137,7 +141,6 @@
     width: 2.5rem;
     height: 2.5rem;
     line-height: 2.5rem;
-    margin: 5px 0;
     text-align: center;
     font-size: 0.9rem;
   }
@@ -150,6 +153,15 @@
     text-align: center;
     color: white;
     font-size: 0.9rem;
+  }
+
+  .showAllFloor {
+
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1rem;
+
+    background: url("../assets/showallfloor.png") no-repeat center/100%;
   }
 
 </style>
