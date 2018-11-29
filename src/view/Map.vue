@@ -118,7 +118,7 @@
       },
       onStopNavigate() {
 
-        this.stopRouteAndClean(true)
+        this.stopRouteAndClean()
       },
       doChangeFloor(floorIndex) {
 
@@ -272,19 +272,12 @@
 
         this.$store.dispatch('setNaviStatus', {nextdir, totalDistance, nextDistance})
       },
-      stopRouteAndClean(removeEndMarker = true) {
+      stopRouteAndClean() {
 
         this.map.stopRoute()
 
         this.$store.dispatch('stopNavigation')
           .then(()=>{
-
-            if (removeEndMarker) {
-
-              this.map.removeMarker(this.endMarker)
-
-              this.endMarker = null
-            }
 
             this.map.setStatus(YFM.Map.STATUS_TOUCH)
           })

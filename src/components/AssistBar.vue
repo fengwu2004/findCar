@@ -18,6 +18,8 @@
 </template>
 
 <script>
+  import {idrLocateServerInstance} from "../../../indoorunMap/map";
+
   export default {
     name: "AssistBar",
     methods: {
@@ -28,16 +30,24 @@
       },
       carFlash() {
 
-        if (doCarFlash) {
+        if (idrLocateServerInstance.isAndroid) {
 
-          doCarFlash()
+          android.doCarFlash({})
+        }
+        else {
+
+          window.webkit.messageHandlers.doCarFlash.postMessage({})
         }
       },
       carWhistle() {
 
-        if (doCarWhistle) {
+        if (idrLocateServerInstance.isAndroid) {
 
-          doCarWhistle()
+          android.doCarWhistle({})
+        }
+        else {
+
+          window.webkit.messageHandlers.doCarWhistle.postMessage({})
         }
       }
     }

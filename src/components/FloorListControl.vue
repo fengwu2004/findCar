@@ -48,6 +48,18 @@
     height: 15rem;
     overflow-y: scroll;
     justify-content: flex-start;
+
+    > div:first-child {
+
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+    }
+
+    > div:last-child {
+
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
   }
 
   .floors::-webkit-scrollbar {display:none}
@@ -69,8 +81,7 @@
 
   .selected {
 
-    background: url("../assets/selectedFloor.png") no-repeat center/100%;
-    color: #fff;
+    background: url("../assets/selectedFloor.png") no-repeat center/112%;
     font-size: 0.9rem;
   }
 
