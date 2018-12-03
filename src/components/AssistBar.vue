@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import {idrLocateServerInstance} from "../../../indoorunMap/map";
+  import {idrCoreMgr} from "../../../indoorunMap/map";
 
   export default {
     name: "AssistBar",
@@ -30,7 +30,7 @@
       },
       carFlash() {
 
-        if (idrLocateServerInstance.isAndroid) {
+        if (idrCoreMgr.isAndroid) {
 
           android.doCarFlash({})
         }
@@ -41,7 +41,7 @@
       },
       carWhistle() {
 
-        if (idrLocateServerInstance.isAndroid) {
+        if (idrCoreMgr.isAndroid) {
 
           android.doCarWhistle({})
         }
