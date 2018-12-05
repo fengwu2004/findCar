@@ -136,7 +136,9 @@
 
         this.floorList = mapInfo.floorList
 
-        this.map.changeFloor(this.parkingFloorIndex)
+        const unit = this.map.findUnitWithId(this.parkingUnitId)
+
+        this.map.changeFloor(unit.floorIndex)
       },
       onFirstShowFloor() {
 
