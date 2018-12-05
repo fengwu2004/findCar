@@ -32,7 +32,7 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          android.doCarFlash({})
+          window.android.doCarFlash()
         }
         else {
 
@@ -43,7 +43,7 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          android.doCarWhistle({})
+          window.android.doCarWhistle()
         }
         else {
 
