@@ -41,7 +41,7 @@
         mapInfo:null,
         map:null,
         dolocate:false,
-        regionId:'14707947068300001',
+        regionId:'14443871894123339',
         parkingUnitId:null,
         parkingFloorIndex:null,
         enableError:false,
@@ -68,7 +68,7 @@
         this.parkingFloorIndex = parseInt(decodeURI(this.$route.query.floor))
       }
 
-      this.regionId = "14707947068300001"
+      this.regionId = "14443871894123339"
 
       this.initMap()
     },
