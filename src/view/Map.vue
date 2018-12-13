@@ -58,6 +58,8 @@
     },
     mounted() {
 
+      window.MapVm = this
+
       if (this.$route.query.unit) {
 
         this.parkingUnitId = decodeURI(this.$route.query.unit)
@@ -283,7 +285,6 @@
 
             this.map.setStatus(YFM.Map.STATUS_TOUCH)
           })
-
       },
       onShowCarPos() {
 
