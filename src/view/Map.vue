@@ -2,9 +2,11 @@
   <div>
     <div id="map" class="page"></div>
     <assist-bar @showCarPos="onShowCarPos"></assist-bar>
-    <find-car-btn v-if="!navigation.start" @find-car="beginFindCar"></find-car-btn>
+    <find-car-btn v-if="!navigation.start" @find-car="checkBlutToothState"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
+    <blue-tooth-off v-if="blueToothAlert" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
   </div>
 </template>
 
@@ -13,8 +15,9 @@
   // import '@/yfmap.min'
   import {
     idrMapView,
+    idrCoreMgr,
     idrMapEvent,
-    idrLocateServerInstance,
+    idrLocateServerInstance, idrDebug,
   } from '../../../indoorunMap/map'
 
   import FloorListControl from '@/components/FloorListControl.vue'
@@ -22,10 +25,14 @@
   import FindCarBtn from "@/components/findCarBar";
   import { mapGetters } from 'vuex'
   import AssistBar from "@/components/AssistBar";
+  import NotInParkingLot from "@/components/NotInParkingLot";
+  import BlueToothOff from "@/components/BlueToothOff";
 
   export default {
     name: "Map",
     components: {
+      BlueToothOff,
+      NotInParkingLot,
       AssistBar,
       FloorListControl,
       navigation,
@@ -47,6 +54,9 @@
         enableError:false,
         needConfirm:false,
         first:true,
+        locatedFailedCount:0,
+        blueToothAlert:false,
+        inparkingLotAlert:false,
         confirmObj:{start:null, end:null}
       }
     },
@@ -73,8 +83,36 @@
       this.regionId = "14443871894123339"
 
       this.initMap()
+
+      idrDebug.showDebugInfo(false)
+
+      idrDebug.debugInfo("测试")
+    },
+    destroyed() {
+
+      this.map.release()
     },
     methods:{
+      updateBluetoothState(on) {
+
+        idrDebug.debugInfo(on)
+
+        if (!on) {
+
+          this.blueToothAlert = true
+        }
+        else {
+
+          if (this.locatedFailedCount > 3) {
+
+            this.inparkingLotAlert = true
+          }
+          else {
+
+            this.beginFindCar()
+          }
+        }
+      },
       initMap() {
 
         this.map = new idrMapView()
@@ -163,7 +201,25 @@
 
         this.map.showCurrFloor()
       },
+      checkBlutToothState() {
+
+        if (idrCoreMgr.isAndroid) {
+
+          window.android.isBlueToothOn()
+        }
+        else {
+
+          window.webkit.messageHandlers.isBlueToothOn.postMessage({})
+        }
+      },
       beginFindCar(){
+
+        if (this.locatedFailedCount > 3) {
+
+          this.checkBlutToothState()
+
+          return
+        }
 
         const unit = this.map.findUnitWithId(this.parkingUnitId)
 
@@ -205,8 +261,29 @@
         this.map.setUserPos(pos)
 
         this.locateFloorIndex = pos.floorIndex
+
+        this.locatedFailedCount = 0
+      },
+      closeBlueToothAlert() {
+
+        this.blueToothAlert = false
+      },
+      goToSettingBlutTooth() {
+
+        this.blueToothAlert = false
+
+        if (idrCoreMgr.isAndroid) {
+
+          window.android.setupBlueTooth()
+        }
+        else {
+
+          window.webkit.messageHandlers.setupBlueTooth.postMessage({})
+        }
       },
       onLocateFailed(){
+
+        this.locatedFailedCount += 1
 
         if (this.enableError) {
 
@@ -284,7 +361,20 @@
           .then(()=>{
 
             this.map.setStatus(YFM.Map.STATUS_TOUCH)
+
+            this.delegateToNativeLayerOfStopRoute()
           })
+      },
+      delegateToNativeLayerOfStopRoute() {
+
+        if (idrCoreMgr.isAndroid) {
+
+          window.android.endNavigate()
+        }
+        else {
+
+          window.webkit.messageHandlers.endNavigate.postMessage({})
+        }
       },
       onShowCarPos() {
 
