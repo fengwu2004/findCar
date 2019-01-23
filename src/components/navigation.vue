@@ -96,7 +96,7 @@
   .topbar {
 
     border-radius: 0.5rem;
-    width: 90%;
+    width: calc(100% - 1.1rem - 1.1rem);
     height: 6rem;
     background: #18202A;
     opacity: 0.93;

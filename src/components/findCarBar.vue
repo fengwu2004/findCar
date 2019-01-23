@@ -42,7 +42,7 @@
 
   .content {
 
-    width: 90%;
+    width: calc(100% - 1.1rem - 1.1rem);
     display: flex;
     background-color: white;
     align-items: center;

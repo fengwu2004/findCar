@@ -6,7 +6,8 @@
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
-    <blue-tooth-off v-if="blueToothAlert" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
+    <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
+    <blue-tooth-off-in-navi v-if="blueToothAlert && navigation.start" @do-confirm="stopRouteAndClean"></blue-tooth-off-in-navi>
   </div>
 </template>
 
@@ -27,10 +28,12 @@
   import AssistBar from "@/components/AssistBar";
   import NotInParkingLot from "@/components/NotInParkingLot";
   import BlueToothOff from "@/components/BlueToothOff";
+  import BlueToothOffInNavi from "@/components/BlueToothOffInNavi";
 
   export default {
     name: "Map",
     components: {
+      BlueToothOffInNavi,
       BlueToothOff,
       NotInParkingLot,
       AssistBar,
@@ -78,6 +81,11 @@
       if (this.$route.query.floor) {
 
         this.parkingFloorIndex = parseInt(decodeURI(this.$route.query.floor))
+      }
+
+      if (this.$route.query.debug) {
+
+        idrLocateServerInstance.debug = true
       }
 
       this.regionId = "14443871894123339"
@@ -139,7 +147,26 @@
           this.onMapStatusChange(data)
         })
       },
+      tellNativeRouterSuccess() {
+
+        if (idrCoreMgr.isAndroid) {
+
+          if (window.android.startNavigate) {
+
+            window.android.startNavigate()
+          }
+        }
+        else {
+
+          if (window.webkit.messageHandlers.startNavigate) {
+
+            window.webkit.messageHandlers.startNavigate.postMessage({})
+          }
+        }
+      },
       onRouterSuccess({start, end}, findcar = true) {
+
+        this.tellNativeRouterSuccess()
 
         return new Promise((resolve => {
 
@@ -432,6 +459,17 @@
 </script>
 <style scoped lang="scss">
 
+.container {
 
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 90%;
+  margin: auto;
+  z-index: 0;
+  pointer-events:none;
+}
 
 </style>
