@@ -87,7 +87,7 @@
   .top {
 
     position: absolute;
-    top: 1rem;
+    top: 2rem;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -96,7 +96,7 @@
   .topbar {
 
     border-radius: 0.5rem;
-    width: calc(100% - 1.1rem - 1.1rem);
+    width: calc(100% - 2rem - 2rem);
     height: 6rem;
     background: #18202A;
     opacity: 0.93;
@@ -106,7 +106,7 @@
   .reach {
 
     border-radius: 0.5rem;
-    width: 90%;
+    width: calc(100% - 2rem - 2rem);
     height: 6rem;
     background: #18202A;
     opacity: 0.93;
@@ -150,7 +150,7 @@
     display: flex;
     height: 5.6rem;
     width: 100%;
-    bottom: 1rem;
+    bottom: 4rem;
     justify-content: center;
     position: absolute;
   }
@@ -158,7 +158,7 @@
   .normal {
 
     display: flex;
-    width: 90%;
+    width: calc(100% - 2rem - 2rem);
     height: 100%;
     justify-content: space-between;
     align-items: center;
@@ -211,7 +211,7 @@
   .exitstatus {
 
     display: flex;
-    width: 90%;
+    width: calc(100% - 2rem - 2rem);
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -252,14 +252,14 @@
     display: flex;
     height: 5.6rem;
     width: 100%;
-    bottom: 1rem;
+    bottom: 4rem;
     justify-content: center;
     position: absolute;
 
     > div {
 
       display: flex;
-      width: 90%;
+      width: calc(100% - 2rem - 2rem);
       height: 100%;
       justify-content: center;
       align-items: center;

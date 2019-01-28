@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="map" class="page"></div>
-    <assist-bar @showCarPos="onShowCarPos"></assist-bar>
+    <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
     <find-car-btn v-if="!navigation.start" @find-car="checkBlutToothState"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
@@ -232,11 +232,18 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          window.android.isBlueToothOn()
+          if (window.android.isBlueToothOn) {
+
+            window.android.isBlueToothOn()
+          }
+
         }
         else {
 
-          window.webkit.messageHandlers.isBlueToothOn.postMessage({})
+          if (window.webkit.messageHandlers && window.webkit.messageHandlers.isBlueToothOn) {
+
+            window.webkit.messageHandlers.isBlueToothOn.postMessage({})
+          }
         }
       },
       beginFindCar(){
@@ -301,11 +308,17 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          window.android.setupBlueTooth()
+          if (window.android.setupBlueTooth) {
+
+            window.android.setupBlueTooth()
+          }
         }
         else {
 
-          window.webkit.messageHandlers.setupBlueTooth.postMessage({})
+          if (window.webkit.messageHandlers && window.webkit.messageHandlers.setupBlueTooth) {
+
+            window.webkit.messageHandlers.setupBlueTooth.postMessage({})
+          }
         }
       },
       onLocateFailed(){
@@ -396,11 +409,17 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          window.android.endNavigate()
+          if (window.android.endNavigate) {
+
+            window.android.endNavigate()
+          }
         }
         else {
 
-          window.webkit.messageHandlers.endNavigate.postMessage({})
+          if (window.webkit.messageHandlers && window.webkit.messageHandlers.endNavigate) {
+
+            window.webkit.messageHandlers.endNavigate.postMessage({})
+          }
         }
       },
       onShowCarPos() {

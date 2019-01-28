@@ -61,7 +61,7 @@
   .main {
 
     position: absolute;
-    right: 1.1rem;
+    right: 2rem;
     width: $btnwidth;
     top: 10rem;
     display: flex;

@@ -33,7 +33,7 @@
   .main {
 
     position: absolute;
-    bottom: 2rem;
+    bottom: 4rem;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -42,7 +42,7 @@
 
   .content {
 
-    width: calc(100% - 1.1rem - 1.1rem);
+    width: calc(100% - 2rem - 2rem);
     display: flex;
     background-color: white;
     align-items: center;

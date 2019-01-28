@@ -37,7 +37,7 @@
   .main {
 
     position: absolute;
-    left: 1.1rem;
+    left: 2rem;
     top: 10rem;
   }
 
@@ -48,6 +48,8 @@
     height: 15rem;
     overflow-y: scroll;
     justify-content: flex-start;
+
+
 
     > div:first-child {
 
@@ -60,6 +62,8 @@
       border-bottom-left-radius: 0.5rem;
       border-bottom-right-radius: 0.5rem;
     }
+
+    border-radius: 0.5rem;
   }
 
   .floors::-webkit-scrollbar {display:none}
