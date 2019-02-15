@@ -26,3 +26,11 @@ function setBlueToothOn() {
     return window.MapVm.updateBluetoothState(true)
   }
 }
+
+function showUserPos() {
+  
+  if (window.MapVm) {
+    
+    window.MapVm.doLocating()
+  }
+}

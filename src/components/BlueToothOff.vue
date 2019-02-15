@@ -6,15 +6,33 @@
       <div class="line"></div>
       <div class="btns">
         <div class="cancel" @click="doCancel">取消</div>
-        <div class="confirm" @click="doConfirm">去设置</div>
+        <div class="confirm" @click="doConfirm">{{settingTitle}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { idrCoreMgr } from "../../../indoorunMap/map";
+
   export default {
     name: "BlueToothOff",
+    data(){
+      return {
+        settingTitle:null
+      }
+    },
+    mounted(){
+
+      if (idrCoreMgr.isAndroid) {
+
+        this.settingTitle = "打开蓝牙"
+      }
+      else {
+
+        this.settingTitle = "去设置"
+      }
+    },
     methods: {
 
       doConfirm() {
