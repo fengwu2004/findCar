@@ -21,7 +21,14 @@
     methods:{
       showAllFloor() {
 
-        this.$emit("show-all-floor")
+        if (this.selectedIndex == -1) {
+
+          this.$emit("show-all-floor", false)
+        }
+        else {
+
+          this.$emit("show-all-floor", true)
+        }
       },
       onSelect(floorIndex) {
 
