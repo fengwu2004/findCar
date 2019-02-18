@@ -4,9 +4,11 @@
       <img v-if="!showallfloor" src="../assets/allfloor.png"/>
       <img v-else src="../assets/allfloor_selected.png"/>
     </div>
+    <div class="start"><span><</span></div>
     <div class="floors">
       <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="[floor.floorIndex == selectedIndex ? 'selected' : '', 'floor']" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>
     </div>
+    <div class="end"><span><</span></div>
   </div>
 </template>
 
@@ -48,22 +50,40 @@
     height: 15rem;
     overflow-y: scroll;
     justify-content: flex-start;
+  }
 
+  .start {
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: gray;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
 
-    > div:first-child {
+    > span {
 
-      border-top-left-radius: 0.5rem;
-      border-top-right-radius: 0.5rem;
+      transform: rotate(90deg);
+      font-size: 0.5rem;
     }
+  }
 
-    > div:last-child {
+  .end {
 
-      border-bottom-left-radius: 0.5rem;
-      border-bottom-right-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: gray;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+
+    > span {
+
+      transform: rotate(-90deg);
+      font-size: 0.5rem;
     }
-
-    border-radius: 0.5rem;
   }
 
   .floors::-webkit-scrollbar {display:none}

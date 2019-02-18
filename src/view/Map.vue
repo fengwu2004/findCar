@@ -158,7 +158,7 @@
         }
         else {
 
-          if (window.webkit.messageHandlers.startNavigate) {
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.startNavigate) {
 
             window.webkit.messageHandlers.startNavigate.postMessage({})
           }
@@ -236,11 +236,10 @@
 
             window.android.isBlueToothOn()
           }
-
         }
         else {
 
-          if (window.webkit.messageHandlers && window.webkit.messageHandlers.isBlueToothOn) {
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.isBlueToothOn) {
 
             window.webkit.messageHandlers.isBlueToothOn.postMessage({})
           }
@@ -458,6 +457,8 @@
         this.map.set2DMap(true)
 
         this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
+
+        this.currentFloorIndex = this.map.getUserPos().floorIndex
       },
       onShowAllFloor() {
 
@@ -469,9 +470,16 @@
       },
       birdLook() {
 
-        this.map.birdLook()
+        if (this.map._naviParm.end.position.floorIndex == this.map.getUserPos().floorIndex) {
 
-        this.setMapInNormal()
+          this.map.birdLook()
+
+          this.setMapInNormal()
+        }
+        else {
+
+          this.onShowAllFloor()
+        }
       }
     }
   }
