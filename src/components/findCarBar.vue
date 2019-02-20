@@ -67,6 +67,11 @@
       padding-top: 1rem;
       font-size: 1.8rem;
     }
+
+    > span:last-child {
+
+      padding-bottom: 1rem;
+    }
   }
 
   .combin {
@@ -82,14 +87,14 @@
     justify-content: center;
     align-items: center;
     margin-right: 1rem;
-    border: 2px solid #32ADEA;
+    border: 1px solid #32ADEA;
     border-radius: 2rem;
     padding: 0.5rem 1rem;
 
     > img {
 
-      width: 2rem;
-      height: 2rem;
+      width: 1.5rem;
+      height: 1.5rem;
       padding-right: 0.5rem;
     }
 

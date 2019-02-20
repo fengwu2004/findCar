@@ -2,7 +2,7 @@
   <div>
     <div id="map" class="page"></div>
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
-    <find-car-btn v-if="!navigation.start" @find-car="checkBlutToothState"></find-car-btn>
+    <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
@@ -214,6 +214,11 @@
         const unit = this.map.findUnitWithId(this.parkingUnitId)
 
         this.map.addUnitsOverlay([unit], './static/parkingcar.png')
+
+        setTimeout(()=>{
+
+          this.map.centerPos(unit.position, true)
+        }, 500)
       },
       onFloorChangeSuccess({floorIndex}) {
 
