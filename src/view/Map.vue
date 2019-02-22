@@ -2,9 +2,9 @@
   <div @touchstart="onTouchStart" @touchend="onTouchEnd">
     <div id="map" class="page"></div>
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
-    <find-car-btn v-if="!navigation.start && !first" @find-car="beginFindCar" :unit="parkingUnit"></find-car-btn>
+    <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState" :unit="parkingUnit"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
-    <floor-list-control v-if="floorList" :innavi="navigation.start" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <floor-list-control v-if="floorList" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
     <blue-tooth-off-in-navi v-if="blueToothAlert && navigation.start" @do-confirm="stopRouteAndClean"></blue-tooth-off-in-navi>
@@ -61,7 +61,8 @@
         blueToothAlert:false,
         inparkingLotAlert:false,
         parkingUnit:null,
-        confirmObj:{start:null, end:null}
+        confirmObj:{start:null, end:null},
+        firstload:true
       }
     },
     computed: {
@@ -232,6 +233,8 @@
         setTimeout(()=>{
 
           this.map.centerPos(unit.position, true)
+
+          this.firstload = false
         }, 500)
       },
       onFloorChangeSuccess({floorIndex}) {
@@ -244,8 +247,10 @@
 
           this.first = false
         }
+        else {
 
-        this.map.showCurrFloor()
+          this.map.showCurrFloor()
+        }
       },
       checkBlutToothState() {
 

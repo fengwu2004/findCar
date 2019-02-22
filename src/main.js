@@ -8,6 +8,7 @@ import store from './store'
 import AlertBox from './AlertBox.js'
 import HeaderTip from './HeaderTip.js'
 import {FloatAlert} from "./FloatAlert";
+import { Picker } from 'mint-ui';
 
 import 'mint-ui/lib/style.css'
 import {idrWxManagerIntance} from "../../indoorunMap/map";
@@ -15,6 +16,9 @@ import {idrWxManagerIntance} from "../../indoorunMap/map";
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
+
+
+Vue.component(Picker.name, Picker);
 
 window.debugtest = false
 

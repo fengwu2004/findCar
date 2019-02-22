@@ -6,18 +6,19 @@
     </div>
     <div class="start"><span><</span></div>
     <div class="floors">
-      <div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="[floor.floorIndex == selectedIndex ? 'selected' : '', 'floor']" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>
+      <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
     </div>
+    <!--<div class="floors">-->
+      <!--<div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="[floor.floorIndex == selectedIndex ? 'selected' : '', 'floor']" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>-->
+    <!--</div>-->
     <div class="end"><span><</span></div>
   </div>
 </template>
 
 <script>
-
-
   export default {
     name :'floorlistdiv',
-    props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor', 'innavi'],
+    props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor', 'innavi', 'firstload'],
     methods:{
       showAllFloor() {
 
@@ -33,12 +34,52 @@
       onSelect(floorIndex) {
 
         this.$emit('on-select', floorIndex)
+      },
+      onValuesChange(picker, values) {
+
+        if (this.firstload) {
+
+          return
+        }
+
+        let floorIndex = -1
+
+        for (let i = 0; i < this.floorList.length; ++i) {
+
+          if (values[0] == this.floorList[i].name) {
+
+            floorIndex = i
+
+            break
+          }
+        }
+
+        if (floorIndex != -1) {
+
+          this.onSelect(floorIndex)
+        }
       }
+    },
+    mounted(){
+
+      for (let i = 0; i < this.floorList.length; ++i) {
+
+        this.slots[0].values.push(this.floorList[i].name)
+      }
+
+      this.slots[0].defaultIndex = this.selectedIndex
     },
     data(){
       return {
         main:'main',
-        othermain:'othermain'
+        othermain:'othermain',
+        slots:[{
+          flex: 1,
+          values: [],
+          className: 'floors',
+          textAlign: 'center',
+          defaultIndex:0
+        }]
       }
     }
   }
@@ -70,6 +111,7 @@
     height: 15rem;
     overflow-y: scroll;
     justify-content: flex-start;
+    background-color: white;
   }
 
   .start {
