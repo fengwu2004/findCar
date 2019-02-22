@@ -9,9 +9,9 @@
           <img src="../assets/front.png"/>
         </div>
         <div class="direction">
-          <div v-if="navigation.nextdir === 0">直行<span>{{navigation.nextDistance}}米</span> 后左转</div>
-          <div v-if="navigation.nextdir === 1">直行<span>{{navigation.nextDistance}}米</span> 后右转</div>
-          <div v-if="navigation.nextdir === 2">直行<span>{{navigation.nextDistance}}米</span></div>
+          <div v-if="navigation.nextdir === 0">直行 <span>{{navigation.nextDistance}}米</span> 后左转</div>
+          <div v-if="navigation.nextdir === 1">直行 <span>{{navigation.nextDistance}}米</span> 后右转</div>
+          <div v-if="navigation.nextdir === 2">直行 <span>{{navigation.nextDistance}}米</span></div>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
           <span class="exittext">退出</span>
           <span class="line"/>
         </div>
-        <div class="detail">全程剩余: <span>{{navigation.totalDistance}}</span>米 <span>{{Math.ceil(navigation.totalDistance/60)}}</span>分钟</div>
+        <div class="detail">剩余: <span>{{navigation.totalDistance}}</span>米 <span>{{Math.ceil(navigation.totalDistance/60)}}</span>分钟</div>
         <div>
           <div v-if="followStatus" class="title" @click='birdlook'>路线全览</div>
           <div v-else class="title" @click='changeToNavi'>恢复导航</div>
@@ -96,18 +96,19 @@
   .topbar {
 
     border-radius: 0.5rem;
-    width: calc(100% - 2rem - 2rem);
-    height: 6rem;
+    width: calc(100% - 1rem - 1rem);
+    height: 9.3rem;
     background: #18202A;
     opacity: 0.93;
     display: flex;
+    align-items: center;
   }
 
   .reach {
 
     border-radius: 0.5rem;
-    width: calc(100% - 2rem - 2rem);
-    height: 6rem;
+    width: calc(100% - 1rem - 1rem);
+    height: 9.3rem;
     background: #18202A;
     opacity: 0.93;
     display: flex;
@@ -121,8 +122,10 @@
 
     > img {
 
-      padding: 1rem;
-      width: 4rem;
+      margin-left: 2rem;
+      margin-right: 2rem;
+      width: 5.3rem;
+      height: 5.3rem;
     }
   }
 
@@ -158,7 +161,7 @@
   .normal {
 
     display: flex;
-    width: calc(100% - 2rem - 2rem);
+    width: calc(100% - 1rem - 1rem);
     height: 100%;
     justify-content: space-between;
     align-items: center;
@@ -168,11 +171,11 @@
     .detail {
 
       font-size: 1.4rem;
-      color: #0F1520;
+      color: #2B3547;
 
       > span {
 
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
     }
 
@@ -180,8 +183,8 @@
 
       background-color: #32ADEA;
       color: white;
-      font-size: 1.4rem;
-      padding: 0.5rem 0.8rem;
+      font-size: 1.6rem;
+      padding: 0.5rem 1.2rem;
       border-radius: 2rem;
       margin-right:1rem;
     }
@@ -197,6 +200,8 @@
 
       font-size: 1.6rem;
       margin: 2rem;
+      margin-left: 3.1rem;
+      margin-right: 3.1rem;
       color: #FC431D;
     }
 
@@ -211,7 +216,7 @@
   .exitstatus {
 
     display: flex;
-    width: calc(100% - 2rem - 2rem);
+    width: calc(100% - 1rem - 1rem);
     height: 100%;
     justify-content: center;
     align-items: center;

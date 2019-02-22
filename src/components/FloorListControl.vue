@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div v-bind:class="[innavi ? main:othermain]">
     <div class="allFloor" v-if="floorList.length > 1" @click="showAllFloor">
       <img v-if="!showallfloor" src="../assets/allfloor.png"/>
       <img v-else src="../assets/allfloor_selected.png"/>
@@ -17,7 +17,7 @@
 
   export default {
     name :'floorlistdiv',
-    props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor'],
+    props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor', 'innavi'],
     methods:{
       showAllFloor() {
 
@@ -34,6 +34,12 @@
 
         this.$emit('on-select', floorIndex)
       }
+    },
+    data(){
+      return {
+        main:'main',
+        othermain:'othermain'
+      }
     }
   }
 
@@ -41,13 +47,20 @@
 
 <style scoped lang="scss">
 
-  $btnwidth:3rem;
+  $btnwidth:4rem;
+
+  .othermain {
+
+    position: absolute;
+    left: 1rem;
+    top: 3rem;
+  }
 
   .main {
 
     position: absolute;
-    left: 2rem;
-    top: 10rem;
+    left: 1rem;
+    top: 12.7rem;
   }
 
   .floors {
@@ -72,7 +85,7 @@
     > span {
 
       transform: rotate(90deg);
-      font-size: 0.5rem;
+      font-size: 1rem;
     }
   }
 
@@ -89,7 +102,7 @@
     > span {
 
       transform: rotate(-90deg);
-      font-size: 0.5rem;
+      font-size: 1rem;
     }
   }
 
@@ -102,7 +115,7 @@
     color: #2B3547;
     width: $btnwidth;
     height: $btnwidth;
-    font-size: 0.9rem;
+    font-size: 1.6rem;
 
     flex-shrink: 0;
     display: flex;
@@ -113,15 +126,15 @@
   .selected {
 
     background: url("../assets/selectedFloor.png") no-repeat center/112%;
-    font-size: 0.9rem;
+    font-size: 1.6rem;
   }
 
   .allFloor {
 
     width: $btnwidth;
     height: $btnwidth;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 12px 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.12);
     border-radius: 4px;
     display: flex;
     justify-content: center;

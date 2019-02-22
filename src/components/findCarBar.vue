@@ -2,7 +2,7 @@
   <div class="main">
     <div class="content">
       <div class="detail">
-        <span>B3层 C02</span>
+        <span>{{parkingUnitName}}</span>
         <span>小鹏智能产业园地下停车场</span>
       </div>
       <div class="combin">
@@ -22,6 +22,13 @@
     methods:{
       onClick(){
         this.$emit('find-car')
+      }
+    },
+    computed:{
+
+      parkingUnitName() {
+
+        return this.unit.floorName + '层 ' + this.unit.name
       }
     }
   }
@@ -55,7 +62,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 1rem;
+    margin-left: 2rem;
 
     > span {
 
@@ -64,13 +71,14 @@
 
     > span:first-child {
 
-      padding-top: 1rem;
+      padding-top: 2rem;
       font-size: 1.8rem;
     }
 
     > span:last-child {
 
-      padding-bottom: 1rem;
+      padding-bottom: 2rem;
+      font-size: 1.4rem;
     }
   }
 
@@ -84,12 +92,13 @@
   .btn {
 
     display: flex;
+    height: 3.8rem;
     justify-content: center;
     align-items: center;
-    margin-right: 1rem;
-    border: 1px solid #32ADEA;
+    margin-right: 2rem;
+    border: 2px solid #32ADEA;
     border-radius: 2rem;
-    padding: 0.5rem 1rem;
+    padding: 0rem 1rem;
 
     > img {
 

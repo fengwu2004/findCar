@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div @touchstart="onTouchStart" @touchend="onTouchEnd">
     <div id="map" class="page"></div>
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
-    <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState"></find-car-btn>
+    <find-car-btn v-if="!navigation.start && !first" @find-car="beginFindCar" :unit="parkingUnit"></find-car-btn>
     <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
-    <floor-list-control v-if="floorList" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <floor-list-control v-if="floorList" :innavi="navigation.start" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
     <blue-tooth-off-in-navi v-if="blueToothAlert && navigation.start" @do-confirm="stopRouteAndClean"></blue-tooth-off-in-navi>
@@ -60,6 +60,7 @@
         locatedFailedCount:0,
         blueToothAlert:false,
         inparkingLotAlert:false,
+        parkingUnit:null,
         confirmObj:{start:null, end:null}
       }
     },
@@ -101,6 +102,14 @@
       this.map.release()
     },
     methods:{
+      onTouchStart() {
+
+        clearTimeout(this.tenSecondWatch)
+      },
+      onTouchEnd(){
+
+        this.beginTenSecondWatch()
+      },
       updateBluetoothState(on) {
 
         idrDebug.debugInfo(on)
@@ -145,6 +154,11 @@
         this.map.addEventListener(idrMapEvent.types.onMapStatusChange, (data) => {
 
           this.onMapStatusChange(data)
+        })
+
+        this.map.addEventListener(idrMapEvent.types.onMapClick, (data) => {
+
+          this.onMapClick(data)
         })
       },
       tellNativeRouterSuccess() {
@@ -203,9 +217,9 @@
 
         this.floorList = mapInfo.floorList
 
-        const unit = this.map.findUnitWithId(this.parkingUnitId)
+        this.parkingUnit = this.map.findUnitWithId(this.parkingUnitId)
 
-        this.map.changeFloor(unit.floorIndex)
+        this.map.changeFloor(this.parkingUnit.floorIndex)
       },
       onFirstShowFloor() {
 
@@ -360,7 +374,7 @@
           this.beginTenSecondWatch()
         }
       },
-      onNaviStatusUpdate({validate, projDist, goalDist, serialDist, nextSug}) {
+      onNaviStatusUpdate({validate, projDist, globalDist, serialDist, nextSug}) {
 
         if (!validate || this.needConfirm) {
 
@@ -374,7 +388,7 @@
           return
         }
 
-        const totalDistance = Math.ceil(goalDist/10.0)
+        const totalDistance = Math.ceil(globalDist/10.0)
 
         const nextDistance = Math.ceil(serialDist/10.0)
 
@@ -395,7 +409,9 @@
           nextdir = 2
         }
 
-        this.$store.dispatch('setNaviStatus', {nextdir, totalDistance, nextDistance})
+        var inTargetFloor = this.map.checkInTargetFloor()
+
+        this.$store.dispatch('setNaviStatus', {nextdir, totalDistance, nextDistance, inTargetFloor})
       },
       stopRouteAndClean() {
 
@@ -429,6 +445,8 @@
       onShowCarPos() {
 
         let unit = this.map.findUnitWithId(this.parkingUnitId)
+
+        this.doChangeFloor(unit.floorIndex)
 
         this.map.centerPos(unit.position, true)
 
