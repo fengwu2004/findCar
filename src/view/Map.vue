@@ -2,8 +2,8 @@
   <div @touchstart="onTouchStart" @touchend="onTouchEnd">
     <div id="map" class="page"></div>
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
-    <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState" :unit="parkingUnit"></find-car-btn>
-    <navigation v-if='navigation.start' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
+    <find-car-btn v-if="!navigation.start && !first" @find-car="beginFindCar" :unit="parkingUnit"></find-car-btn>
+    <navigation v-if='navigation.start && navigation.statusValid' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
@@ -231,6 +231,8 @@
         this.map.addUnitsOverlay([unit], './static/parkingcar.png')
 
         setTimeout(()=>{
+
+          this.map.autoChangeFloor = false
 
           this.map.centerPos(unit.position, true)
 
@@ -487,8 +489,10 @@
         this.map.setStatus(YFM.Map.STATUS_NAVIGATE)
 
         this.currentFloorIndex = this.map.getUserPos().floorIndex
+
+        clearTimeout(this.tenSecondWatch)
       },
-      onShowAllFloor(show) {
+      onShowAllFloor(show = true) {
 
         if (show) {
 
@@ -517,7 +521,7 @@
         }
         else {
 
-          this.onShowAllFloor()
+          this.onShowAllFloor(true)
         }
       }
     }

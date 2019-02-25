@@ -5,7 +5,8 @@ export const navigation = {
     nextdir:'',
     nextDistance:0,
     findCar:false,
-    enableSpeack:true
+    enableSpeack:true,
+    statusValid:false
   },
   mutations: {
     
@@ -22,6 +23,8 @@ export const navigation = {
     STOP:(state)=> {
     
       state.start = false
+  
+      state.statusValid = false
     },
     SET_NAVI_STATUS:(state, {totalDistance, nextdir, nextDistance})=> {
       
@@ -30,6 +33,8 @@ export const navigation = {
       state.nextdir = nextdir
   
       state.nextDistance = nextDistance
+      
+      state.statusValid = true
     },
   },
   actions:{

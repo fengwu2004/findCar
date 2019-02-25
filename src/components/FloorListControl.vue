@@ -8,9 +8,6 @@
     <div class="floors">
       <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
     </div>
-    <!--<div class="floors">-->
-      <!--<div v-for="floor in floorList" v-bind:key="floor.floorIndex" v-bind:class="[floor.floorIndex == selectedIndex ? 'selected' : '', 'floor']" v-on:click="onSelect(floor.floorIndex)">{{ floor.name }}</div>-->
-    <!--</div>-->
     <div class="end"><span><</span></div>
   </div>
 </template>
@@ -58,6 +55,15 @@
 
           this.onSelect(floorIndex)
         }
+      }
+    },
+    watch:{
+
+      selectedIndex(newValue) {
+
+        console.log(newValue)
+
+        this.slots[0].defaultIndex = newValue
       }
     },
     mounted(){
