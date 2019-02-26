@@ -153,7 +153,7 @@
     display: flex;
     height: 5.6rem;
     width: 100%;
-    bottom: 3rem;
+    bottom: 4rem;
     justify-content: center;
     position: absolute;
   }
