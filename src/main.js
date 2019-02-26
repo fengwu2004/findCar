@@ -20,7 +20,7 @@ Vue.use(Vuex)
 
 Vue.component(Picker.name, Picker);
 
-window.debugtest = true
+window.debugtest = false
 
 window.Alertboxview = new AlertBox()
 

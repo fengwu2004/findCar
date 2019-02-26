@@ -49,7 +49,7 @@
 
   .content {
 
-    width: calc(100% - 2rem - 2rem);
+    width: calc(100% - 1rem - 1rem);
     display: flex;
     background-color: white;
     align-items: center;

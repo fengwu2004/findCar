@@ -100,14 +100,14 @@
 
     position: absolute;
     left: 1rem;
-    top: 3rem;
+    top: 10rem;
   }
 
   .main {
 
     position: absolute;
     left: 1rem;
-    top: 12.7rem;
+    top: 14rem;
   }
 
   .floors {

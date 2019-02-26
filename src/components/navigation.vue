@@ -87,7 +87,7 @@
   .top {
 
     position: absolute;
-    top: 2rem;
+    top: 3rem;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -153,7 +153,7 @@
     display: flex;
     height: 5.6rem;
     width: 100%;
-    bottom: 4rem;
+    bottom: 3rem;
     justify-content: center;
     position: absolute;
   }
