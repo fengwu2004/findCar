@@ -6,7 +6,7 @@
     </div>
     <div class="start"><span><</span></div>
     <div class="floors">
-      <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
+      <mt-picker :slots="slots" @change="onValuesChange" :visibleItemCount="5" :item-height="40"></mt-picker>
     </div>
     <div class="end"><span><</span></div>
   </div>
@@ -99,14 +99,14 @@
   .othermain {
 
     position: absolute;
-    left: 1rem;
-    top: 10rem;
+    left: 2rem;
+    top: 14rem;
   }
 
   .main {
 
     position: absolute;
-    left: 1rem;
+    left: 2rem;
     top: 14rem;
   }
 
@@ -114,7 +114,6 @@
 
     display: flex;
     flex-direction: column;
-    height: 15rem;
     overflow-y: scroll;
     justify-content: flex-start;
     background-color: white;

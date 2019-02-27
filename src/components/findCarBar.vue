@@ -37,10 +37,12 @@
 
 <style scoped lang="scss">
 
+  $width:calc(100% - 2rem - 2rem);
+
   .main {
 
     position: absolute;
-    bottom: 4rem;
+    bottom: 2rem;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -49,7 +51,7 @@
 
   .content {
 
-    width: calc(100% - 1rem - 1rem);
+    width: $width;
     display: flex;
     background-color: white;
     align-items: center;

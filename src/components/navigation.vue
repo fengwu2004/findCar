@@ -12,6 +12,7 @@
           <div v-if="navigation.nextdir === 0">直行 <span>{{navigation.nextDistance}}米</span> 后左转</div>
           <div v-if="navigation.nextdir === 1">直行 <span>{{navigation.nextDistance}}米</span> 后右转</div>
           <div v-if="navigation.nextdir === 2">直行 <span>{{navigation.nextDistance}}米</span></div>
+          <div v-if="navigation.nextdir === 3">直行 <span>{{navigation.nextDistance}}米</span> 后d到达</div>
         </div>
       </div>
     </div>
@@ -84,6 +85,9 @@
 
 <style scoped lang="scss">
 
+  $width:calc(100% - 2rem - 2rem);
+  $fontsize:1.4rem;
+
   .top {
 
     position: absolute;
@@ -96,7 +100,7 @@
   .topbar {
 
     border-radius: 0.5rem;
-    width: calc(100% - 1rem - 1rem);
+    width: $width;
     height: 9.3rem;
     background: #18202A;
     opacity: 0.93;
@@ -107,7 +111,7 @@
   .reach {
 
     border-radius: 0.5rem;
-    width: calc(100% - 1rem - 1rem);
+    width: $width;
     height: 9.3rem;
     background: #18202A;
     opacity: 0.93;
@@ -153,7 +157,7 @@
     display: flex;
     height: 5.6rem;
     width: 100%;
-    bottom: 4rem;
+    bottom: 3rem;
     justify-content: center;
     position: absolute;
   }
@@ -161,7 +165,7 @@
   .normal {
 
     display: flex;
-    width: calc(100% - 1rem - 1rem);
+    width: $width;
     height: 100%;
     justify-content: space-between;
     align-items: center;
@@ -183,7 +187,7 @@
 
       background-color: #32ADEA;
       color: white;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       padding: 0.5rem 1.2rem;
       border-radius: 2rem;
       margin-right:1rem;
@@ -216,7 +220,7 @@
   .exitstatus {
 
     display: flex;
-    width: calc(100% - 1rem - 1rem);
+    width: $width;
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -264,7 +268,7 @@
     > div {
 
       display: flex;
-      width: calc(100% - 2rem - 2rem);
+      width: $width;
       height: 100%;
       justify-content: center;
       align-items: center;

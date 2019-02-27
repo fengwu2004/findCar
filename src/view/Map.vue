@@ -4,7 +4,7 @@
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
     <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState" :unit="parkingUnit"></find-car-btn>
     <navigation v-if='navigation.start && navigation.statusValid' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
-    <floor-list-control v-if="floorList" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <floor-list-control v-if="floorList && !inparkingLotAlert && !blueToothAlert" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
     <blue-tooth-off-in-navi v-if="blueToothAlert && navigation.start" @do-confirm="stopRouteAndClean"></blue-tooth-off-in-navi>
@@ -13,7 +13,6 @@
 
 <script>
 
-  // import '@/yfmap.min'
   import {
     idrMapView,
     idrCoreMgr,
@@ -90,13 +89,20 @@
         idrLocateServerInstance.debug = true
       }
 
+      idrDebug.showDebugInfo(false)
+
+      if (idrLocateServerInstance.debug) {
+
+        idrDebug.debugInfo('模拟定位 ok')
+      }
+      else {
+
+        idrDebug.debugInfo('模拟定位 failed')
+      }
+
       this.regionId = "14443871894123339"
 
       this.initMap()
-
-      idrDebug.showDebugInfo(false)
-
-      idrDebug.debugInfo("测试")
     },
     destroyed() {
 
@@ -113,7 +119,14 @@
       },
       updateBluetoothState(on) {
 
-        idrDebug.debugInfo(on)
+        if (idrLocateServerInstance.debug) {
+
+          this.beginFindCar()
+
+          return
+        }
+
+        // idrDebug.debugInfo(on)
 
         if (!on) {
 
@@ -273,7 +286,7 @@
       },
       beginFindCar(){
 
-        if (this.locatedFailedCount > 3) {
+        if (this.locatedFailedCount > 3 && idrLocateServerInstance.debug == false) {
 
           this.checkBlutToothState()
 
@@ -288,6 +301,10 @@
             this.followStatus = true
 
             this.onRouterSuccess(res)
+          })
+          .catch(()=>{
+
+            this.inparkingLotAlert = true
           })
       },
       doLocating() {
@@ -367,9 +384,11 @@
       },
       onMapClick(pos) {
 
-        if (window.debugtest) {
+        if (false) {
 
           idrLocateServerInstance.debugPos = pos
+
+          console.log(pos)
         }
       },
       onMapStatusChange({status}) {
@@ -381,7 +400,7 @@
           this.beginTenSecondWatch()
         }
       },
-      onNaviStatusUpdate({validate, projDist, globalDist, serialDist, nextSug}) {
+      onNaviStatusUpdate({validate, projDist, globalDist, goalDist, serialDist, nextSug}) {
 
         if (!validate || this.needConfirm) {
 
@@ -414,6 +433,18 @@
         if (nextSug == YFM.Map.Navigate.NextSuggestion.FRONT) {
 
           nextdir = 2
+        }
+
+        if (nextSug == YFM.Map.Navigate.NextSuggestion.ARRIVE) {
+
+          if (Math.abs(goalDist - globalDist) < 1) {
+
+            nextdir = 3
+          }
+          else {
+
+            nextdir = 2
+          }
         }
 
         var inTargetFloor = this.map.checkInTargetFloor()
