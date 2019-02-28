@@ -2,7 +2,7 @@
   <div @touchstart="onTouchStart" @touchend="onTouchEnd">
     <div id="map" class="page"></div>
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
-    <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState" :unit="parkingUnit"></find-car-btn>
+    <find-car-btn v-if="!navigation.start && !first" @find-car="beginFindCar" :unit="parkingUnit"></find-car-btn>
     <navigation v-if='navigation.start && navigation.statusValid' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList && !inparkingLotAlert && !blueToothAlert" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>

@@ -59,7 +59,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: gray;
+    background: rgba(0, 0, 0, 0.6);
   }
 
   .content {
