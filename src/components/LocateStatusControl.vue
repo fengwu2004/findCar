@@ -34,6 +34,7 @@
     position: absolute;
     left: 2rem;
     bottom: 12.5rem;
+    z-index: 0;
   }
 
   .notLocating {

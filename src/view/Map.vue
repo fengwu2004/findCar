@@ -5,10 +5,11 @@
     <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState" :unit="parkingUnit"></find-car-btn>
     <navigation v-if='navigation.start && navigation.statusValid' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
     <floor-list-control v-if="floorList && !inparkingLotAlert && !blueToothAlert" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
     <blue-tooth-off-in-navi v-if="blueToothAlert && navigation.start" @do-confirm="stopRouteAndClean"></blue-tooth-off-in-navi>
-    <locate-status-control :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
+
   </div>
 </template>
 
