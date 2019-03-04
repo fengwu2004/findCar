@@ -64,7 +64,6 @@
 
   .content {
 
-    margin-top: 3rem;
     width: 80%;
     background: white;
     display: flex;
