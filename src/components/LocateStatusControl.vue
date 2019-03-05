@@ -33,7 +33,7 @@
 
     position: absolute;
     left: 2rem;
-    bottom: 12.5rem;
+    bottom: 13.25rem;
     z-index: 0;
   }
 

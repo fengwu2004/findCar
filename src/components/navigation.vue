@@ -22,7 +22,7 @@
           <span class="exittext">退出</span>
           <span class="line"/>
         </div>
-        <div class="detail">剩余: <span>{{navigation.totalDistance}}</span>米 <span>{{Math.ceil(navigation.totalDistance/60)}}</span>分钟</div>
+        <div class="detail">剩余{{navigation.totalDistance}}米 {{Math.ceil(navigation.totalDistance/60)}}分钟</div>
         <div>
           <div v-if="followStatus" class="title" @click='birdlook'>路线全览</div>
           <div v-else class="title" @click='changeToNavi'>恢复导航</div>
@@ -126,8 +126,8 @@
 
     > img {
 
-      margin-left: 2rem;
-      margin-right: 2rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
       width: 5.3rem;
       height: 5.3rem;
     }
@@ -138,7 +138,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 3rem;
+    font-size: 2.2rem;
     color: #939AA9;
 
     > div > span {
@@ -155,9 +155,9 @@
   .bottom {
 
     display: flex;
-    height: 5.6rem;
+    height: 5.4rem;
     width: 100%;
-    bottom: 3rem;
+    bottom: 2rem;
     justify-content: center;
     position: absolute;
   }
@@ -174,13 +174,8 @@
 
     .detail {
 
-      font-size: 1.4rem;
-      color: #2B3547;
-
-      > span {
-
-        font-size: 1.8rem;
-      }
+      font-size: 1.3rem;
+      color: #0F1520;
     }
 
     .title {
@@ -202,10 +197,8 @@
 
     .exittext {
 
-      font-size: 1.6rem;
-      margin: 2rem;
-      margin-left: 3.1rem;
-      margin-right: 3.1rem;
+      font-size: 1.4rem;
+      margin: 1.9rem 1.4rem;
       color: #FC431D;
     }
 

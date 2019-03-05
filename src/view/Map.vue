@@ -93,15 +93,15 @@
         idrLocateServerInstance.debug = true
       }
 
-      idrDebug.showDebugInfo(false)
+      // idrDebug.showDebugInfo(false)
 
       if (idrLocateServerInstance.debug) {
 
-        idrDebug.debugInfo('模拟定位 ok')
+        // idrDebug.debugInfo('模拟定位 ok')
       }
       else {
 
-        idrDebug.debugInfo('模拟定位 failed')
+        // idrDebug.debugInfo('模拟定位 failed')
       }
 
       this.regionId = "14443871894123339"

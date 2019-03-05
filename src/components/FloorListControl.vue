@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="[innavi ? main:othermain]">
+  <div v-bind:class="[innavi ? naviposition:normalposition]">
     <div class="allFloor" v-if="floorList.length > 1" @click="showAllFloor">
       <img v-if="!showallfloor" src="../assets/allfloor.png"/>
       <img v-else src="../assets/allfloor_selected.png"/>
@@ -13,6 +13,9 @@
 </template>
 
 <script>
+
+  import { idrCoreMgr } from "../../../indoorunMap/map";
+
   export default {
     name :'floorlistdiv',
     props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor', 'innavi', 'firstload'],
@@ -45,7 +48,7 @@
 
           if (values[0] == this.floorList[i].name) {
 
-            floorIndex = i
+            floorIndex = this.floorList[i].floorIndex
 
             break
           }
@@ -61,14 +64,27 @@
 
       selectedIndex(newValue) {
 
-        console.log(newValue)
+        let floorName = this.slots[0].values[newValue]
 
-        this.slots[0].defaultIndex = newValue
+        let floorIndex = -1
+
+        for (let i = 0; i < this.floorList.length; ++i) {
+
+          if (this.floorList[i].name == floorName) {
+
+            floorIndex = this.floorList[i].floorIndex
+          }
+        }
+
+        if (floorIndex != -1) {
+
+          this.slots[0].defaultIndex = floorIndex
+        }
       }
     },
     mounted(){
 
-      for (let i = 0; i < this.floorList.length; ++i) {
+      for (let i = this.floorList.length - 1; i >= 0; --i) {
 
         this.slots[0].values.push(this.floorList[i].name)
       }
@@ -87,6 +103,37 @@
           defaultIndex:0
         }]
       }
+    },
+    computed:{
+      naviposition() {
+
+        if (idrCoreMgr.isAndroid) {
+
+          return 'android'
+        }
+        else {
+
+          return 'iosnavigate'
+        }
+      },
+      normalposition() {
+
+        if (idrCoreMgr.isAndroid) {
+
+          return 'android'
+        }
+        else {
+
+          if (document.body.clientHeight == 812) {
+
+            return 'iosbignormal'
+          }
+          else {
+
+            return 'iosnormal'
+          }
+        }
+      }
     }
   }
 
@@ -96,14 +143,28 @@
 
   $btnwidth:4rem;
 
-  .othermain {
+  .android {
 
     position: absolute;
     left: 2rem;
-    top: 14rem;
+    top: 12rem;
   }
 
-  .main {
+  .iosnormal {
+
+    position: absolute;
+    left: 2rem;
+    top: 8.4rem;
+  }
+
+  .iosbignormal {
+
+    position: absolute;
+    left: 2rem;
+    top: 10.8rem;
+  }
+
+  .iosnavigate {
 
     position: absolute;
     left: 2rem;
@@ -180,7 +241,7 @@
 
     width: $btnwidth;
     height: $btnwidth;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     box-shadow: 0 4px 12px 0 rgba(0,0,0,0.12);
     border-radius: 4px;
     display: flex;

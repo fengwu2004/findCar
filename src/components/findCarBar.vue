@@ -42,6 +42,7 @@
   .main {
 
     position: absolute;
+    height: 9.25rem;
     bottom: 2rem;
     width: 100%;
     display: flex;
@@ -64,23 +65,20 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 2rem;
-
-    > span {
-
-      padding: 0.5rem 0;
-    }
+    margin-left: 1.6rem;
 
     > span:first-child {
 
-      padding-top: 2rem;
+      padding-top: 1.6rem;
+      padding-bottom: 0.45rem;
       font-size: 1.8rem;
     }
 
     > span:last-child {
 
-      padding-bottom: 2rem;
-      font-size: 1.4rem;
+      padding-top: 0.45rem;
+      padding-bottom: 1.6rem;
+      font-size: 1.2rem;
     }
   }
 
@@ -93,14 +91,15 @@
 
   .btn {
 
+    width: 10.1rem;
     display: flex;
     height: 3.8rem;
     justify-content: center;
     align-items: center;
-    margin-right: 2rem;
-    border: 2px solid #32ADEA;
+    margin-right: 1.6rem;
+    border: 1px solid #32ADEA;
     border-radius: 2rem;
-    padding: 0rem 1rem;
+    flex: 1;
 
     > img {
 
