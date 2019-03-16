@@ -3,18 +3,27 @@
 </template>
 
 <script>
+
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'LocateStatusControl',
     props: ['dolocate'],
     computed: {
-      getStyle() {
-        if (this.dolocate) {
+      ...mapGetters([
 
-          return 'inLocating'
+        'navigation'
+      ]),
+      getStyle() {
+
+        if (this.navigation.start) {
+
+          return 'inNavi'
         }
 
-        return 'notLocating'
+        return 'notNavi'
       }
+
     },
     methods: {
       onClick() {
@@ -33,24 +42,21 @@
 
     position: absolute;
     left: 2rem;
-    bottom: 13.25rem;
     z-index: 0;
-  }
-
-  .notLocating {
-
     background: url("../assets/location1.png") no-repeat;
     background-size: $width;
     width: $width;
     height: $width;
   }
 
-  .inLocating {
+  .notNavi {
 
-    background: url("../assets/location2.png") no-repeat;
-    background-size: $width;
-    width: $width;
-    height: $width;
+    bottom: 13.25rem;
+  }
+
+  .inNavi {
+
+    bottom: 10rem;
   }
 
 </style>
