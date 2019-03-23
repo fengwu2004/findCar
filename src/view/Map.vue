@@ -60,7 +60,7 @@
         needConfirm:false,
         first:true,
         locatedFailedCount:0,
-        blueToothAlert:true,
+        blueToothAlert:false,
         inparkingLotAlert:false,
         parkingUnit:null,
         confirmObj:{start:null, end:null},

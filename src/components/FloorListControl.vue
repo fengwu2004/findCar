@@ -6,6 +6,7 @@
     </div>
     <div class="start"><span><</span></div>
     <div class="floors">
+      <!--<div class="coverselected"></div>-->
       <mt-picker :slots="slots" @change="onValuesChange" :visibleItemCount="5" :item-height="40"></mt-picker>
     </div>
     <div class="end"><span><</span></div>
@@ -174,6 +175,16 @@
     position: absolute;
     left: 2rem;
     top: 10.8rem;
+  }
+
+  .coverselected {
+
+    position: absolute;
+    //background: url("../assets/selectedFloor.png") no-repeat center/112%;
+    width: 100%;
+    background-color: red;
+    height: 4rem;
+    top: 12rem;
   }
 
   .iosnavigate {
