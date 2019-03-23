@@ -109,7 +109,7 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          return 'android'
+          return 'androidnavigate'
         }
         else {
 
@@ -120,7 +120,7 @@
 
         if (idrCoreMgr.isAndroid) {
 
-          return 'android'
+          return 'androidnormal'
         }
         else {
 
@@ -143,11 +143,18 @@
 
   $btnwidth:4rem;
 
-  .android {
+  .androidnavigate {
 
     position: absolute;
     left: 2rem;
     top: 12rem;
+  }
+
+  .androidnormal {
+
+    position: absolute;
+    left: 2rem;
+    top: 1.6rem;
   }
 
   .iosnormal {
