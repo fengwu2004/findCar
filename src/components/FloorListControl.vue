@@ -153,7 +153,7 @@
 
     position: absolute;
     left: 2rem;
-    top: 12rem;
+    top: 13rem;
   }
 
   .androidnormal {
