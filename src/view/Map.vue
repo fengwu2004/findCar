@@ -4,7 +4,7 @@
     <!--<assist-bar @showCarPos="onShowCarPos"></assist-bar>-->
     <find-car-btn v-if="!navigation.start && !first" @find-car="checkBlutToothState" :unit="parkingUnit"></find-car-btn>
     <navigation v-if='navigation.start && navigation.statusValid' v-on:stop="onStopNavigate" @birdlook="birdLook" :followStatus="followStatus" @changeToNavigate="setMapInNavigate"></navigation>
-    <floor-list-control v-if="floorList && !inparkingLotAlert && !blueToothAlert" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-index="currentFloorIndex"></floor-list-control>
+    <floor-list-control v-if="floorList" :innavi="navigation.start" :firstload="firstload" @show-all-floor="onShowAllFloor" @on-select="doChangeFloor" :showallfloor="currentFloorIndex == -1" :floor-list="floorList" :located-index="locateFloorIndex" :selected-floorname="selectedFloorName"></floor-list-control>
     <locate-status-control v-if="floorList" :dolocate="dolocate" @onclick="doLocating"></locate-status-control>
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
@@ -56,12 +56,11 @@
         dolocate:false,
         regionId:'14443871894123339',
         parkingUnitId:null,
-        parkingFloorIndex:null,
         enableError:false,
         needConfirm:false,
         first:true,
         locatedFailedCount:0,
-        blueToothAlert:false,
+        blueToothAlert:true,
         inparkingLotAlert:false,
         parkingUnit:null,
         confirmObj:{start:null, end:null},
@@ -72,7 +71,18 @@
       ...mapGetters([
         'mapState',
         'navigation'
-      ])
+      ]),
+      selectedFloorName() {
+
+        if (this.currentFloorIndex != -1) {
+
+          let floor = this.mapInfo.getFloorByIndex(this.currentFloorIndex)
+
+          return floor.name
+        }
+
+        return null
+      }
     },
     mounted() {
 
@@ -83,25 +93,9 @@
         this.parkingUnitId = decodeURI(this.$route.query.unit)
       }
 
-      if (this.$route.query.floor) {
-
-        this.parkingFloorIndex = parseInt(decodeURI(this.$route.query.floor))
-      }
-
       if (this.$route.query.debug) {
 
         idrLocateServerInstance.debug = true
-      }
-
-      // idrDebug.showDebugInfo(false)
-
-      if (idrLocateServerInstance.debug) {
-
-        // idrDebug.debugInfo('模拟定位 ok')
-      }
-      else {
-
-        // idrDebug.debugInfo('模拟定位 failed')
       }
 
       this.regionId = "14443871894123339"
@@ -248,8 +242,6 @@
 
         this.mapInfo = mapInfo
 
-        this.floorList = mapInfo.floorList
-
         this.parkingUnit = this.map.findUnitWithId(this.parkingUnitId)
 
         this.map.changeFloor(this.parkingUnit.floorIndex)
@@ -257,6 +249,8 @@
       onFirstShowFloor() {
 
         this.doLocating()
+
+        this.floorList = this.mapInfo.floorList
 
         const unit = this.map.findUnitWithId(this.parkingUnitId)
 

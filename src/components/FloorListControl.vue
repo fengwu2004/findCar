@@ -18,7 +18,7 @@
 
   export default {
     name :'floorlistdiv',
-    props:['floorList', 'selectedIndex', 'locatedIndex', 'showallfloor', 'innavi', 'firstload'],
+    props:['floorList', 'selectedFloorname', 'locatedIndex', 'showallfloor', 'innavi', 'firstload'],
     methods:{
       showAllFloor() {
 
@@ -54,6 +54,8 @@
           }
         }
 
+        console.log('xxx', floorIndex)
+
         if (floorIndex != -1) {
 
           this.onSelect(floorIndex)
@@ -62,23 +64,16 @@
     },
     watch:{
 
-      selectedIndex(newValue) {
+      selectedFloorname(newValue) {
 
-        let floorName = this.slots[0].values[newValue]
+        for (let i = 0; i < this.slots[0].values.length; ++i) {
 
-        let floorIndex = -1
+          if (newValue == this.slots[0].values[i]) {
 
-        for (let i = 0; i < this.floorList.length; ++i) {
+            this.slots[0].defaultIndex = i
 
-          if (this.floorList[i].name == floorName) {
-
-            floorIndex = this.floorList[i].floorIndex
+            return
           }
-        }
-
-        if (floorIndex != -1) {
-
-          this.slots[0].defaultIndex = floorIndex
         }
       }
     },
@@ -89,7 +84,17 @@
         this.slots[0].values.push(this.floorList[i].name)
       }
 
-      this.slots[0].defaultIndex = this.selectedIndex
+      for (let i = 0; i < this.slots[0].values.length; ++i) {
+
+        if (this.selectedFloorname == this.slots[0].values[i]) {
+
+          this.slots[0].defaultIndex = i
+
+          console.log('mounted', i)
+
+          return
+        }
+      }
     },
     data(){
       return {
