@@ -9,6 +9,9 @@
     <not-in-parking-lot v-if="inparkingLotAlert" @do-confirm="inparkingLotAlert = false"></not-in-parking-lot>
     <blue-tooth-off v-if="blueToothAlert && !navigation.start" @do-cancel="closeBlueToothAlert" @do-confirm="goToSettingBlutTooth"></blue-tooth-off>
     <blue-tooth-off-in-navi v-if="blueToothAlert && navigation.start" @do-confirm="stopRouteAndClean"></blue-tooth-off-in-navi>
+    <div class="loading" v-show="isLoading">
+      <img src="../assets/loading.gif"/>
+    </div>
 
   </div>
 </template>
@@ -45,6 +48,7 @@
       FindCarBtn},
     data() {
       return {
+        isLoading:true,
         tenSecondWatch:null,
         followStatus:true,
         startLocate:false,
@@ -266,6 +270,8 @@
         }, 500)
       },
       onFloorChangeSuccess({floorIndex}) {
+
+        this.isLoading = false
 
         this.currentFloorIndex = floorIndex
 
@@ -584,17 +590,30 @@
 </script>
 <style scoped lang="scss">
 
-.container {
+  .container {
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 90%;
-  margin: auto;
-  z-index: 0;
-  pointer-events:none;
-}
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 90%;
+    margin: auto;
+    z-index: 0;
+    pointer-events:none;
+  }
+
+  .loading {
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
 </style>

@@ -153,14 +153,14 @@
 
     position: absolute;
     left: 2rem;
-    top: 12.9rem;
+    top: 13rem;
   }
 
   .androidnormal {
 
     position: absolute;
     left: 2rem;
-    top: 1.6rem;
+    top: 2rem;
   }
 
   .iosnormal {
